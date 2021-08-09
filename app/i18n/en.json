@@ -1,0 +1,18 @@
+{
+  "common": {
+    "send": "Send",
+				"receive": "Receive",
+				"deposit": "Deposit",
+				"withdraw": "Withdraw"
+  },
+  "errors": {
+    "invalidEmail": "Invalid email address."
+  },
+		"dashboard": {
+			"balance": "US Balance"
+		},
+  "storybook": {
+    "placeholder": "Placeholder",
+    "field": "Field"
+  }
+}

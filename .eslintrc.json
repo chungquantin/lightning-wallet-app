@@ -1,0 +1,146 @@
+{
+	/**
+	 * environment defines predefined global variables you’re using. For example, Jest allows you to use global variables in your test files such as describe, it
+	 * or test. However, ESLint won’t know what these variables refer to if you haven’t explicitely told it. For that, set jest to true.
+	 */
+	"env": {
+		"browser": true,
+		"jest": true,
+		"es6": true
+	},
+	"parser": "babel-eslint",
+	/**
+	 * ESLint allows you to specify the JavaScript language options you want to support. By default, ESLint expects ECMAScript 5 syntax. You can override that
+	 * setting to enable support for other ECMAScript versions as well as JSX by using parser options.
+	 */
+	"parserOptions": {
+		"ecmaVersion": 6,
+		"sourceType": "module",
+		"project": "./tsconfig.json",
+		"ecmaFeatures": {
+			"jsx": true
+		}
+	},
+	/**
+	 * Basically, plugins are a set of ESLint rules related to a same subject. As an example, eslint-plugin-react contains many rules related to React.
+	 * Caution: you have to install the plugin as a dev dependency if you want your rules to work properly.
+	 */
+	"plugins": [
+		/*
+		 * npm install --save-dev eslint-plugin-import
+		 * https://www.npmjs.com/package/eslint-plugin-import
+		 */
+		"import",
+		/*
+		 * npm install --save-dev eslint-config-prettier eslint-plugin-prettier
+		 * https://www.npmjs.com/package/eslint-config-prettier
+		 * https://www.npmjs.com/package/eslint-plugin-prettier
+		 */
+		"prettier"
+	],
+	/**
+	 * Allows you to extend your configuration file from others configurations. A popular one is react-app provided by Create React App. That’s also in extends
+	 * that you can use popular style guides such as the one of Airbnb, Google or Standard.
+	 */
+	"extends": [
+		/**
+		 * npm install --save-dev eslint-config-airbnb
+		 * https://www.npmjs.com/package/eslint-config-airbnb
+		 */
+		"react-app",
+		"airbnb",
+		"airbnb/hooks",
+		"plugin:@typescript-eslint/recommended",
+		"plugin:import/typescript",
+		"eslint:recommended"
+	],
+	/**
+	 * Allows you custom absolute import
+	 * https://medium.com/hackernoon/absolute-imports-with-create-react-app-4c6cfb66c35d
+	 */
+	"settings": {},
+	"rules": {
+		/**
+		 * 0: off
+		 * 1: warning
+		 * 2: error
+		 */
+		"no-console": 1,
+		"no-eval": 2,
+		"no-var": 2,
+		"no-new-func": 2,
+		"no-new-object": 2,
+		"no-array-constructor": 2,
+		"no-param-reassign": 2,
+		"no-iterator": 2,
+		"no-restricted-syntax": 2,
+		"no-multi-assign": 2,
+		"no-nested-ternary": 2,
+		"no-unneeded-ternary": 2,
+		"no-mixed-operators": 2,
+		"no-else-return": 2,
+		"no-multiple-empty-lines": 2,
+		"no-trailing-spaces": 2,
+		"no-new-wrappers": 2,
+		"no-restricted-globals": 2,
+		"no-underscore-dangle": 2,
+		"no-shadow": 0,
+		"nonblock-statement-body-position": 2,
+		"new-cap": 2,
+		"arrow-spacing": 2,
+		"arrow-parens": 0,
+		"array-bracket-spacing": 2,
+		"block-spacing": 2,
+		"comma-spacing": 2,
+		"comma-style": 2,
+		"comma-dangle": 2,
+		"camelcase": 2,
+		"dot-notation": 2,
+		"func-call-spacing": 2,
+		"generator-star-spacing": 2,
+		"keyword-spacing": 2,
+		"linebreak-style": 0,
+		"max-len": ["error", { "code": 80, "comments": 150 }],
+		"spaced-comment": 2,
+		"space-before-blocks": 2,
+		"space-infix-ops": 2,
+		"object-curly-spacing": 2,
+		"object-shorthand": 2,
+		"object-curly-newline": 0,
+		"operator-linebreak": 0,
+		"padded-blocks": 2,
+		"prefer-arrow-callback": 2,
+		"prefer-destructuring": 2,
+		"import/prefer-default-export": 0,
+		"prefer-template": "error",
+		"prefer-spread": "error",
+		"quote-props": 2,
+		"implicit-arrow-linebreak": 0,
+		"quotes": ["error", "single"],
+		"indent": ["error", 2, { "SwitchCase": 1 }],
+		"template-curly-spacing": ["error", "never"],
+		"import/order": 2,
+		"import/first": 2,
+		"import/export": 2,
+		"import/default": 2,
+		"import/named": 2,
+		"import/namespace": 2,
+		"import/newline-after-import": 2,
+		"import/no-duplicates": 2,
+		"import/no-unresolved": 2,
+		"import/no-self-import": 2,
+		"import/no-named-as-default": 2,
+		"import/no-webpack-loader-syntax": 2,
+		"react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".tsx", ".ts"] }],
+		"import/extensions": 0,
+		"react/button-has-type": 0,
+		"react/jsx-props-no-spreading": 0,
+		"react/jsx-one-expression-per-line": 0,
+		"react/state-in-constructor": 0,
+		"react/jsx-fragments": 0,
+		"react/forbid-prop-types": 0,
+		"react-hooks/rules-of-hooks": 0,
+		"react-hooks/exhaustive-deps": 0,
+		"jsx-a11y/control-has-associated-label": 0
+	}
+}
