@@ -1,4 +1,5 @@
 import { Tron } from "./tron"
+import { openInEditor } from "reactotron-react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { RootStore } from "../../models/root-store/root-store"
 import { onSnapshot } from "mobx-state-tree"
@@ -66,8 +67,10 @@ export class Reactotron {
    */
   constructor(config: ReactotronConfig = DEFAULT_REACTOTRON_CONFIG) {
     // merge the passed in config with some defaults
+    // grabs the ip address
     this.config = {
-      host: "localhost",
+      host: config.host,
+      port: config.port,
       useAsyncStorage: true,
       ...config,
       state: {
@@ -84,6 +87,7 @@ export class Reactotron {
    * @param rootStore The root store
    */
   setRootStore(rootStore: any, initialData: any) {
+    console.log(__DEV__, "Reactotron [setRootStore]")
     if (__DEV__) {
       rootStore = rootStore as RootStore // typescript hack
       this.rootStore = rootStore
@@ -110,12 +114,14 @@ export class Reactotron {
    * Configure reactotron based on the the config settings passed in, then connect if we need to.
    */
   async setup() {
+    console.log(__DEV__, "Reactotron [setup]", this.config)
     // only run this in dev... metro bundler will ignore this block: 🎉
     if (__DEV__) {
       // configure reactotron
       Tron.configure({
         name: this.config.name || require("../../../package.json").name,
         host: this.config.host,
+        port: this.config.port,
       })
 
       // hookup middleware
@@ -125,6 +131,7 @@ export class Reactotron {
         }
         Tron.useReactNative({
           asyncStorage: this.config.useAsyncStorage ? undefined : false,
+          devTools: false,
         })
       }
 
@@ -137,6 +144,8 @@ export class Reactotron {
           filter: (event) => RX.test(event.name) === false,
         }),
       )
+
+      //Tron.use(openInEditor())
 
       // connect to the app
       Tron.connect()

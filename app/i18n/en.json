@@ -3,13 +3,17 @@
     "send": "Send",
     "receive": "Receive",
     "deposit": "Deposit",
-    "withdraw": "Withdraw"
+    "withdraw": "Withdraw",
+    "transaction": "Transaction"
   },
   "navigation": {
     "wallet": "Wallet",
     "contact": "Contact",
     "history": "History",
     "profile": "You"
+  },
+  "wallet": {
+    "total-transactions": "Total transactions"
   },
   "errors": {
     "invalidEmail": "Invalid email address."

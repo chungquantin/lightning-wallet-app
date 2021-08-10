@@ -24,7 +24,7 @@ export const color = {
    * The screen background.
    */
   background: palette.black,
-		secondaryBackground: palette.offBlack,
+  secondaryBackground: palette.offBlack,
   /**
    * The main tinting color.
    */
@@ -41,6 +41,7 @@ export const color = {
    * The default color of text in many components.
    */
   text: palette.white,
+  secondaryText: palette.lightGray,
   /**
    * Secondary information.
    */

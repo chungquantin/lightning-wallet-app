@@ -1,4 +1,5 @@
 import { Platform } from "react-native"
+import { color } from "./color"
 
 /**
  * You can find a list of available fonts on both iOS and Android here:
@@ -28,4 +29,15 @@ export const typography = {
    * Lets get fancy with a monospace font!
    */
   code: Platform.select({ ios: "Courier", android: "monospace" }),
+}
+
+export const textStyle = {
+  header: {
+    fontSize: 20,
+    color: color.text,
+  },
+  subheader: {
+    fontSize: 14,
+    color: color.secondaryText,
+  },
 }

@@ -12,10 +12,13 @@ const Style: { [key: string]: ViewStyle | any } = {
     elevation: 0,
   },
   Container: {
-    backgroundColor: color.background,
-    borderTopColor: color.transparent,
+    backgroundColor: color.palette.tintBlack,
+    borderTopColor: color.palette.offGray,
+				shadowOffset: {
+					height: 0.5,
+			},
     elevation: 2,
-    //height: 100,
+    height: 100,
     position: "absolute",
     bottom: 0,
     right: 0,

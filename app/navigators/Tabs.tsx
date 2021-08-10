@@ -40,8 +40,10 @@ const TabItems = (
   component: React.FunctionComponent<any>
   layout: any
   buttonLayout: any
+  headerShown: boolean
 }>[] => [
   {
+    headerShown: false,
     key: "wallet-tab",
     name: "Wallet",
     component: WalletScreen,
@@ -63,6 +65,7 @@ const TabItems = (
     ),
   },
   {
+    headerShown: true,
     key: "contact-tab",
     name: "Contact",
     component: ContactScreen,
@@ -84,6 +87,7 @@ const TabItems = (
     ),
   },
   {
+    headerShown: false,
     key: "qr-code",
     name: "QR Code",
     component: WalletScreen,
@@ -91,6 +95,7 @@ const TabItems = (
     buttonLayout: (props) => <TabBarCustomButton {...props} />,
   },
   {
+    headerShown: true,
     key: "history-tab",
     name: "History",
     component: HistoryScreen,
@@ -112,6 +117,7 @@ const TabItems = (
     ),
   },
   {
+    headerShown: true,
     key: "profile-tab",
     name: "Profile",
     component: ProfileScreen,
@@ -138,7 +144,14 @@ export const Tabs = observer(function Tabs() {
   return (
     <Tab.Navigator
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
+        headerStyle: {
+          ...Style.Header,
+        },
+        headerTitleStyle: {
+          fontWeight: "bold",
+          color: color.text,
+        },
         tabBarStyle: {
           ...Style.Container,
         },
@@ -157,6 +170,7 @@ export const Tabs = observer(function Tabs() {
           name={tab.name}
           component={tab.component}
           options={{
+            headerShown: tab.headerShown,
             tabBarIcon: tab.layout,
             tabBarButton: tab.buttonLayout,
           }}
