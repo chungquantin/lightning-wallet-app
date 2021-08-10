@@ -7,7 +7,10 @@
 import React from "react"
 import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native"
 import { createStackNavigator } from "@react-navigation/stack"
-import { DashboardScreen } from "../screens"
+import { Tabs } from "./Tabs"
+import { ContactScreen } from "../screens"
+import Style from "./Tabs.style"
+import { color } from "../theme"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -22,7 +25,8 @@ import { DashboardScreen } from "../screens"
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  */
 export type NavigatorParamList = {
-		dashboard: undefined
+  Wallet: undefined
+  Contact: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -32,11 +36,19 @@ const AppStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
+        headerStyle: {
+          ...Style.Header,
+        },
+        headerTitleStyle: {
+          fontWeight: "bold",
+          color: color.text,
+        },
       }}
-      initialRouteName="dashboard"
+      initialRouteName="Wallet"
     >
-						<Stack.Screen name="dashboard" component={DashboardScreen} />
+      <Stack.Screen options={{ headerShown: false }} name="Wallet" component={Tabs} />
+      <Stack.Screen name="Contact" component={ContactScreen} />
     </Stack.Navigator>
   )
 }

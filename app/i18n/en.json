@@ -1,16 +1,22 @@
 {
   "common": {
     "send": "Send",
-				"receive": "Receive",
-				"deposit": "Deposit",
-				"withdraw": "Withdraw"
+    "receive": "Receive",
+    "deposit": "Deposit",
+    "withdraw": "Withdraw"
+  },
+  "navigation": {
+    "wallet": "Wallet",
+    "contact": "Contact",
+    "history": "History",
+    "profile": "You"
   },
   "errors": {
     "invalidEmail": "Invalid email address."
   },
-		"dashboard": {
-			"balance": "US Balance"
-		},
+  "dashboard": {
+    "balance": "US Balance"
+  },
   "storybook": {
     "placeholder": "Placeholder",
     "field": "Field"
