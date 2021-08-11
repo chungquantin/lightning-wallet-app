@@ -11,6 +11,7 @@ import { FlatList } from "react-native-gesture-handler"
 import { color } from "../../theme"
 import getSymbolFromCurrency from "currency-symbol-map"
 import { TxKeyPath } from "../../i18n"
+import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons"
 
 interface ButtonProps {
   onPressHandler: (event: GestureResponderEvent) => void
@@ -55,25 +56,33 @@ export const WalletScreen = observer(function WalletScreen() {
       <Screen preset="fixed">
         <View style={Style.TopContainer}>
           <View style={Style.TopContainerStart}>
-            <Text tx="wallet.balance" />
-            <Text>USD</Text>
+            <Text tx="wallet.balance" style={Style.TopContainerText} />
+            <Text style={Style.TopContainerText}>USD</Text>
           </View>
           <View style={Style.TopContainerCenter}>
-            <Text>{getSymbolFromCurrency("USD")}18,000.00</Text>
-            <Text>+12.00%</Text>
+            <Text style={Style.BalanceText}>{getSymbolFromCurrency("USD")}18,000.00</Text>
+            <Text style={Style.BalanceRate}>+12.00%</Text>
           </View>
           <View style={Style.TopContainerEnd}>
             <CustomButton onPressHandler={handler.Send} tx="common.send">
-              <Text>Hello World</Text>
+              <FontAwesome5 name="donate" color={color.palette.offWhite} size={20} />
             </CustomButton>
             <CustomButton onPressHandler={handler.Receive} tx="common.receive">
-              <Text>Hello World</Text>
+              <FontAwesome5 name="hand-holding-usd" color={color.palette.offWhite} size={20} />
             </CustomButton>
             <CustomButton onPressHandler={handler.Deposit} tx="common.deposit">
-              <Text>Hello World</Text>
+              <MaterialCommunityIcons
+                name="bank-transfer-out"
+                color={color.palette.offWhite}
+                size={30}
+              />
             </CustomButton>
             <CustomButton onPressHandler={handler.Withdraw} tx="common.withdraw">
-              <Text>Hello World</Text>
+              <MaterialCommunityIcons
+                name="bank-transfer-in"
+                color={color.palette.offWhite}
+                size={30}
+              />
             </CustomButton>
           </View>
         </View>
@@ -91,6 +100,7 @@ export const WalletScreen = observer(function WalletScreen() {
                 style={
                   index === transaction.length - 1 && {
                     borderBottomColor: color.transparent,
+                    marginBottom: 30,
                   }
                 }
               />

@@ -29,21 +29,38 @@ const Style = StyleSheet.create({
   },
   TopContainer: {
     display: "flex",
-    height: height / 3,
+    height: height / 4,
   },
   TopContainerStart: {
-    flex: 1,
+    flex: 0,
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: width / 13,
     marginTop: height / 80,
   },
+  BalanceText: {
+    fontSize: 40,
+    fontFamily: textStyle.secondaryFontBold,
+    fontWeight: "bold",
+  },
+  BalanceRate: {
+    marginTop: 18,
+    fontSize: textStyle.largeSize,
+    fontFamily: textStyle.secondaryFont,
+    color: color.palette.green,
+  },
+  TopContainerText: {
+    color: color.palette.lightGray,
+  },
   TopContainerCenter: {
-    flex: 1,
+    alignItems: "center",
+    justifyContent: "space-between",
+    flex: 3,
+    paddingHorizontal: width / 13,
     flexDirection: "row",
   },
   TopContainerEnd: {
-    flex: 6,
+    flex: 2,
     flexDirection: "row",
     justifyContent: "space-evenly",
   },

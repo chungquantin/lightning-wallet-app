@@ -3,13 +3,12 @@ import { observer } from "mobx-react-lite"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { ContactScreen, HistoryScreen, ProfileScreen, WalletScreen } from "../screens"
 import Style from "./Tabs.style"
-import IonIcon from "react-native-vector-icons/Ionicons"
-import ADIcon from "react-native-vector-icons/AntDesign"
 import { color } from "../theme"
 import { View } from "react-native"
 import { Text } from "../components"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { LinearGradient } from "expo-linear-gradient"
+import { Ionicons } from "@expo/vector-icons"
 
 const Tab = createBottomTabNavigator()
 
@@ -49,7 +48,7 @@ const TabItems = (
     component: WalletScreen,
     layout: ({ focused }) => (
       <View style={Style.TabItemsView}>
-        <IonIcon
+        <Ionicons
           name="wallet-outline"
           color={focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor}
           size={props.iconStyle.size}
@@ -71,8 +70,8 @@ const TabItems = (
     component: ContactScreen,
     layout: ({ focused }) => (
       <View style={Style.TabItemsView}>
-        <ADIcon
-          name="contacts"
+        <Ionicons
+          name="ios-globe"
           color={focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor}
           size={props.iconStyle.size}
         />
@@ -91,7 +90,7 @@ const TabItems = (
     key: "qr-code",
     name: "QR Code",
     component: WalletScreen,
-    layout: () => <ADIcon name="scan1" color={color.palette.offWhite} size={25} />,
+    layout: () => <Ionicons name="scan-outline" color={color.palette.offWhite} size={25} />,
     buttonLayout: (props) => <TabBarCustomButton {...props} />,
   },
   {
@@ -101,7 +100,7 @@ const TabItems = (
     component: HistoryScreen,
     layout: ({ focused }) => (
       <View style={Style.TabItemsView}>
-        <IonIcon
+        <Ionicons
           name="ios-stats-chart"
           color={focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor}
           size={props.iconStyle.size}
@@ -123,7 +122,7 @@ const TabItems = (
     component: ProfileScreen,
     layout: ({ focused }) => (
       <View style={Style.TabItemsView}>
-        <IonIcon
+        <Ionicons
           name="person-outline"
           color={focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor}
           size={props.iconStyle.size}

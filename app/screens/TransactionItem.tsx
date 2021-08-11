@@ -19,8 +19,8 @@ const Style = StyleSheet.create({
   Container: {
     paddingHorizontal: width / 13,
     backgroundColor: color.transparent,
-    marginTop: 15,
-    paddingBottom: 15,
+    marginTop: height / 55,
+    paddingBottom: height / 55,
     flex: 1,
     flexDirection: "row",
     borderBottomColor: color.borderLight,
