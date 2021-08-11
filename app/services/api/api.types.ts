@@ -1,5 +1,5 @@
 import { GeneralApiProblem } from "./api-problem"
-import { Transaction } from "../../models/character/Transaction"
+import { Transaction } from "../../models/transaction/Transaction"
 
 export interface User {
   id: number

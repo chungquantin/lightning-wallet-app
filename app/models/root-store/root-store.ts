@@ -1,5 +1,5 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
-import { TransactionStoreModel } from "../character-store/transaction-store"
+import { TransactionStoreModel } from "../transaction-store/transaction-store"
 
 /**
  * A RootStore model.

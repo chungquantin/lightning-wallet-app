@@ -6,6 +6,9 @@
     "withdraw": "Withdraw",
     "transaction": "Transaction"
   },
+  "time": {
+    "date": "Date"
+  },
   "navigation": {
     "wallet": "Wallet",
     "contact": "Contact",
@@ -13,13 +16,11 @@
     "profile": "You"
   },
   "wallet": {
+    "balance": "Balance",
     "total-transactions": "Total transactions"
   },
   "errors": {
     "invalidEmail": "Invalid email address."
-  },
-  "dashboard": {
-    "balance": "US Balance"
   },
   "storybook": {
     "placeholder": "Placeholder",

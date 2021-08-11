@@ -87,7 +87,6 @@ export class Reactotron {
    * @param rootStore The root store
    */
   setRootStore(rootStore: any, initialData: any) {
-    console.log(__DEV__, "Reactotron [setRootStore]")
     if (__DEV__) {
       rootStore = rootStore as RootStore // typescript hack
       this.rootStore = rootStore
@@ -114,7 +113,6 @@ export class Reactotron {
    * Configure reactotron based on the the config settings passed in, then connect if we need to.
    */
   async setup() {
-    console.log(__DEV__, "Reactotron [setup]", this.config)
     // only run this in dev... metro bundler will ignore this block: 🎉
     if (__DEV__) {
       // configure reactotron

@@ -32,12 +32,20 @@ export const typography = {
 }
 
 export const textStyle = {
+  primaryFont: "Poppins-Regular",
+  secondaryFont: "Inter-Regular",
+  secondaryFontBold: "Inter-SemiBold",
   header: {
     fontSize: 20,
     color: color.text,
+    fontFamily: "Poppins-Regular",
   },
   subheader: {
     fontSize: 14,
     color: color.secondaryText,
+    fontFamily: "Poppins-Regular",
   },
+  largeSize: 18,
+  normalSize: 14,
+  smallSize: 12,
 }

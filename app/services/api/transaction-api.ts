@@ -2,7 +2,9 @@
 import { Api } from "./api"
 import { GetTransactionsResult } from "./api.types"
 //import { getGeneralApiProblem } from "./api-problem"
-import { Transaction } from "../../models/character/Transaction"
+import { Transaction } from "../../models/transaction/Transaction"
+import moment from "moment"
+import { getUnixMinLater, getUnixNow } from "../../utils/date"
 
 //const API_PAGE_SIZE = 50
 
@@ -21,21 +23,35 @@ export class TransactionApi {
       //  { amount: API_PAGE_SIZE },
       //)
 
-      const mockTransaction: Transaction = {
-        id: "1",
-        amount: 100,
-        currency: "USD",
-        description: "Hello World",
-        type: "IN",
-        from: "cqtin0903@gmail.com",
-        to: "tin@neutronpay.com",
-        status: "pending",
-      }
-
-      const response = {
+      const response: { ok: string; problem: any; data: Transaction[] } = {
         ok: "ok",
         problem: null,
-        data: [mockTransaction],
+        data: [
+          {
+            id: "1",
+            amount: 100,
+            currency: "USD",
+            description: "Hello World",
+            type: "IN",
+            from: "cqtin0903@gmail.com",
+            to: "tin@neutronpay.com",
+            status: "PENDING",
+            createdAt: getUnixNow(),
+            expiredAt: getUnixMinLater(15),
+          },
+          {
+            id: "2",
+            amount: 200,
+            currency: "USD",
+            description: "Hello World",
+            type: "OUT",
+            from: "cqtin0903@gmail.com",
+            to: "tin@neutronpay.com",
+            status: "PENDING",
+            createdAt: getUnixNow(),
+            expiredAt: getUnixMinLater(15),
+          },
+        ],
       }
 
       // the typical ways to die when calling an api

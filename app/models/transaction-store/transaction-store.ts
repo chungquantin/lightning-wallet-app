@@ -1,11 +1,8 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
-import { TransactionModel, TransactionSnapshot } from "../character/Transaction"
+import { TransactionModel, TransactionSnapshot } from "../transaction/Transaction"
 import { TransactionApi } from "../../services/api/transaction-api"
 import { withEnvironment } from "../extensions/with-environment"
 
-/**
- * Example store containing Rick and Morty characters
- */
 export const TransactionStoreModel = types
   .model("TransactionStore")
   .props({
@@ -18,7 +15,7 @@ export const TransactionStoreModel = types
     },
   }))
   .actions((self) => ({
-    getCharacters: async () => {
+    fetchTransactions: async () => {
       const transactionApi = new TransactionApi(self.environment.api)
       const result = await transactionApi.getTransactions()
 

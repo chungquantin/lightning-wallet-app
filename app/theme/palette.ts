@@ -8,6 +8,7 @@ export const palette = {
   offGray: "#62737F",
   gray: "#828282",
   lightGray: "#9CB3BF",
+  tintGray: "#E4E4E415",
 
   white: "#ffffff",
   offWhite: "#e6e6e6",
