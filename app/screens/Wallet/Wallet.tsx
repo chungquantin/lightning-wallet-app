@@ -5,7 +5,7 @@ import { Button, Screen, Text } from "../../components"
 import Style from "./Wallet.style"
 import { useStores } from "../../models"
 import { onSnapshot } from "mobx-state-tree"
-import { useFocusEffect } from "@react-navigation/native"
+import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import { TransactionItem } from "../TransactionItem"
 import { FlatList } from "react-native-gesture-handler"
 import { color } from "../../theme"
@@ -33,6 +33,7 @@ const CustomButton = ({ onPressHandler, tx, children }: ButtonProps) => {
 export const WalletScreen = observer(function WalletScreen() {
   const { transactionStore } = useStores()
   const transaction = transactionStore.transactions
+  const navigator = useNavigation()
 
   onSnapshot(transactionStore.transactions, (snapshot) => {
     transaction.replace(snapshot)
@@ -45,10 +46,10 @@ export const WalletScreen = observer(function WalletScreen() {
   )
 
   const handler = {
-    Send: () => {},
-    Receive: () => {},
-    Withdraw: () => {},
-    Deposit: () => {},
+    Send: () => navigator.navigate("Send"),
+    Receive: () => navigator.navigate("Receive"),
+    Withdraw: () => navigator.navigate("Withdraw"),
+    Deposit: () => navigator.navigate("Deposit"),
   }
 
   return (

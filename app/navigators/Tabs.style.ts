@@ -14,9 +14,9 @@ const Style: { [key: string]: ViewStyle | any } = {
   Container: {
     backgroundColor: color.palette.tintBlack,
     borderTopColor: color.palette.offGray,
-				shadowOffset: {
-					height: 0.5,
-			},
+    shadowOffset: {
+      height: 0.5,
+    },
     elevation: 2,
     height: 100,
     position: "absolute",

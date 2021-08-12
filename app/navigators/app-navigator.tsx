@@ -8,9 +8,9 @@ import React from "react"
 import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native"
 import { createStackNavigator } from "@react-navigation/stack"
 import { Tabs } from "./Tabs"
-import { ContactScreen } from "../screens"
 import Style from "./Tabs.style"
-import { color } from "../theme"
+import { color, textStyle } from "../theme"
+import { DepositScreen, ReceiveScreen, SendScreen, WithdrawScreen } from "../screens"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -26,29 +26,46 @@ import { color } from "../theme"
  */
 export type NavigatorParamList = {
   Wallet: undefined
-  Contact: undefined
+  Send: undefined
+  Receive: undefined
+  Withdraw: undefined
+  Deposit: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createStackNavigator<NavigatorParamList>()
 
+const screenOptions = {
+  headerShown: true,
+  headerStyle: {
+    ...Style.Header,
+  },
+  headerTitleStyle: {
+    fontWeight: "bold",
+    color: color.text,
+  },
+}
+
 const AppStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: true,
-        headerStyle: {
-          ...Style.Header,
+        ...screenOptions,
+        headerBackTitleStyle: {
+          fontSize: textStyle.normalSize,
+          color: color.primary,
         },
-        headerTitleStyle: {
-          fontWeight: "bold",
-          color: color.text,
-        },
+        headerTintColor: color.primary,
       }}
       initialRouteName="Wallet"
     >
       <Stack.Screen options={{ headerShown: false }} name="Wallet" component={Tabs} />
-      <Stack.Screen name="Contact" component={ContactScreen} />
+      <>
+        <Stack.Screen name="Send" component={SendScreen} />
+        <Stack.Screen name="Receive" component={ReceiveScreen} />
+        <Stack.Screen name="Withdraw" component={WithdrawScreen} />
+        <Stack.Screen name="Deposit" component={DepositScreen} />
+      </>
     </Stack.Navigator>
   )
 }
