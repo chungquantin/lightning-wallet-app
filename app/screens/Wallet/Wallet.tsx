@@ -5,7 +5,7 @@ import { Button, Screen, Text } from "../../components"
 import Style from "./Wallet.style"
 import { useStores } from "../../models"
 import { onSnapshot } from "mobx-state-tree"
-import { useFocusEffect, useNavigation } from "@react-navigation/native"
+import { useIsFocused, useNavigation } from "@react-navigation/native"
 import { TransactionItem } from "../TransactionItem"
 import { FlatList } from "react-native-gesture-handler"
 import { color } from "../../theme"
@@ -31,19 +31,32 @@ const CustomButton = ({ onPressHandler, tx, children }: ButtonProps) => {
 }
 
 export const WalletScreen = observer(function WalletScreen() {
-  const { transactionStore } = useStores()
+  const { transactionStore, userStore } = useStores()
+  const isFocused = useIsFocused()
   const transaction = transactionStore.transactions
+  const mockBalance = React.useMemo(() => {
+    let totalBalance = 0
+    transactionStore.transactions.filter((transaction) => {
+      if (transaction.type === "IN") {
+        totalBalance += transaction.amount
+      } else {
+        totalBalance -= transaction.amount
+      }
+    })
+    return totalBalance
+  }, [transaction])
+
+  const currentUser = userStore.user
   const navigator = useNavigation()
 
   onSnapshot(transactionStore.transactions, (snapshot) => {
     transaction.replace(snapshot)
   })
 
-  useFocusEffect(
-    React.useCallback(() => {
-      transactionStore.fetchTransactions()
-    }, []),
-  )
+  React.useEffect(() => {
+    transactionStore.fetchTransactions()
+    userStore.fetchUser("1")
+  }, [isFocused])
 
   const handler = {
     Send: () => navigator.navigate("Send"),
@@ -58,10 +71,13 @@ export const WalletScreen = observer(function WalletScreen() {
         <View style={Style.TopContainer}>
           <View style={Style.TopContainerStart}>
             <Text tx="wallet.balance" style={Style.TopContainerText} />
-            <Text style={Style.TopContainerText}>USD</Text>
+            <Text style={Style.TopContainerText}>{currentUser.defaultCurrency}</Text>
           </View>
           <View style={Style.TopContainerCenter}>
-            <Text style={Style.BalanceText}>{getSymbolFromCurrency("USD")}18,000.00</Text>
+            <Text style={Style.BalanceText}>
+              {getSymbolFromCurrency(currentUser.defaultCurrency)}
+              {mockBalance}
+            </Text>
             <Text style={Style.BalanceRate}>+12.00%</Text>
           </View>
           <View style={Style.TopContainerEnd}>

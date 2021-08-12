@@ -4,6 +4,7 @@ export const palette = {
   darkPurple: "#770E5F",
   black: "#171826",
   offBlack: "#27283E",
+  offBlackShade: "#27283E4D",
   tintBlack: "#282A3F",
   offGray: "#62737F",
   gray: "#828282",

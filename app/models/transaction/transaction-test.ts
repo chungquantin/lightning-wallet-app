@@ -1,4 +1,4 @@
-import { TransactionModel } from "./Transaction"
+import { TransactionModel } from "./transaction"
 
 test("can be created", () => {
   const instance = TransactionModel.create({
@@ -9,7 +9,7 @@ test("can be created", () => {
     type: "IN",
     from: "cqtin0903@gmail.com",
     to: "tin@neutronpay.com",
-    status: "pending",
+    status: "PENDING",
   })
 
   expect(instance).toBeTruthy()

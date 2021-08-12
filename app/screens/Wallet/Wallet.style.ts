@@ -16,7 +16,7 @@ const Style = StyleSheet.create({
     width: "100%",
     borderTopRightRadius: 40,
     borderTopLeftRadius: 40,
-    paddingTop: 35,
+    paddingTop: 20,
   },
   BottomSubheader: {
     ...textStyle.subheader,

@@ -25,6 +25,7 @@ export const color = {
    */
   background: palette.black,
   secondaryBackground: palette.offBlack,
+		secondaryBackgroundShade: palette.offBlackShade,
   /**
    * The main tinting color.
    */

@@ -3,7 +3,6 @@ import { Api } from "./api"
 import { GetTransactionsResult } from "./api.types"
 //import { getGeneralApiProblem } from "./api-problem"
 import { Transaction } from "../../models/transaction/Transaction"
-import moment from "moment"
 import { getUnixMinLater, getUnixNow } from "../../utils/date"
 
 //const API_PAGE_SIZE = 50

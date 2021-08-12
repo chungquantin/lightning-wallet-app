@@ -9,6 +9,7 @@ import { Text } from "../components"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { LinearGradient } from "expo-linear-gradient"
 import { Ionicons } from "@expo/vector-icons"
+import { useStores } from "../models"
 
 const Tab = createBottomTabNavigator()
 
@@ -140,6 +141,10 @@ const TabItems = (
 ]
 
 export const Tabs = observer(function Tabs() {
+  const { userStore } = useStores()
+  React.useEffect(() => {
+    userStore.fetchUser("1")
+  }, [])
   return (
     <Tab.Navigator
       screenOptions={{

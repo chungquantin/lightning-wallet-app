@@ -1,10 +1,6 @@
 import { GeneralApiProblem } from "./api-problem"
-import { Transaction } from "../../models/transaction/Transaction"
-
-export interface User {
-  id: number
-  name: string
-}
+import { Transaction } from "../../models/transaction/transaction"
+import { User } from "../../models/user/user"
 
 export type GetUsersResult = { kind: "ok"; users: User[] } | GeneralApiProblem
 export type GetUserResult = { kind: "ok"; user: User } | GeneralApiProblem

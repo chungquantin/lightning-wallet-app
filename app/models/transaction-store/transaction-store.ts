@@ -1,5 +1,5 @@
-import { Instance, SnapshotOut, types } from "mobx-state-tree"
-import { TransactionModel, TransactionSnapshot } from "../transaction/Transaction"
+import { flow, Instance, SnapshotOut, types } from "mobx-state-tree"
+import { TransactionModel, TransactionSnapshot } from "../transaction/transaction"
 import { TransactionApi } from "../../services/api/transaction-api"
 import { withEnvironment } from "../extensions/with-environment"
 
@@ -15,16 +15,16 @@ export const TransactionStoreModel = types
     },
   }))
   .actions((self) => ({
-    fetchTransactions: async () => {
+    fetchTransactions: flow(function* (){
       const transactionApi = new TransactionApi(self.environment.api)
-      const result = await transactionApi.getTransactions()
+      const result = yield transactionApi.getTransactions()
 
       if (result.kind === "ok") {
         self.saveTransactions(result.transactions)
       } else {
         __DEV__ && console.tron.log(result.kind)
       }
-    },
+    }),
   }))
 
 type TransactionStoreType = Instance<typeof TransactionStoreModel>

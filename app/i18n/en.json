@@ -4,7 +4,23 @@
     "receive": "Receive",
     "deposit": "Deposit",
     "withdraw": "Withdraw",
-    "transaction": "Transaction"
+    "transaction": "Transaction",
+    "lightning": {
+      "description": "Low fee, instant transfer"
+    },
+    "onchain": {
+      "description": "High fee, flexible amount"
+    },
+    "form": {
+      "from": {
+        "label": "From",
+        "placeholder": "Search for user"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Enter your description"
+      }
+    }
   },
   "time": {
     "date": "Date"
