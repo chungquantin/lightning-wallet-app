@@ -55,6 +55,9 @@ const AppStack = () => {
           fontSize: textStyle.normalSize,
           color: color.primary,
         },
+        cardStyle: {
+          backgroundColor: color.background,
+        },
         headerTintColor: color.primary,
       }}
       initialRouteName="Wallet"

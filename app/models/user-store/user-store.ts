@@ -7,11 +7,15 @@ export const UserStoreModel = types
   .model("UserStore")
   .props({
     user: types.optional(UserModel, {}),
+    contacts: types.optional(types.array(UserModel), []),
   })
   .extend(withEnvironment)
   .actions((self) => ({
     saveUser: (userSnapshot: UserSnapshot) => {
       self.user = userSnapshot
+    },
+    saveUserContacts: (userContactsSnapshot: UserSnapshot[]) => {
+      self.contacts.replace(userContactsSnapshot)
     },
   }))
   .actions((self) => ({
@@ -21,6 +25,16 @@ export const UserStoreModel = types
 
       if (result.kind === "ok") {
         self.saveUser(result.user)
+      } else {
+        __DEV__ && console.tron.log(result.kind)
+      }
+    }),
+    fetchUserContacts: flow(function* (id: string) {
+      const userApi = new UserApi(self.environment.api)
+      const result = yield userApi.getUserContacts(id)
+
+      if (result.kind === "ok") {
+        self.saveUserContacts(result.userContacts)
       } else {
         __DEV__ && console.tron.log(result.kind)
       }

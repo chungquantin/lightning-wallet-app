@@ -9,9 +9,9 @@ import { useIsFocused, useNavigation } from "@react-navigation/native"
 import { TransactionItem } from "../TransactionItem"
 import { FlatList } from "react-native-gesture-handler"
 import { color } from "../../theme"
-import getSymbolFromCurrency from "currency-symbol-map"
 import { TxKeyPath } from "../../i18n"
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons"
+import { formatByUnit } from "../../utils/currency"
 
 interface ButtonProps {
   onPressHandler: (event: GestureResponderEvent) => void
@@ -75,8 +75,7 @@ export const WalletScreen = observer(function WalletScreen() {
           </View>
           <View style={Style.TopContainerCenter}>
             <Text style={Style.BalanceText}>
-              {getSymbolFromCurrency(currentUser.defaultCurrency)}
-              {mockBalance}
+              {formatByUnit(currentUser.balance + mockBalance, currentUser.defaultCurrency)}
             </Text>
             <Text style={Style.BalanceRate}>+12.00%</Text>
           </View>

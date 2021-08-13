@@ -8,19 +8,37 @@ import { FlatList, TextInput } from "react-native-gesture-handler"
 import I18n from "i18n-js"
 import { color } from "../../theme"
 import { ReceiveUserItem } from "./ReceiveUserItem"
+import { User } from "../../models/user/user"
+import { useIsFocused } from "@react-navigation/native"
+import { useStores } from "../../models"
 
 export const ReceiveScreen = observer(function ReceiveScreen() {
+  const [tab, switchTab] = React.useState<number>(0)
+  const { userStore } = useStores()
+  const isFocused = useIsFocused()
   const { formValues, handleSetFieldValue } = useFormValidation<{
     method: "LIGHTNING" | "ONCHAIN"
     user: string
     description: string
+    friendId: ""
+    requestId: ""
   }>({
     method: "LIGHTNING",
     user: "",
     description: "",
+    friendId: "",
+    requestId: "",
   })
 
-  const [tab, switchTab] = React.useState<number>(0)
+  const contactList: User[] = userStore.contacts
+
+  const handleSelectFriend = (id) => {
+    handleSetFieldValue("friendId", id)
+  }
+
+  React.useEffect(() => {
+    userStore.fetchUserContacts("1")
+  }, [isFocused])
 
   const RenderMethodContainer = () => (
     <View style={Style.MethodContainer}>
@@ -67,14 +85,10 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
       label: "Friends",
       component: (
         <FlatList
-          data={[
-            {
-              id: "123",
-              name: "Tin",
-              email: "cqtin0903@gmail.com",
-            },
-          ]}
-          renderItem={({ item }) => <ReceiveUserItem />}
+          data={contactList}
+          renderItem={({ item }) => (
+            <ReceiveUserItem user={item} onPressHandler={() => handleSelectFriend(item.id)} />
+          )}
           keyExtractor={(item) => item.id}
         />
       ),
@@ -95,6 +109,7 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
       <View style={Style.RequestTabContainer}>
         {tabLists.map((tabItem, index) => (
           <Button
+            key={index}
             style={{
               ...Style.RequestTabButton,
               ...(tab === index ? Style.RequestTabButtonActive : Style.RequestTabButtonInActive),

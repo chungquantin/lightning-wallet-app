@@ -22,12 +22,12 @@ enableScreens()
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
 //console.log = (...args) => {
-//	Tron.display({
-//			name: 'CONSOLE.LOG',
-//			important: true,
-//			value: args,
-//			preview: args.length ? JSON.stringify(args) : args[0]
-//	});
+//  Tron.display({
+//    name: "CONSOLE.LOG",
+//    important: true,
+//    value: args,
+//    preview: args.length ? JSON.stringify(args) : args[0],
+//  })
 //}
 
 /**
