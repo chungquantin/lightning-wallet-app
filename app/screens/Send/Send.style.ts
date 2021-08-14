@@ -9,33 +9,6 @@ const Style = StyleSheet.create({
     flex: 1,
     paddingTop: 10,
   },
-  MethodContainer: {
-    marginHorizontal: width / 13,
-  },
-  MethodButton: {
-    marginVertical: 5,
-    borderRadius: 12,
-    height: height / 11,
-    flexDirection: "row",
-    paddingHorizontal: 20,
-    justifyContent: "flex-start",
-  },
-  MethodActive: {
-    backgroundColor: color.secondaryBackground,
-    borderColor: color.borderLight,
-    borderWidth: 1,
-  },
-  MethodInactive: {
-    backgroundColor: color.secondaryBackgroundShade,
-  },
-  MethodHeader: {
-    fontSize: 18,
-  },
-  MethodSubheader: {
-    marginTop: 10,
-    color: color.palette.lightGray,
-  },
-  MethodIcon: { width: 35, height: 35, marginRight: 20 },
   InputContainer: {
     paddingHorizontal: width / 13,
     marginTop: 5,

@@ -12,32 +12,24 @@ import Style from "./Tabs.style"
 import { color, textStyle } from "../theme"
 import {
   DepositScreen,
-  ReceiveInAppUserScreen,
-  ReceiveScannerScreen,
+  ReceiveInAppRequestScreen,
+  ReceiveOutAppRequestScreen,
   ReceiveScreen,
+  SendInAppUserScreen,
+  SendOutAppRequestScreen,
   SendScreen,
   WithdrawScreen,
 } from "../screens"
 import i18n from "i18n-js"
 
-/**
- * This type allows TypeScript to know what routes are defined in this navigator
- * as well as what properties (if any) they might take when navigating to them.
- *
- * If no params are allowed, pass through `undefined`. Generally speaking, we
- * recommend using your MobX-State-Tree store(s) to keep application state
- * rather than passing state through navigation params.
- *
- * For more information, see this documentation:
- *   https://reactnavigation.org/docs/params/
- *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
- */
 export type NavigatorParamList = {
   Wallet: undefined
   Send: undefined
+  SendOutAppRequest: undefined
+  SendInAppRequest: undefined
   Receive: undefined
-  ReceiveScanner: undefined
-  ReceiveInAppUser: undefined
+  ReceiveOutAppRequest: undefined
+  ReceiveInAppRequest: undefined
   Withdraw: undefined
   Deposit: undefined
 }
@@ -74,22 +66,38 @@ const AppStack = () => {
     >
       <Stack.Screen options={{ headerShown: false }} name="Wallet" component={Tabs} />
       <>
-        <Stack.Screen name="Send" component={SendScreen} />
         <>
-          <Stack.Screen name="Receive" component={ReceiveScreen} />
+          <Stack.Screen name="Send" component={SendScreen} />
           <Stack.Screen
-            name="ReceiveScanner"
-            options={{
-              headerTitle: i18n.t("navigation.qrCode"),
-            }}
-            component={ReceiveScannerScreen}
-          />
-          <Stack.Screen
-            name="ReceiveInAppUser"
+            name="SendOutAppRequest"
             options={{
               headerTitle: i18n.t("navigation.request"),
             }}
-            component={ReceiveInAppUserScreen}
+            component={SendOutAppRequestScreen}
+          />
+          <Stack.Screen
+            name="SendInAppRequest"
+            options={{
+              headerTitle: i18n.t("navigation.request"),
+            }}
+            component={SendInAppUserScreen}
+          />
+        </>
+        <>
+          <Stack.Screen name="Receive" component={ReceiveScreen} />
+          <Stack.Screen
+            name="ReceiveOutAppRequest"
+            options={{
+              headerTitle: i18n.t("navigation.request"),
+            }}
+            component={ReceiveOutAppRequestScreen}
+          />
+          <Stack.Screen
+            name="ReceiveInAppRequest"
+            options={{
+              headerTitle: i18n.t("navigation.request"),
+            }}
+            component={ReceiveInAppRequestScreen}
           />
         </>
         <Stack.Screen name="Withdraw" component={WithdrawScreen} />
@@ -121,5 +129,5 @@ AppNavigator.displayName = "AppNavigator"
  *
  * `canExit` is used in ./app/app.tsx in the `useBackButtonHandler` hook.
  */
-const exitRoutes = ["dashboard"]
+const exitRoutes = ["Wallet"]
 export const canExit = (routeName: string) => exitRoutes.includes(routeName)

@@ -1,5 +1,5 @@
 import React from "react"
-import { Image, View } from "react-native"
+import { View } from "react-native"
 import { observer } from "mobx-react-lite"
 import { Button, Text } from "../../components"
 import Style from "./Send.style"
@@ -7,86 +7,59 @@ import useFormValidation from "../../hooks/useFormValidation"
 import { FlatList, TextInput } from "react-native-gesture-handler"
 import I18n from "i18n-js"
 import { color } from "../../theme"
-import { ReceiveUserItem } from "../UserItem"
+import { UserItem } from "../UserItem"
 import { User } from "../../models/user/user"
-import { useIsFocused } from "@react-navigation/native"
+import { useIsFocused, useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
 
 export const SendScreen = observer(function SendScreen() {
   const [tab, switchTab] = React.useState<number>(0)
   const { userStore } = useStores()
   const isFocused = useIsFocused()
+  const navigator = useNavigation()
   const { formValues, handleSetFieldValue } = useFormValidation<{
-    method: "LIGHTNING" | "ONCHAIN"
     user: string
     description: string
-    friendId: ""
-    requestId: ""
   }>({
-    method: "LIGHTNING",
     user: "",
     description: "",
-    friendId: "",
-    requestId: "",
   })
 
-  const contactList: User[] = userStore.contacts
+  const [contactList, setContactList] = React.useState<User[]>(userStore.contacts)
+
+  const handler = {
+    Send: () => navigator.navigate("SendSOutAppRequest"),
+    InAppRequest: ({ id }: Pick<User, "id">) => {
+      navigator.navigate("SendInAppRequest", {
+        userId: id,
+      })
+    },
+  }
 
   React.useEffect(() => {
     userStore.fetchUserContacts("1")
   }, [isFocused])
 
-  const RenderMethodContainer = () => (
-    <View style={Style.MethodContainer}>
-      <Button
-        style={{
-          ...Style.MethodButton,
-          ...(formValues.method === "LIGHTNING" ? Style.MethodActive : Style.MethodInactive),
-        }}
-        onPress={() => handleSetFieldValue("method", "LIGHTNING")}
-      >
-        <Image
-          source={require("../../../assets/images/icons/Bitcoin-Icon.png")}
-          style={Style.MethodIcon}
-        />
-        <View>
-          <Text style={Style.MethodHeader}>On-chain</Text>
-          <Text style={Style.MethodSubheader} tx="common.onchain.description" />
-        </View>
-      </Button>
-      <Button
-        style={{
-          ...Style.MethodButton,
-          ...(formValues.method === "ONCHAIN" ? Style.MethodActive : Style.MethodInactive),
-        }}
-        onPress={() => handleSetFieldValue("method", "ONCHAIN")}
-      >
-        <Image
-          source={require("../../../assets/images/icons/Lightning-Network-Icon.png")}
-          style={Style.MethodIcon}
-        />
-        <View>
-          <Text style={Style.MethodHeader}>Lightning</Text>
-          <Text style={Style.MethodSubheader} tx="common.lightning.description" />
-        </View>
-      </Button>
-    </View>
-  )
+  React.useEffect(() => {
+    if (formValues.user !== "") {
+      const filteredContactList = userStore.getContactsByNameAndEmail(formValues.user)
+      setContactList((list) => (list = filteredContactList))
+    } else {
+      setContactList(userStore.contacts)
+    }
+  }, [formValues.user])
 
-  const RenderTabComponent = ({
-    listData,
-    fieldName,
-  }: {
-    listData: User[]
-    fieldName: "friendId" | "requestId"
-  }) => (
+  const RenderTabComponent = ({ listData }: { listData: User[] }) => (
     <FlatList
       data={listData}
       renderItem={({ item }) => (
-        <ReceiveUserItem
+        <UserItem
           user={item}
-          onPressHandler={() => handleSetFieldValue(fieldName, item.id)}
-          isSelected={formValues[fieldName] === item.id.toString()}
+          onPressHandler={() =>
+            handler.InAppRequest({
+              id: item.id,
+            })
+          }
         />
       )}
       keyExtractor={(item) => item.id}
@@ -103,12 +76,12 @@ export const SendScreen = observer(function SendScreen() {
     component: JSX.Element
   }[] = [
     {
-      label: "Friends",
-      component: <RenderTabComponent fieldName="friendId" listData={contactList} />,
+      label: I18n.t("common.friends"),
+      component: <RenderTabComponent listData={contactList} />,
     },
     {
-      label: "Request",
-      component: <RenderTabComponent fieldName="requestId" listData={[]} />,
+      label: I18n.t("common.pay"),
+      component: <RenderTabComponent listData={[]} />,
     },
   ]
 
@@ -138,7 +111,6 @@ export const SendScreen = observer(function SendScreen() {
 
   return (
     <View testID="SendScreen" style={Style.Container}>
-      <RenderMethodContainer />
       <View style={Style.InputContainer}>
         <View style={Style.Input}>
           <Text tx="common.form.from.label" style={Style.InputLabel} />

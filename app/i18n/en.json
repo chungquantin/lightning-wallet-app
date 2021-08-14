@@ -6,6 +6,9 @@
     "deposit": "Deposit",
     "withdraw": "Withdraw",
     "transaction": "Transaction",
+    "friends": "Friends",
+    "request": "Request",
+    "pay": "Pay",
     "lightning": {
       "description": "Low fee, instant transfer"
     },

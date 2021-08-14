@@ -1,5 +1,11 @@
 const createExpoWebpackConfigAsync = require("@expo/webpack-config")
+const path = require("path")
 
+// This helper function is not strictly necessary.
+// I just don't like repeating the path.join a dozen times.
+function srcPath(subdir) {
+  return path.join(__dirname, "app", subdir)
+}
 // Expo CLI will await this method so you can optionally return a promise.
 module.exports = async function (env, argv) {
   const config = await createExpoWebpackConfigAsync(env, argv)

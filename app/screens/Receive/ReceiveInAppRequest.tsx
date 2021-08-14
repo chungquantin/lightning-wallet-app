@@ -2,7 +2,7 @@ import React from "react"
 import { View } from "react-native"
 import { observer } from "mobx-react-lite"
 import { Screen, Text } from "../../components"
-import Style from "./ReceiveInAppUser.style"
+import Style from "./ReceiveInAppRequest.style"
 import { ParamListBase, RouteProp, useRoute } from "@react-navigation/native"
 
 interface ReceiveInAppUserRouteProps extends ParamListBase {
@@ -11,12 +11,12 @@ interface ReceiveInAppUserRouteProps extends ParamListBase {
   }
 }
 
-export const ReceiveInAppUserScreen = observer(function ReceiveInAppUserScreen() {
+export const ReceiveInAppRequestScreen = observer(function ReceiveInAppRequestScreen() {
   const route = useRoute<RouteProp<ReceiveInAppUserRouteProps, "UserDetail">>()
   const { userId } = route.params
 
   return (
-    <View testID="ReceiveInAppUserScreen" style={Style.Container}>
+    <View testID="ReceiveInAppRequestScreen" style={Style.Container}>
       <Screen>
         <Text>User ID: {userId}</Text>
       </Screen>

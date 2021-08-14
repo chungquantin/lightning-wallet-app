@@ -7,7 +7,7 @@ import useFormValidation from "../../hooks/useFormValidation"
 import { FlatList, TextInput } from "react-native-gesture-handler"
 import I18n from "i18n-js"
 import { color } from "../../theme"
-import { ReceiveUserItem } from "../UserItem"
+import { UserItem } from "../UserItem"
 import { User } from "../../models/user/user"
 import { useIsFocused, useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
@@ -29,9 +29,9 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
   const [contactList, setContactList] = React.useState<User[]>(userStore.contacts)
 
   const handler = {
-    Receive: () => navigator.navigate("ReceiveScanner"),
+    OutAppRequest: () => navigator.navigate("ReceiveOutAppRequest"),
     InAppRequest: ({ id }: Pick<User, "id">) => {
-      navigator.navigate("ReceiveInAppUser", {
+      navigator.navigate("ReceiveInAppRequest", {
         userId: id,
       })
     },
@@ -57,7 +57,7 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
           ...Style.MethodButton,
           ...Style.MethodActive,
         }}
-        onPress={handler.Receive}
+        onPress={handler.OutAppRequest}
       >
         <View
           style={{
@@ -79,24 +79,17 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
     </View>
   )
 
-  const RenderTabComponent = ({
-    listData,
-    fieldName,
-  }: {
-    listData: User[]
-    fieldName: "friendId" | "requestId"
-  }) => (
+  const RenderTabComponent = ({ listData }: { listData: User[] }) => (
     <FlatList
       data={listData}
       renderItem={({ item }) => (
-        <ReceiveUserItem
+        <UserItem
           user={item}
           onPressHandler={() =>
             handler.InAppRequest({
               id: item.id,
             })
           }
-          isSelected={formValues[fieldName] === item.id.toString()}
         />
       )}
       keyExtractor={(item) => item.id}
@@ -113,12 +106,12 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
     component: JSX.Element
   }[] = [
     {
-      label: "Friends",
-      component: <RenderTabComponent fieldName="friendId" listData={contactList} />,
+      label: I18n.t("common.friends"),
+      component: <RenderTabComponent listData={contactList} />,
     },
     {
-      label: "Request",
-      component: <RenderTabComponent fieldName="requestId" listData={[]} />,
+      label: I18n.t("common.request"),
+      component: <RenderTabComponent listData={[]} />,
     },
   ]
 
