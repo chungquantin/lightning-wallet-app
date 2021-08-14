@@ -18,6 +18,16 @@ export const UserStoreModel = types
       self.contacts.replace(userContactsSnapshot)
     },
   }))
+  .views((self) => ({
+    getContactsByNameAndEmail: (text: string) =>
+      self.contacts.filter((contact) => {
+        const fullName = `${contact.firstName} ${contact.lastName}`
+        return (
+          fullName.toLowerCase().includes(text.toLowerCase()) ||
+          contact.email.toLowerCase().includes(text)
+        )
+      }),
+  }))
   .actions((self) => ({
     fetchUser: flow(function* (id: string) {
       const userApi = new UserApi(self.environment.api)

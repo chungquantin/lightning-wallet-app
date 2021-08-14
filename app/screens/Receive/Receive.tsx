@@ -21,16 +21,12 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
   const { formValues, handleSetFieldValue } = useFormValidation<{
     user: string
     description: string
-    friendId: ""
-    requestId: ""
   }>({
     user: "",
     description: "",
-    friendId: "",
-    requestId: "",
   })
 
-  const contactList: User[] = userStore.contacts
+  const [contactList, setContactList] = React.useState<User[]>(userStore.contacts)
 
   const handler = {
     Receive: () => navigator.navigate("ReceiveScanner"),
@@ -44,6 +40,15 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
   React.useEffect(() => {
     userStore.fetchUserContacts("1")
   }, [isFocused])
+
+  React.useEffect(() => {
+    if (formValues.user !== "") {
+      const filteredContactList = userStore.getContactsByNameAndEmail(formValues.user)
+      setContactList((list) => (list = filteredContactList))
+    } else {
+      setContactList(userStore.contacts)
+    }
+  }, [formValues.user])
 
   const RenderMethodContainer = () => (
     <View style={Style.MethodContainer}>
