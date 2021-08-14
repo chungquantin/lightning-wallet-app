@@ -32,10 +32,6 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
 
   const contactList: User[] = userStore.contacts
 
-  const handleSelectFriend = (id) => {
-    handleSetFieldValue("friendId", id)
-  }
-
   React.useEffect(() => {
     userStore.fetchUserContacts("1")
   }, [isFocused])
@@ -77,25 +73,42 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
     </View>
   )
 
+  const RenderTabComponent = ({
+    listData,
+    fieldName,
+  }: {
+    listData: User[]
+    fieldName: "friendId" | "requestId"
+  }) => (
+    <FlatList
+      data={listData}
+      renderItem={({ item }) => (
+        <ReceiveUserItem
+          user={item}
+          onPressHandler={() => handleSetFieldValue(fieldName, item.id)}
+          isSelected={formValues[fieldName] === item.id.toString()}
+        />
+      )}
+      keyExtractor={(item) => item.id}
+      ListEmptyComponent={() => (
+        <View style={Style.RequestEmptyContainer}>
+          <Text style={{ color: color.palette.offGray }} tx="common.contact.empty" />
+        </View>
+      )}
+    />
+  )
+
   const tabLists: {
     label: string
     component: JSX.Element
   }[] = [
     {
       label: "Friends",
-      component: (
-        <FlatList
-          data={contactList}
-          renderItem={({ item }) => (
-            <ReceiveUserItem user={item} onPressHandler={() => handleSelectFriend(item.id)} />
-          )}
-          keyExtractor={(item) => item.id}
-        />
-      ),
+      component: <RenderTabComponent fieldName="friendId" listData={contactList} />,
     },
     {
       label: "Request",
-      component: <></>,
+      component: <RenderTabComponent fieldName="requestId" listData={[]} />,
     },
   ]
 

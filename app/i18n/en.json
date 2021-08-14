@@ -11,6 +11,9 @@
     "onchain": {
       "description": "High fee, flexible amount"
     },
+    "contact": {
+      "empty": "There is no contact"
+    },
     "form": {
       "from": {
         "label": "From",

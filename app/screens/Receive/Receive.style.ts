@@ -53,12 +53,20 @@ const Style = StyleSheet.create({
     marginBottom: 10,
   },
   RequestContainer: {
+    borderColor: color.borderLight,
+    borderWidth: 1,
     backgroundColor: color.secondaryBackground,
     flex: 1,
     marginTop: 10,
     marginBottom: 30,
     borderRadius: 20,
     marginHorizontal: width / 13,
+  },
+  RequestEmptyContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    height: height / 3,
+    flex: 1,
   },
   RequestTabContainer: {
     flexDirection: "row",

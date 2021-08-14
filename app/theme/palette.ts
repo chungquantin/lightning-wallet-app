@@ -2,6 +2,7 @@ export const palette = {
   // NeutronPay color palette
   purple: "#B71392",
   darkPurple: "#770E5F",
+  darkBlack: "#181824",
   black: "#171826",
   offBlack: "#27283E",
   offBlackShade: "#27283E4D",
