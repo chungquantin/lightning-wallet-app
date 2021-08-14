@@ -15,7 +15,7 @@ import {
   ReceiveInAppRequestScreen,
   ReceiveOutAppRequestScreen,
   ReceiveScreen,
-  SendInAppUserScreen,
+  SendInAppRequestScreen,
   SendOutAppRequestScreen,
   SendScreen,
   WithdrawScreen,
@@ -80,7 +80,7 @@ const AppStack = () => {
             options={{
               headerTitle: i18n.t("navigation.request"),
             }}
-            component={SendInAppUserScreen}
+            component={SendInAppRequestScreen}
           />
         </>
         <>
