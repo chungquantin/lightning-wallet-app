@@ -5,4 +5,7 @@ export * from "./Profile/Profile"
 export * from "./Withdraw/Withdraw"
 export * from "./Deposit/Deposit"
 export * from "./Send/Send"
+// Receive
 export * from "./Receive/Receive"
+export * from "./Receive/ReceiveScanner"
+export * from "./Receive/ReceiveInAppUser"

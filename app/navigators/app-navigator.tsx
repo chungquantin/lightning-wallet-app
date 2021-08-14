@@ -10,7 +10,15 @@ import { createStackNavigator } from "@react-navigation/stack"
 import { Tabs } from "./Tabs"
 import Style from "./Tabs.style"
 import { color, textStyle } from "../theme"
-import { DepositScreen, ReceiveScreen, SendScreen, WithdrawScreen } from "../screens"
+import {
+  DepositScreen,
+  ReceiveInAppUserScreen,
+  ReceiveScannerScreen,
+  ReceiveScreen,
+  SendScreen,
+  WithdrawScreen,
+} from "../screens"
+import i18n from "i18n-js"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -28,6 +36,8 @@ export type NavigatorParamList = {
   Wallet: undefined
   Send: undefined
   Receive: undefined
+  ReceiveScanner: undefined
+  ReceiveInAppUser: undefined
   Withdraw: undefined
   Deposit: undefined
 }
@@ -65,7 +75,23 @@ const AppStack = () => {
       <Stack.Screen options={{ headerShown: false }} name="Wallet" component={Tabs} />
       <>
         <Stack.Screen name="Send" component={SendScreen} />
-        <Stack.Screen name="Receive" component={ReceiveScreen} />
+        <>
+          <Stack.Screen name="Receive" component={ReceiveScreen} />
+          <Stack.Screen
+            name="ReceiveScanner"
+            options={{
+              headerTitle: i18n.t("navigation.qrCode"),
+            }}
+            component={ReceiveScannerScreen}
+          />
+          <Stack.Screen
+            name="ReceiveInAppUser"
+            options={{
+              headerTitle: i18n.t("navigation.request"),
+            }}
+            component={ReceiveInAppUserScreen}
+          />
+        </>
         <Stack.Screen name="Withdraw" component={WithdrawScreen} />
         <Stack.Screen name="Deposit" component={DepositScreen} />
       </>

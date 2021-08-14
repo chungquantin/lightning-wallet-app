@@ -1,9 +1,9 @@
 import React from "react"
 import { observer } from "mobx-react-lite"
 import { Avatar, List } from "react-native-paper"
-import { color } from "../../theme"
-import { Style } from "./ReceiveUserItem.style"
-import { User } from "../../models/user/user"
+import { color } from "../theme"
+import { Style } from "./UserItem.style"
+import { User } from "../models/user/user"
 import { GestureResponderEvent, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 

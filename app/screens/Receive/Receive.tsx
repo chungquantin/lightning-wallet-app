@@ -1,5 +1,5 @@
 import React from "react"
-import { Image, View } from "react-native"
+import { View } from "react-native"
 import { observer } from "mobx-react-lite"
 import { Button, Text } from "../../components"
 import Style from "./Receive.style"
@@ -7,23 +7,23 @@ import useFormValidation from "../../hooks/useFormValidation"
 import { FlatList, TextInput } from "react-native-gesture-handler"
 import I18n from "i18n-js"
 import { color } from "../../theme"
-import { ReceiveUserItem } from "./ReceiveUserItem"
+import { ReceiveUserItem } from "../UserItem"
 import { User } from "../../models/user/user"
-import { useIsFocused } from "@react-navigation/native"
+import { useIsFocused, useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
+import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 export const ReceiveScreen = observer(function ReceiveScreen() {
   const [tab, switchTab] = React.useState<number>(0)
   const { userStore } = useStores()
   const isFocused = useIsFocused()
+  const navigator = useNavigation()
   const { formValues, handleSetFieldValue } = useFormValidation<{
-    method: "LIGHTNING" | "ONCHAIN"
     user: string
     description: string
     friendId: ""
     requestId: ""
   }>({
-    method: "LIGHTNING",
     user: "",
     description: "",
     friendId: "",
@@ -31,6 +31,15 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
   })
 
   const contactList: User[] = userStore.contacts
+
+  const handler = {
+    Receive: () => navigator.navigate("ReceiveScanner"),
+    InAppRequest: ({ id }: Pick<User, "id">) => {
+      navigator.navigate("ReceiveInAppUser", {
+        userId: id,
+      })
+    },
+  }
 
   React.useEffect(() => {
     userStore.fetchUserContacts("1")
@@ -41,33 +50,25 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
       <Button
         style={{
           ...Style.MethodButton,
-          ...(formValues.method === "LIGHTNING" ? Style.MethodActive : Style.MethodInactive),
+          ...Style.MethodActive,
         }}
-        onPress={() => handleSetFieldValue("method", "LIGHTNING")}
+        onPress={handler.Receive}
       >
-        <Image
-          source={require("../../../assets/images/icons/Bitcoin-Icon.png")}
-          style={Style.MethodIcon}
-        />
-        <View>
-          <Text style={Style.MethodHeader}>On-chain</Text>
-          <Text style={Style.MethodSubheader} tx="common.onchain.description" />
+        <View
+          style={{
+            marginRight: 20,
+            borderColor: color.text,
+            borderWidth: 1,
+            padding: 6,
+            borderRadius: 20,
+          }}
+        >
+          <MaterialCommunityIcons size={20} color={color.text} name="arrow-expand-down" />
         </View>
-      </Button>
-      <Button
-        style={{
-          ...Style.MethodButton,
-          ...(formValues.method === "ONCHAIN" ? Style.MethodActive : Style.MethodInactive),
-        }}
-        onPress={() => handleSetFieldValue("method", "ONCHAIN")}
-      >
-        <Image
-          source={require("../../../assets/images/icons/Lightning-Network-Icon.png")}
-          style={Style.MethodIcon}
-        />
+
         <View>
-          <Text style={Style.MethodHeader}>Lightning</Text>
-          <Text style={Style.MethodSubheader} tx="common.lightning.description" />
+          <Text style={Style.MethodHeader} tx="common.receive" />
+          <Text style={Style.MethodSubheader} tx="common.receive-description" />
         </View>
       </Button>
     </View>
@@ -85,7 +86,11 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
       renderItem={({ item }) => (
         <ReceiveUserItem
           user={item}
-          onPressHandler={() => handleSetFieldValue(fieldName, item.id)}
+          onPressHandler={() =>
+            handler.InAppRequest({
+              id: item.id,
+            })
+          }
           isSelected={formValues[fieldName] === item.id.toString()}
         />
       )}

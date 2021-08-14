@@ -35,7 +35,6 @@ const Style = StyleSheet.create({
     marginTop: 10,
     color: color.palette.lightGray,
   },
-  MethodIcon: { width: 35, height: 35, marginRight: 20 },
   InputContainer: {
     paddingHorizontal: width / 13,
     marginTop: 5,

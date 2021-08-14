@@ -2,6 +2,7 @@
   "common": {
     "send": "Send",
     "receive": "Receive",
+    "receive-description": "Show sender QR code",
     "deposit": "Deposit",
     "withdraw": "Withdraw",
     "transaction": "Transaction",
@@ -32,7 +33,9 @@
     "wallet": "Wallet",
     "contact": "Contact",
     "history": "History",
-    "profile": "You"
+    "profile": "You",
+    "request": "Request",
+    "qrCode": "QR Code"
   },
   "wallet": {
     "balance": "Balance",
