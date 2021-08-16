@@ -12,6 +12,7 @@ import { TxKeyPath } from "../../i18n"
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons"
 import { formatByUnit } from "../../utils/currency"
 import { SectionList } from "react-native"
+import { Transaction } from "../../models/transaction/transaction"
 
 interface ButtonProps {
   onPressHandler: (event: GestureResponderEvent) => void
@@ -64,6 +65,10 @@ export const WalletScreen = observer(function WalletScreen() {
     Receive: () => navigator.navigate("Receive"),
     Withdraw: () => navigator.navigate("Withdraw"),
     Deposit: () => navigator.navigate("Deposit"),
+    OpenTransactionDetail: (transaction: Transaction) =>
+      navigator.navigate("TransactionDetail", {
+        transaction,
+      }),
   }
 
   const RenderTopContainer = () => (
@@ -118,7 +123,12 @@ export const WalletScreen = observer(function WalletScreen() {
             <Text style={Style.BottomTransactionLabelText}>{year}</Text>
           </View>
         )}
-        renderItem={({ item }) => <TransactionItem transaction={item} />}
+        renderItem={({ item }) => (
+          <TransactionItem
+            transaction={item}
+            onPressHandler={() => handler.OpenTransactionDetail(item)}
+          />
+        )}
         keyExtractor={(item) => item.id}
       />
     </View>

@@ -28,8 +28,6 @@ export const ContactScreen = observer(function ContactScreen() {
     userStore.groupContactsByAlphabet,
   )
 
-  navigator.setOptions({ headerBackTitle: "Contact" })
-
   React.useEffect(() => {
     userStore.fetchUserContacts("1")
   }, [isFocused])
@@ -45,7 +43,7 @@ export const ContactScreen = observer(function ContactScreen() {
 
   const handler = {
     OpenUserDetail: (user: User) =>
-      navigator.navigate("ContactDetail", {
+      navigator.navigate("UserDetail", {
         user,
       }),
   }

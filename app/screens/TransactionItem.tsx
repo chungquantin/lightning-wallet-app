@@ -8,18 +8,21 @@ import { formatUnixDate } from "../utils/date"
 import getSymbolFromCurrency from "currency-symbol-map"
 import { TouchableRipple } from "react-native-paper"
 import { Style } from "./TransactionItem.style"
+import { GestureResponderEvent } from "react-native"
 
 interface Props {
   transaction: Partial<Transaction>
   style?: ViewStyle
+  onPressHandler?: (event: GestureResponderEvent) => void
 }
 
-export const TransactionItem = observer(function TransactionItem({ transaction, style }: Props) {
-  const handleItemPress = () => {
-    console.log(transaction.id)
-  }
+export const TransactionItem = observer(function TransactionItem({
+  transaction,
+  style,
+  onPressHandler,
+}: Props) {
   return (
-    <TouchableRipple onPress={handleItemPress}>
+    <TouchableRipple onPress={onPressHandler}>
       <View key={transaction.id} testID="TransactionItem" style={{ ...Style.Container, ...style }}>
         <View style={{ flex: 3 }}>
           <Text style={Style.Header}>{transaction.description}</Text>

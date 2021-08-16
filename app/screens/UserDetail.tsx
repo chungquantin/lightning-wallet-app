@@ -1,25 +1,25 @@
 import React from "react"
 import { View } from "react-native"
 import { observer } from "mobx-react-lite"
-import { Screen, Text } from "../../components"
-import Style from "./ContactDetail.style"
+import { Screen, Text } from "../components"
+import Style from "./UserDetail.style"
 import { ParamListBase, RouteProp, useNavigation, useRoute } from "@react-navigation/native"
-import { User } from "../../models/user/user"
+import { User } from "../models/user/user"
 
-interface ContactDetailScreen extends ParamListBase {
+interface UserDetailScreen extends ParamListBase {
   UserDetail: {
     user: User
   }
 }
 
-export const ContactDetailScreen = observer(function ContactDetailScreen() {
-  const route = useRoute<RouteProp<ContactDetailScreen, "UserDetail">>()
+export const UserDetailScreen = observer(function UserDetailScreen() {
+  const route = useRoute<RouteProp<UserDetailScreen, "UserDetail">>()
   const navigator = useNavigation()
   const { user } = route.params
   navigator.setOptions({ headerTitle: `${user.firstName} ${user.lastName}` })
 
   return (
-    <View testID="ContactDetailScreen" style={Style.Container}>
+    <View testID="UserDetailScreen" style={Style.Container}>
       <Screen>
         <Text>User ID: {user.id}</Text>
       </Screen>
