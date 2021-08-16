@@ -11,7 +11,7 @@ import { Style } from "./TransactionItem.style"
 
 interface Props {
   transaction: Partial<Transaction>
-  style: ViewStyle
+  style?: ViewStyle
 }
 
 export const TransactionItem = observer(function TransactionItem({ transaction, style }: Props) {

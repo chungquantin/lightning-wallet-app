@@ -27,9 +27,10 @@ const Style = StyleSheet.create({
     backgroundColor: color.secondaryBackground,
   },
   BottomTransactionLabelText: {
-    color: color.palette.lightGray,
-    fontSize: 17,
-    fontFamily: textStyle.secondaryFont,
+    color: color.palette.offGray,
+    fontWeight: "bold",
+    fontSize: 15,
+    fontFamily: textStyle.secondaryFontBold,
   },
   BottomSubheader: {
     ...textStyle.subheader,

@@ -1,5 +1,5 @@
 import { flow, Instance, SnapshotOut, types } from "mobx-state-tree"
-import { TransactionModel, TransactionSnapshot } from "../transaction/transaction"
+import { Transaction, TransactionModel, TransactionSnapshot } from "../transaction/transaction"
 import { TransactionApi } from "../../services/api/transaction-api"
 import { withEnvironment } from "../extensions/with-environment"
 import _ from "underscore"
@@ -12,7 +12,9 @@ export const TransactionStoreModel = types
   })
   .extend(withEnvironment)
   .views((self) => ({
-    groupTransactionByMonthAndYear: () => {
+    get groupTransactionByMonthAndYear(): {
+      [key: string]: Transaction[]
+    } {
       const transactionGroupedByAllMonth = _.groupBy(self.transactions, (item) => {
         return `${getMonthFromUnix(item.createdAt) + 1}-${getYearFromUnix(item.createdAt)}`
       })

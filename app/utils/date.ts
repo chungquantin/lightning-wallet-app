@@ -1,6 +1,19 @@
 import moment from "moment"
 export const formatUnixDate = (unix) => moment.unix(unix).format("DD MMM, YYYY")
-
+export const monthList = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+]
 export const getUnixNow = () => moment().unix()
 export const getUnixMinLater = (time: number) =>
   moment()

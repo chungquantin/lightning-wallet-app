@@ -7,12 +7,13 @@ import { useStores } from "../../models"
 import { onSnapshot } from "mobx-state-tree"
 import { useIsFocused, useNavigation } from "@react-navigation/native"
 import { TransactionItem } from "../TransactionItem"
-import { FlatList } from "react-native-gesture-handler"
 import { color } from "../../theme"
 import { TxKeyPath } from "../../i18n"
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons"
 import { formatByUnit } from "../../utils/currency"
 import { SectionList } from "react-native"
+import { monthList } from "../../utils/date"
+import { Transaction } from "../../models/transaction/transaction"
 
 interface ButtonProps {
   onPressHandler: (event: GestureResponderEvent) => void
@@ -35,6 +36,7 @@ export const WalletScreen = observer(function WalletScreen() {
   const { transactionStore, userStore } = useStores()
   const isFocused = useIsFocused()
   const transaction = transactionStore.transactions
+  const groupedTransactions = transactionStore.groupTransactionByMonthAndYear
   const mockBalance = React.useMemo(() => {
     let totalBalance = 0
     transactionStore.transactions.filter((transaction) => {
@@ -103,13 +105,17 @@ export const WalletScreen = observer(function WalletScreen() {
     </View>
   )
 
-  const transactionList = [
-    {
-      month: "August",
-      year: "2021",
-      data: transaction,
-    },
-  ]
+  const transactionList: {
+    month: string
+    year: string
+    data: Transaction[]
+  }[] = Object.keys(groupedTransactions).map((transactionKey, index) => {
+    return {
+      month: monthList[Number(transactionKey.split("-")[0]) - 1],
+      year: transactionKey.split("-")[1],
+      data: groupedTransactions[transactionKey],
+    }
+  })
 
   const RenderTransactionsContainer = () => (
     <View style={Style.BottomContainer}>
@@ -126,17 +132,7 @@ export const WalletScreen = observer(function WalletScreen() {
             <Text style={Style.BottomTransactionLabelText}>{year}</Text>
           </View>
         )}
-        renderItem={({ item, index }) => (
-          <TransactionItem
-            transaction={item}
-            style={
-              index === transaction.length - 1 && {
-                borderBottomColor: color.transparent,
-                marginBottom: 30,
-              }
-            }
-          />
-        )}
+        renderItem={({ item }) => <TransactionItem transaction={item} />}
         keyExtractor={(item) => item.id}
       />
     </View>
