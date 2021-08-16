@@ -42,6 +42,7 @@ const TabItems = (
   buttonLayout: any
   headerShown: boolean
 }>[] => [
+  // First button - Wallet
   {
     headerShown: false,
     key: "wallet-tab",
@@ -64,6 +65,7 @@ const TabItems = (
       </View>
     ),
   },
+  // Second button - Contact
   {
     headerShown: true,
     key: "contact-tab",
@@ -86,6 +88,7 @@ const TabItems = (
       </View>
     ),
   },
+  // Center Button
   {
     headerShown: false,
     key: "qr-code",
@@ -94,6 +97,7 @@ const TabItems = (
     layout: () => <Ionicons name="scan-outline" color={color.palette.offWhite} size={25} />,
     buttonLayout: (props) => <TabBarCustomButton {...props} />,
   },
+  // Fourth Button - History
   {
     headerShown: true,
     key: "history-tab",
@@ -116,6 +120,7 @@ const TabItems = (
       </View>
     ),
   },
+  // Fifth Button - Profile
   {
     headerShown: true,
     key: "profile-tab",

@@ -12,6 +12,7 @@ import { color } from "../../theme"
 import { TxKeyPath } from "../../i18n"
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons"
 import { formatByUnit } from "../../utils/currency"
+import { SectionList } from "react-native"
 
 interface ButtonProps {
   onPressHandler: (event: GestureResponderEvent) => void
@@ -65,65 +66,87 @@ export const WalletScreen = observer(function WalletScreen() {
     Deposit: () => navigator.navigate("Deposit"),
   }
 
+  const RenderTopContainer = () => (
+    <View style={Style.TopContainer}>
+      <View style={Style.TopContainerStart}>
+        <Text tx="wallet.balance" style={Style.TopContainerText} />
+        <Text style={Style.TopContainerText}>{currentUser.defaultCurrency}</Text>
+      </View>
+      <View style={Style.TopContainerCenter}>
+        <Text style={Style.BalanceText}>
+          {formatByUnit(currentUser.balance + mockBalance, currentUser.defaultCurrency)}
+        </Text>
+        <Text style={Style.BalanceRate}>+12.00%</Text>
+      </View>
+      <View style={Style.TopContainerEnd}>
+        <CustomButton onPressHandler={handler.Send} tx="common.send">
+          <FontAwesome5 name="donate" color={color.palette.offWhite} size={20} />
+        </CustomButton>
+        <CustomButton onPressHandler={handler.Receive} tx="common.receive">
+          <FontAwesome5 name="hand-holding-usd" color={color.palette.offWhite} size={20} />
+        </CustomButton>
+        <CustomButton onPressHandler={handler.Deposit} tx="common.deposit">
+          <MaterialCommunityIcons
+            name="bank-transfer-out"
+            color={color.palette.offWhite}
+            size={30}
+          />
+        </CustomButton>
+        <CustomButton onPressHandler={handler.Withdraw} tx="common.withdraw">
+          <MaterialCommunityIcons
+            name="bank-transfer-in"
+            color={color.palette.offWhite}
+            size={30}
+          />
+        </CustomButton>
+      </View>
+    </View>
+  )
+
+  const transactionList = [
+    {
+      month: "August",
+      year: "2021",
+      data: transaction,
+    },
+  ]
+
+  const RenderTransactionsContainer = () => (
+    <View style={Style.BottomContainer}>
+      <Text tx="common.transaction" style={Style.BottomHeader} />
+      <Text style={{ marginBottom: 20 }}>
+        <Text style={Style.BottomSubheader} tx="wallet.total-transactions" />
+        <Text style={Style.BottomSubheader}>: {transaction.length}</Text>
+      </Text>
+      <SectionList
+        sections={transactionList}
+        renderSectionHeader={({ section: { month, year } }) => (
+          <View style={Style.BottomTransactionLabelContainer}>
+            <Text style={Style.BottomTransactionLabelText}>{month}</Text>
+            <Text style={Style.BottomTransactionLabelText}>{year}</Text>
+          </View>
+        )}
+        renderItem={({ item, index }) => (
+          <TransactionItem
+            transaction={item}
+            style={
+              index === transaction.length - 1 && {
+                borderBottomColor: color.transparent,
+                marginBottom: 30,
+              }
+            }
+          />
+        )}
+        keyExtractor={(item) => item.id}
+      />
+    </View>
+  )
+
   return (
     <View testID="WalletScreen" style={Style.Container}>
       <Screen preset="fixed">
-        <View style={Style.TopContainer}>
-          <View style={Style.TopContainerStart}>
-            <Text tx="wallet.balance" style={Style.TopContainerText} />
-            <Text style={Style.TopContainerText}>{currentUser.defaultCurrency}</Text>
-          </View>
-          <View style={Style.TopContainerCenter}>
-            <Text style={Style.BalanceText}>
-              {formatByUnit(currentUser.balance + mockBalance, currentUser.defaultCurrency)}
-            </Text>
-            <Text style={Style.BalanceRate}>+12.00%</Text>
-          </View>
-          <View style={Style.TopContainerEnd}>
-            <CustomButton onPressHandler={handler.Send} tx="common.send">
-              <FontAwesome5 name="donate" color={color.palette.offWhite} size={20} />
-            </CustomButton>
-            <CustomButton onPressHandler={handler.Receive} tx="common.receive">
-              <FontAwesome5 name="hand-holding-usd" color={color.palette.offWhite} size={20} />
-            </CustomButton>
-            <CustomButton onPressHandler={handler.Deposit} tx="common.deposit">
-              <MaterialCommunityIcons
-                name="bank-transfer-out"
-                color={color.palette.offWhite}
-                size={30}
-              />
-            </CustomButton>
-            <CustomButton onPressHandler={handler.Withdraw} tx="common.withdraw">
-              <MaterialCommunityIcons
-                name="bank-transfer-in"
-                color={color.palette.offWhite}
-                size={30}
-              />
-            </CustomButton>
-          </View>
-        </View>
-        <View style={Style.BottomContainer}>
-          <Text tx="common.transaction" style={Style.BottomHeader} />
-          <Text style={{ marginBottom: 20 }}>
-            <Text style={Style.BottomSubheader} tx="wallet.total-transactions" />
-            <Text style={Style.BottomSubheader}>: {transaction.length}</Text>
-          </Text>
-          <FlatList
-            data={transaction}
-            renderItem={({ item, index }) => (
-              <TransactionItem
-                transaction={item}
-                style={
-                  index === transaction.length - 1 && {
-                    borderBottomColor: color.transparent,
-                    marginBottom: 30,
-                  }
-                }
-              />
-            )}
-            keyExtractor={(item) => item.id}
-          />
-        </View>
+        <RenderTopContainer />
+        <RenderTransactionsContainer />
       </Screen>
     </View>
   )

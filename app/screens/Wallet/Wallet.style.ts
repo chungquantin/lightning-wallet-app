@@ -18,6 +18,19 @@ const Style = StyleSheet.create({
     borderTopLeftRadius: 40,
     paddingTop: 20,
   },
+  BottomTransactionLabelContainer: {
+    flexDirection: "row",
+    flex: 1,
+    paddingHorizontal: width / 16,
+    paddingVertical: 15,
+    justifyContent: "space-between",
+    backgroundColor: color.secondaryBackground,
+  },
+  BottomTransactionLabelText: {
+    color: color.palette.lightGray,
+    fontSize: 17,
+    fontFamily: textStyle.secondaryFont,
+  },
   BottomSubheader: {
     ...textStyle.subheader,
     textAlign: "center",

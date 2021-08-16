@@ -57,6 +57,17 @@ const Style = StyleSheet.create({
   RequestTabButtonInActive: {
     backgroundColor: color.palette.darkPurple,
   },
+  ScanButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    //shadow
+  },
+  ScanButtonInner: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    marginVertical: 10,
+  },
 })
 
 export default Style

@@ -3,7 +3,7 @@ import { Api } from "./api"
 import { GetTransactionsResult } from "./api.types"
 //import { getGeneralApiProblem } from "./api-problem"
 import { Transaction } from "../../models/transaction/Transaction"
-import { getUnixMinLater, getUnixNow } from "../../utils/date"
+import { getUnixMinLater, getUnixMonthAgo, getUnixNow } from "../../utils/date"
 
 //const API_PAGE_SIZE = 50
 
@@ -47,7 +47,7 @@ export class TransactionApi {
             from: "cqtin0903@gmail.com",
             to: "tin@neutronpay.com",
             status: "PENDING",
-            createdAt: getUnixNow(),
+            createdAt: getUnixMonthAgo(1),
             expiredAt: getUnixMinLater(15),
           },
           {
@@ -59,7 +59,7 @@ export class TransactionApi {
             from: "cqtin0903@gmail.com",
             to: "tin@neutronpay.com",
             status: "PENDING",
-            createdAt: getUnixNow(),
+            createdAt: getUnixMonthAgo(2),
             expiredAt: getUnixMinLater(15),
           },
           {
@@ -95,7 +95,7 @@ export class TransactionApi {
             from: "cqtin0903@gmail.com",
             to: "tin@neutronpay.com",
             status: "PENDING",
-            createdAt: getUnixNow(),
+            createdAt: getUnixMonthAgo(3),
             expiredAt: getUnixMinLater(15),
           },
         ],

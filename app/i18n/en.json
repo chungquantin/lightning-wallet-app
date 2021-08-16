@@ -19,6 +19,10 @@
       "empty": "There is no contact"
     },
     "form": {
+      "to": {
+        "label": "To",
+        "placeholder": "Search for user"
+      },
       "from": {
         "label": "From",
         "placeholder": "Search for user"
@@ -38,7 +42,8 @@
     "history": "History",
     "profile": "You",
     "request": "Request",
-    "qrCode": "QR Code"
+    "sendToFriend": "Send to Friend",
+    "scanQrCode": "Scan QR Code"
   },
   "wallet": {
     "balance": "Balance",

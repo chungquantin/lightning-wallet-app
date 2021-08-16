@@ -4,13 +4,15 @@ import { observer } from "mobx-react-lite"
 import { Button, Text } from "../../components"
 import Style from "./Send.style"
 import useFormValidation from "../../hooks/useFormValidation"
-import { FlatList, TextInput } from "react-native-gesture-handler"
+import { FlatList, TextInput, TouchableOpacity } from "react-native-gesture-handler"
 import I18n from "i18n-js"
 import { color } from "../../theme"
 import { UserItem } from "../UserItem"
 import { User } from "../../models/user/user"
 import { useIsFocused, useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
+import { LinearGradient } from "expo-linear-gradient"
+import { Ionicons } from "@expo/vector-icons"
 
 export const SendScreen = observer(function SendScreen() {
   const [tab, switchTab] = React.useState<number>(0)
@@ -28,7 +30,7 @@ export const SendScreen = observer(function SendScreen() {
   const [contactList, setContactList] = React.useState<User[]>(userStore.contacts)
 
   const handler = {
-    Send: () => navigator.navigate("SendSOutAppRequest"),
+    OutAppRequest: () => navigator.navigate("SendOutAppRequest"),
     InAppRequest: ({ id }: Pick<User, "id">) => {
       navigator.navigate("SendInAppRequest", {
         userId: id,
@@ -111,9 +113,19 @@ export const SendScreen = observer(function SendScreen() {
 
   return (
     <View testID="SendScreen" style={Style.Container}>
+      <View>
+        <TouchableOpacity style={Style.ScanButton} onPress={handler.OutAppRequest}>
+          <LinearGradient
+            colors={[color.palette.purple, color.palette.darkPurple]}
+            style={Style.ScanButtonInner}
+          >
+            <Ionicons name="scan-outline" color={color.palette.offWhite} size={25} />
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
       <View style={Style.InputContainer}>
         <View style={Style.Input}>
-          <Text tx="common.form.from.label" style={Style.InputLabel} />
+          <Text tx="common.form.to.label" style={Style.InputLabel} />
           <TextInput
             style={Style.InputField}
             placeholderTextColor={color.palette.offGray}

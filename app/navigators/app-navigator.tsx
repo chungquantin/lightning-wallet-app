@@ -71,14 +71,14 @@ const AppStack = () => {
           <Stack.Screen
             name="SendOutAppRequest"
             options={{
-              headerTitle: i18n.t("navigation.request"),
+              headerTitle: i18n.t("navigation.scanQrCode"),
             }}
             component={SendOutAppRequestScreen}
           />
           <Stack.Screen
             name="SendInAppRequest"
             options={{
-              headerTitle: i18n.t("navigation.request"),
+              headerTitle: i18n.t("navigation.sendToFriend"),
             }}
             component={SendInAppRequestScreen}
           />
