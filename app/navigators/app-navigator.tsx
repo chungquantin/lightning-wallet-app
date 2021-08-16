@@ -21,6 +21,7 @@ import {
   WithdrawScreen,
 } from "../screens"
 import i18n from "i18n-js"
+import { ContactDetailScreen } from "../screens/Contact/ContactDetail"
 
 export type NavigatorParamList = {
   Wallet: undefined
@@ -32,6 +33,7 @@ export type NavigatorParamList = {
   ReceiveInAppRequest: undefined
   Withdraw: undefined
   Deposit: undefined
+  ContactDetail: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -102,6 +104,13 @@ const AppStack = () => {
         </>
         <Stack.Screen name="Withdraw" component={WithdrawScreen} />
         <Stack.Screen name="Deposit" component={DepositScreen} />
+        <Stack.Screen
+          name="ContactDetail"
+          options={{
+            headerBackTitle: "Contact",
+          }}
+          component={ContactDetailScreen}
+        />
       </>
     </Stack.Navigator>
   )

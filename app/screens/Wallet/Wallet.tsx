@@ -12,8 +12,6 @@ import { TxKeyPath } from "../../i18n"
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons"
 import { formatByUnit } from "../../utils/currency"
 import { SectionList } from "react-native"
-import { monthList } from "../../utils/date"
-import { Transaction } from "../../models/transaction/transaction"
 
 interface ButtonProps {
   onPressHandler: (event: GestureResponderEvent) => void
@@ -36,7 +34,7 @@ export const WalletScreen = observer(function WalletScreen() {
   const { transactionStore, userStore } = useStores()
   const isFocused = useIsFocused()
   const transaction = transactionStore.transactions
-  const groupedTransactions = transactionStore.groupTransactionByMonthAndYear
+  const transactionList = transactionStore.groupTransactionByMonthAndYear
   const mockBalance = React.useMemo(() => {
     let totalBalance = 0
     transactionStore.transactions.filter((transaction) => {
@@ -104,18 +102,6 @@ export const WalletScreen = observer(function WalletScreen() {
       </View>
     </View>
   )
-
-  const transactionList: {
-    month: string
-    year: string
-    data: Transaction[]
-  }[] = Object.keys(groupedTransactions).map((transactionKey, index) => {
-    return {
-      month: monthList[Number(transactionKey.split("-")[0]) - 1],
-      year: transactionKey.split("-")[1],
-      data: groupedTransactions[transactionKey],
-    }
-  })
 
   const RenderTransactionsContainer = () => (
     <View style={Style.BottomContainer}>

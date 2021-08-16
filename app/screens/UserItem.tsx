@@ -10,15 +10,17 @@ import { TouchableOpacity } from "react-native-gesture-handler"
 interface Props {
   user: User
   onPressHandler: (event: GestureResponderEvent) => void
+		style?: any
 }
 
-export const UserItem = observer(function UserItem({ user, onPressHandler }: Props) {
+export const UserItem = observer(function UserItem({ user, onPressHandler, style }: Props) {
   return (
     <TouchableOpacity onPress={onPressHandler}>
       <List.Item
         key={user.id}
         style={{
           ...Style.Container,
+										...style,
           backgroundColor: color.transparent,
         }}
         background={color.transparent}

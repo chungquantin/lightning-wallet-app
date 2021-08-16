@@ -32,7 +32,7 @@ const Style: { [key: string]: ViewStyle | any } = {
     marginTop: 5,
   },
   TabBarCustomButton: {
-    top: -30,
+    top: -15,
     justifyContent: "center",
     alignItems: "center",
     //shadow

@@ -3,7 +3,7 @@ import { Transaction, TransactionModel, TransactionSnapshot } from "../transacti
 import { TransactionApi } from "../../services/api/transaction-api"
 import { withEnvironment } from "../extensions/with-environment"
 import _ from "underscore"
-import { getMonthFromUnix, getYearFromUnix } from "../../utils/date"
+import { getMonthFromUnix, getYearFromUnix, monthList } from "../../utils/date"
 
 export const TransactionStoreModel = types
   .model("TransactionStore")
@@ -13,12 +13,25 @@ export const TransactionStoreModel = types
   .extend(withEnvironment)
   .views((self) => ({
     get groupTransactionByMonthAndYear(): {
-      [key: string]: Transaction[]
-    } {
+      month: string
+      year: string
+      data: Transaction[]
+    }[] {
       const transactionGroupedByAllMonth = _.groupBy(self.transactions, (item) => {
         return `${getMonthFromUnix(item.createdAt) + 1}-${getYearFromUnix(item.createdAt)}`
       })
-      return transactionGroupedByAllMonth
+      const transactionList: {
+        month: string
+        year: string
+        data: Transaction[]
+      }[] = Object.keys(transactionGroupedByAllMonth).map((transactionKey) => {
+        return {
+          month: monthList[Number(transactionKey.split("-")[0]) - 1],
+          year: transactionKey.split("-")[1],
+          data: transactionGroupedByAllMonth[transactionKey],
+        }
+      })
+      return transactionList
     },
   }))
   .actions((self) => ({

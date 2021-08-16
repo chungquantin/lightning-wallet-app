@@ -1,7 +1,8 @@
 import { flow, Instance, SnapshotOut, types } from "mobx-state-tree"
 import { withEnvironment } from "../extensions/with-environment"
-import { UserModel, UserSnapshot } from "../user/user"
+import { User, UserModel, UserSnapshot } from "../user/user"
 import { UserApi } from "../../services/api/user-api"
+import _ from "underscore"
 
 export const UserStoreModel = types
   .model("UserStore")
@@ -27,6 +28,44 @@ export const UserStoreModel = types
           contact.email.toLowerCase().includes(text)
         )
       }),
+    getGroupedContactListByNameAndEmail: (text: string) => {
+      const contactList = self.contacts.filter((contact) => {
+        const fullName = `${contact.firstName} ${contact.lastName}`
+        return (
+          fullName.toLowerCase().includes(text.toLowerCase()) ||
+          contact.email.toLowerCase().includes(text)
+        )
+      })
+      const contactsGroupByAlphabet = _.groupBy(contactList, (item: User) => {
+        return item.firstName[0].toUpperCase()
+      })
+      return Object.keys(contactsGroupByAlphabet).map((alphabet) => {
+        return {
+          letter: alphabet,
+          count: contactsGroupByAlphabet[alphabet].length,
+          data: contactsGroupByAlphabet[alphabet],
+        }
+      })
+    },
+    get groupContactsByAlphabet(): {
+      letter: string
+      data: User[]
+    }[] {
+      const contactsGroupByAlphabet = _.groupBy(self.contacts, (item: User) => {
+        return item.firstName[0].toUpperCase()
+      })
+      const contactList: {
+        letter: string
+        data: User[]
+      }[] = Object.keys(contactsGroupByAlphabet).map((alphabet) => {
+        return {
+          letter: alphabet,
+          count: contactsGroupByAlphabet[alphabet].length,
+          data: contactsGroupByAlphabet[alphabet],
+        }
+      })
+      return contactList
+    },
   }))
   .actions((self) => ({
     fetchUser: flow(function* (id: string) {
