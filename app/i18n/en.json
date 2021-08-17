@@ -9,6 +9,9 @@
     "friends": "Friends",
     "request": "Request",
     "pay": "Pay",
+    "next": "Next",
+    "done": "Done",
+    "confirm": "Confirm",
     "lightning": {
       "description": "Low fee, instant transfer"
     },
@@ -42,8 +45,12 @@
     "history": "History",
     "profile": "You",
     "request": "Request",
+    "transaction": "Transaction",
     "sendToFriend": "Send to Friend",
-    "scanQrCode": "Scan QR Code"
+    "scanQrCode": "Scan QR Code",
+    "confirmSend": "Confirm Send",
+    "paymentComplete": "Payment Complete",
+    "back": "Back"
   },
   "wallet": {
     "balance": "Balance",

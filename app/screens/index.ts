@@ -15,4 +15,6 @@ export * from "./Receive/ReceiveOutAppRequest"
 export * from "./Contact/Contact"
 // Reusable Screens
 export * from "./TransactionDetail"
+export * from "./TransactionComplete"
+export * from "./TransactionConfirm"
 export * from "./UserDetail"

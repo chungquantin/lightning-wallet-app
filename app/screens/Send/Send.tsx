@@ -31,9 +31,9 @@ export const SendScreen = observer(function SendScreen() {
 
   const handler = {
     OutAppRequest: () => navigator.navigate("SendOutAppRequest"),
-    InAppRequest: ({ id }: Pick<User, "id">) => {
+    InAppRequest: (user: User) => {
       navigator.navigate("SendInAppRequest", {
-        userId: id,
+        user,
       })
     },
   }
@@ -55,14 +55,7 @@ export const SendScreen = observer(function SendScreen() {
     <FlatList
       data={listData}
       renderItem={({ item }) => (
-        <UserItem
-          user={item}
-          onPressHandler={() =>
-            handler.InAppRequest({
-              id: item.id,
-            })
-          }
-        />
+        <UserItem user={item} onPressHandler={() => handler.InAppRequest(item)} />
       )}
       keyExtractor={(item) => item.id}
       ListEmptyComponent={() => (
