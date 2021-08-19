@@ -42,6 +42,8 @@ export type NavigatorParamList = {
   TransactionComplete: undefined
 }
 
+export type NavigatorParamEnum = keyof NavigatorParamList
+
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createStackNavigator<NavigatorParamList>()
 

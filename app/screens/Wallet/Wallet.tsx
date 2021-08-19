@@ -5,7 +5,7 @@ import { Button, Screen, Text } from "../../components"
 import Style from "./Wallet.style"
 import { useStores } from "../../models"
 import { onSnapshot } from "mobx-state-tree"
-import { useIsFocused, useNavigation } from "@react-navigation/native"
+import { useIsFocused } from "@react-navigation/native"
 import { TransactionItem } from "../TransactionItem"
 import { color } from "../../theme"
 import { TxKeyPath } from "../../i18n"
@@ -13,6 +13,7 @@ import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons"
 import { formatByUnit } from "../../utils/currency"
 import { SectionList } from "react-native"
 import { Transaction } from "../../models/transaction/transaction"
+import useCustomNavigation from "../../hooks/useCustomNavigation"
 
 interface ButtonProps {
   onPressHandler: (event: GestureResponderEvent) => void
@@ -20,7 +21,7 @@ interface ButtonProps {
   children: JSX.Element
 }
 
-const CustomButton = ({ onPressHandler, tx, children }: ButtonProps) => {
+const CustomButton = ({ onPressHandler, tx, children }: Partial<ButtonProps>) => {
   return (
     <View style={Style.ButtonContainer}>
       <Button onPress={onPressHandler} style={Style.Button}>
@@ -49,10 +50,10 @@ export const WalletScreen = observer(function WalletScreen() {
   }, [transaction])
 
   const currentUser = userStore.user
-  const navigator = useNavigation()
+  const navigator = useCustomNavigation()
 
   onSnapshot(transactionStore.transactions, (snapshot) => {
-    transaction.replace(snapshot)
+    transactionStore.fetchTransactions()
   })
 
   React.useEffect(() => {
@@ -66,7 +67,9 @@ export const WalletScreen = observer(function WalletScreen() {
     Withdraw: () => navigator.navigate("Withdraw"),
     Deposit: () => navigator.navigate("Deposit"),
     OpenTransactionDetail: (transaction: Transaction) =>
-      navigator.navigate("TransactionDetail", {
+      navigator.navigate<{
+        transaction: Transaction
+      }>("TransactionDetail", {
         transaction,
       }),
   }

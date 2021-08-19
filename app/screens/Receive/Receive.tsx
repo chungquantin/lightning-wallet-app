@@ -9,15 +9,16 @@ import I18n from "i18n-js"
 import { color } from "../../theme"
 import { UserItem } from "../UserItem"
 import { User } from "../../models/user/user"
-import { useIsFocused, useNavigation } from "@react-navigation/native"
+import { useIsFocused } from "@react-navigation/native"
 import { useStores } from "../../models"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
+import useCustomNavigation from "../../hooks/useCustomNavigation"
 
 export const ReceiveScreen = observer(function ReceiveScreen() {
   const [tab, switchTab] = React.useState<number>(0)
   const { userStore } = useStores()
   const isFocused = useIsFocused()
-  const navigator = useNavigation()
+  const navigator = useCustomNavigation()
   const { formValues, handleSetFieldValue } = useFormValidation<{
     user: string
     description: string
