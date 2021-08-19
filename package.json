@@ -28,6 +28,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@apollo/client": "^3.4.8",
     "@expo/webpack-config": "^0.12.71",
     "@react-native-async-storage/async-storage": "^1.14.1",
     "@react-native-community/masked-view": "0.1.10",
@@ -43,6 +44,7 @@
     "expo-linear-gradient": "~8.4.0",
     "expo-localization": "9.1.0",
     "expo-status-bar": "~1.0.4",
+    "graphql": "^15.5.1",
     "i18n-js": "3.8.0",
     "mobx": "6.1.8",
     "mobx-react-lite": "3.2.0",

@@ -14,21 +14,21 @@ import {
 } from "./navigators"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models"
 import { ToggleStorybook } from "../storybook/toggle-storybook"
-
+import tronLog from "./utils/tron-log"
 import { enableScreens } from "react-native-screens"
-//import { Tron } from "./services/reactotron/tron"
+import { AppRegistry } from "react-native"
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client"
+
 enableScreens()
+console.log = tronLog(false)
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
-//console.log = (...args) => {
-//  Tron.display({
-//    name: "CONSOLE.LOG",
-//    important: true,
-//    value: args,
-//    preview: args.length ? JSON.stringify(args) : args[0],
-//  })
-//}
+// Initialize Apollo Client
+const client = new ApolloClient({
+  uri: "localhost:4000/graphql",
+  cache: new InMemoryCache(),
+})
 
 /**
  * This is the root component of our app.
@@ -44,34 +44,32 @@ function App() {
     NAVIGATION_PERSISTENCE_KEY,
   )
 
-  // Kick off initial async loading actions, like loading fonts and RootStore
   useEffect(() => {
     ;(async () => {
-      await initFonts() // expo
+      await initFonts()
       setupRootStore().then(setRootStore)
     })()
   }, [])
 
-  // Before we show the app, we have to wait for our state to be ready.
-  // In the meantime, don't render anything. This will be the background
-  // color set in native by rootView's background color. You can replace
-  // with your own loading component if you wish.
   if (!rootStore) return null
 
-  // otherwise, we're ready to render the app
   return (
     <ToggleStorybook>
-      <RootStoreProvider value={rootStore}>
-        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-          <AppNavigator
-            ref={navigationRef}
-            initialState={initialNavigationState}
-            onStateChange={onNavigationStateChange}
-          />
-        </SafeAreaProvider>
-      </RootStoreProvider>
+      <ApolloProvider client={client}>
+        <RootStoreProvider value={rootStore}>
+          <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+            <AppNavigator
+              ref={navigationRef}
+              initialState={initialNavigationState}
+              onStateChange={onNavigationStateChange}
+            />
+          </SafeAreaProvider>
+        </RootStoreProvider>
+      </ApolloProvider>
     </ToggleStorybook>
   )
 }
+
+AppRegistry.registerComponent("NeutronPayWallet", () => App)
 
 export default App
