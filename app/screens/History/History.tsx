@@ -182,7 +182,7 @@ export const HistoryScreen = observer(function HistoryScreen() {
     <View style={Style.ChartContainer}>
       <LineChart
         data={lineChartDate}
-        width={screenWidth - 60} // from react-native
+        width={screenWidth - 80} // from react-native
         height={200}
         yAxisLabel={"$"}
         chartConfig={chartConfig}
@@ -190,7 +190,6 @@ export const HistoryScreen = observer(function HistoryScreen() {
         style={{
           alignItems: "center",
           borderRadius: 20,
-          marginRight: 10,
         }}
       />
     </View>
