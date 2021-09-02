@@ -1,0 +1,66 @@
+{
+  "common": {
+    "send": "Send",
+    "receive": "Receive",
+    "receive-description": "Show sender QR code",
+    "deposit": "Deposit",
+    "withdraw": "Withdraw",
+    "transaction": "Transaction",
+    "friends": "Friends",
+    "request": "Request",
+    "pay": "Pay",
+    "next": "Next",
+    "done": "Done",
+    "confirm": "Confirm",
+    "lightning": {
+      "description": "Low fee, instant transfer"
+    },
+    "onchain": {
+      "description": "High fee, flexible amount"
+    },
+    "contact": {
+      "empty": "There is no contact"
+    },
+    "form": {
+      "to": {
+        "label": "To",
+        "placeholder": "Search for user"
+      },
+      "from": {
+        "label": "From",
+        "placeholder": "Search for user"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Enter your description"
+      }
+    }
+  },
+  "time": {
+    "date": "Date"
+  },
+  "navigation": {
+    "wallet": "Wallet",
+    "contact": "Contact",
+    "history": "History",
+    "profile": "You",
+    "request": "Request",
+    "transaction": "Transaction",
+    "sendToFriend": "Send to Friend",
+    "scanQrCode": "Scan QR Code",
+    "confirmSend": "Confirm Send",
+    "paymentComplete": "Payment Complete",
+    "back": "Back"
+  },
+  "wallet": {
+    "balance": "Balance",
+    "total-transactions": "Total transactions"
+  },
+  "errors": {
+    "invalidEmail": "Invalid email address."
+  },
+  "storybook": {
+    "placeholder": "Placeholder",
+    "field": "Field"
+  }
+}
