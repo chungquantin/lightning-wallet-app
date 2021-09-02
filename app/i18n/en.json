@@ -22,9 +22,9 @@
       "empty": "There is no contact"
     },
     "auth": {
-      "login": "Sign in",
+      "signIn": "Sign In",
       "logout": "Logout",
-      "register": "Register"
+      "signUp": "Sign Up"
     },
     "form": {
       "to": {

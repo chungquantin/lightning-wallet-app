@@ -4,11 +4,11 @@ import { observer } from "mobx-react-lite"
 import { Screen, Text } from "../../components"
 import Style from "./Auth.style"
 
-export const AuthScreen = observer(function AuthScreen() {
+export const SignUpScreen = observer(function SignUpScreen() {
   return (
-    <View testID="AuthScreen" style={Style.Container}>
+    <View testID="SignUpScreen" style={Style.Container}>
       <Screen>
-        <Text>Authenticate</Text>
+        <Text>SignUp</Text>
       </Screen>
     </View>
   )

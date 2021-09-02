@@ -18,6 +18,8 @@ import {
   SendInAppRequestScreen,
   SendOutAppRequestScreen,
   SendScreen,
+  SignInScreen,
+  SignUpScreen,
   TransactionCompleteScreen,
   TransactionConfirmScreen,
   TransactionDetailScreen,
@@ -40,6 +42,8 @@ export type NavigatorParamList = {
   TransactionDetail: undefined
   TransactionConfirm: undefined
   TransactionComplete: undefined
+  SignIn: undefined
+  SignUp: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -54,93 +58,112 @@ const screenOptions = {
     fontWeight: "bold",
     color: color.text,
   },
+  headerBackTitleStyle: {
+    fontSize: textStyle.normalSize,
+    color: color.primary,
+  },
+  cardStyle: {
+    backgroundColor: color.background,
+  },
+  headerTintColor: color.primary,
 }
 
 const AppStack = () => {
+  const isSignedIn = false
   return (
     <Stack.Navigator
       screenOptions={{
         ...screenOptions,
-        headerBackTitleStyle: {
-          fontSize: textStyle.normalSize,
-          color: color.primary,
-        },
-        cardStyle: {
-          backgroundColor: color.background,
-        },
-        headerTintColor: color.primary,
       }}
       initialRouteName="Wallet"
     >
-      <Stack.Screen options={{ headerShown: false }} name="Wallet" component={Tabs} />
-      <>
-        {/* Send screen stack */}
-        <Stack.Screen name="Send" component={SendScreen} />
-        <Stack.Screen
-          name="SendOutAppRequest"
-          options={{
-            headerTitle: i18n.t("navigation.scanQrCode"),
-          }}
-          component={SendOutAppRequestScreen}
-        />
-        <Stack.Screen
-          name="SendInAppRequest"
-          options={{
-            headerTitle: i18n.t("navigation.sendToFriend"),
-          }}
-          component={SendInAppRequestScreen}
-        />
-      </>
-      <>
-        {/* Receive screen stack */}
-        <Stack.Screen name="Receive" component={ReceiveScreen} />
-        <Stack.Screen
-          name="ReceiveOutAppRequest"
-          options={{
-            headerTitle: i18n.t("navigation.request"),
-          }}
-          component={ReceiveOutAppRequestScreen}
-        />
-        <Stack.Screen
-          name="ReceiveInAppRequest"
-          options={{
-            headerTitle: i18n.t("navigation.request"),
-          }}
-          component={ReceiveInAppRequestScreen}
-        />
-      </>
-      <Stack.Screen name="Withdraw" component={WithdrawScreen} />
-      <Stack.Screen name="Deposit" component={DepositScreen} />
-      <Stack.Screen
-        name="UserDetail"
-        options={{
-          headerBackTitle: i18n.t("navigation.contact"),
-        }}
-        component={UserDetailScreen}
-      />
-      <Stack.Screen
-        name="TransactionDetail"
-        options={{
-          headerTitle: i18n.t("navigation.transaction"),
-        }}
-        component={TransactionDetailScreen}
-      />
-      <Stack.Screen
-        name="TransactionConfirm"
-        options={{
-          headerTitle: i18n.t("navigation.confirmSend"),
-          headerBackTitle: i18n.t("navigation.back"),
-        }}
-        component={TransactionConfirmScreen}
-      />
-      <Stack.Screen
-        name="TransactionComplete"
-        options={{
-          headerTitle: i18n.t("navigation.paymentComplete"),
-          headerLeft: () => <></>,
-        }}
-        component={TransactionCompleteScreen}
-      />
+      {isSignedIn ? (
+        <>
+          <Stack.Screen options={{ headerShown: false }} name="Wallet" component={Tabs} />
+
+          {/* Send screen stack */}
+          <Stack.Screen name="Send" component={SendScreen} />
+          <Stack.Screen
+            name="SendOutAppRequest"
+            options={{
+              headerTitle: i18n.t("navigation.scanQrCode"),
+            }}
+            component={SendOutAppRequestScreen}
+          />
+          <Stack.Screen
+            name="SendInAppRequest"
+            options={{
+              headerTitle: i18n.t("navigation.sendToFriend"),
+            }}
+            component={SendInAppRequestScreen}
+          />
+          {/* Receive screen stack */}
+          <Stack.Screen name="Receive" component={ReceiveScreen} />
+          <Stack.Screen
+            name="ReceiveOutAppRequest"
+            options={{
+              headerTitle: i18n.t("navigation.request"),
+            }}
+            component={ReceiveOutAppRequestScreen}
+          />
+          <Stack.Screen
+            name="ReceiveInAppRequest"
+            options={{
+              headerTitle: i18n.t("navigation.request"),
+            }}
+            component={ReceiveInAppRequestScreen}
+          />
+          <Stack.Screen name="Withdraw" component={WithdrawScreen} />
+          <Stack.Screen name="Deposit" component={DepositScreen} />
+          <Stack.Screen
+            name="UserDetail"
+            options={{
+              headerBackTitle: i18n.t("navigation.contact"),
+            }}
+            component={UserDetailScreen}
+          />
+          <Stack.Screen
+            name="TransactionDetail"
+            options={{
+              headerTitle: i18n.t("navigation.transaction"),
+            }}
+            component={TransactionDetailScreen}
+          />
+          <Stack.Screen
+            name="TransactionConfirm"
+            options={{
+              headerTitle: i18n.t("navigation.confirmSend"),
+              headerBackTitle: i18n.t("navigation.back"),
+            }}
+            component={TransactionConfirmScreen}
+          />
+          <Stack.Screen
+            name="TransactionComplete"
+            options={{
+              headerTitle: i18n.t("navigation.paymentComplete"),
+              headerLeft: () => <></>,
+            }}
+            component={TransactionCompleteScreen}
+          />
+        </>
+      ) : (
+        <>
+          <Stack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name="SignIn"
+            component={SignInScreen}
+          />
+          <Stack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name="SignUp"
+            component={SignUpScreen}
+          />
+        </>
+      )}
     </Stack.Navigator>
   )
 }
