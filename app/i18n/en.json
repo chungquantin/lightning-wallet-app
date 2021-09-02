@@ -21,6 +21,11 @@
     "contact": {
       "empty": "There is no contact"
     },
+    "auth": {
+      "login": "Sign in",
+      "logout": "Logout",
+      "register": "Register"
+    },
     "form": {
       "to": {
         "label": "To",

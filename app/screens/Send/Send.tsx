@@ -9,28 +9,16 @@ import I18n from "i18n-js"
 import { color } from "../../theme"
 import { UserItem } from "../UserItem"
 import { User } from "../../models/user/user"
-<<<<<<< HEAD
 import { useIsFocused, useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
 import { LinearGradient } from "expo-linear-gradient"
 import { Ionicons } from "@expo/vector-icons"
-=======
-import { useIsFocused } from "@react-navigation/native"
-import { useStores } from "../../models"
-import { LinearGradient } from "expo-linear-gradient"
-import { Ionicons } from "@expo/vector-icons"
-import useCustomNavigation from "../../hooks/useCustomNavigation"
->>>>>>> 38b5999a9bd343d5601b34d217091748d6885637
 
 export const SendScreen = observer(function SendScreen() {
   const [tab, switchTab] = React.useState<number>(0)
   const { userStore } = useStores()
   const isFocused = useIsFocused()
-<<<<<<< HEAD
   const navigator = useNavigation()
-=======
-  const navigator = useCustomNavigation()
->>>>>>> 38b5999a9bd343d5601b34d217091748d6885637
   const { formValues, handleSetFieldValue } = useFormValidation<{
     user: string
     description: string
@@ -44,13 +32,7 @@ export const SendScreen = observer(function SendScreen() {
   const handler = {
     OutAppRequest: () => navigator.navigate("SendOutAppRequest"),
     InAppRequest: (user: User) => {
-<<<<<<< HEAD
       navigator.navigate("SendInAppRequest", {
-=======
-      navigator.navigate<{
-        user: User
-      }>("SendInAppRequest", {
->>>>>>> 38b5999a9bd343d5601b34d217091748d6885637
         user,
       })
     },
