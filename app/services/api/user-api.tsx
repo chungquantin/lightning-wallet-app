@@ -46,11 +46,17 @@ export class UserApi {
       }
 
       const rawUsers = response.data
+<<<<<<< HEAD
       if (rawUsers) {
         const resultUsers: User[] = rawUsers.map(convertUser)
         return { kind: "ok", userContacts: resultUsers }
       }
       return { kind: "ok", userContacts: [] }
+=======
+      const resultUsers: User[] = rawUsers.map(convertUser)
+
+      return { kind: "ok", userContacts: resultUsers }
+>>>>>>> 38b5999a9bd343d5601b34d217091748d6885637
     } catch {
       return { kind: "bad-data" }
     }
@@ -71,15 +77,22 @@ export class UserApi {
         if (problem) return problem
       }
 
+<<<<<<< HEAD
       console.log(response)
 
+=======
+>>>>>>> 38b5999a9bd343d5601b34d217091748d6885637
       // transform the data into the format we are expecting
       const resultUser: User = {
         id: response.data.id.toString(),
         firstName: response.data.name,
         lastName: response.data.username,
         avatar: "https://ca.slack-edge.com/TQV251864-U0252H8HRB4-1f6097ffd12c-512",
+<<<<<<< HEAD
         balance: 12000,
+=======
+        balance: 10000,
+>>>>>>> 38b5999a9bd343d5601b34d217091748d6885637
         defaultCurrency: "USD",
         email: "cqtin0903@gmail.com",
         phoneNumber: "0932095882",

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { flow, Instance, isAlive, SnapshotOut, types } from "mobx-state-tree"
+=======
+import { flow, Instance, SnapshotOut, types } from "mobx-state-tree"
+>>>>>>> 38b5999a9bd343d5601b34d217091748d6885637
 import { withEnvironment } from "../extensions/with-environment"
 import { User, UserModel, UserSnapshot } from "../user/user"
 import { UserApi } from "../../services/api/user-api"
@@ -13,6 +17,7 @@ export const UserStoreModel = types
   .extend(withEnvironment)
   .actions((self) => ({
     saveUser: (userSnapshot: UserSnapshot) => {
+<<<<<<< HEAD
       if (isAlive(self.contacts)) {
         self.user = userSnapshot
       }
@@ -21,6 +26,12 @@ export const UserStoreModel = types
       if (isAlive(self.contacts)) {
         self.contacts.replace(userContactsSnapshot)
       }
+=======
+      self.user = userSnapshot
+    },
+    saveUserContacts: (userContactsSnapshot: UserSnapshot[]) => {
+      self.contacts.replace(userContactsSnapshot)
+>>>>>>> 38b5999a9bd343d5601b34d217091748d6885637
     },
   }))
   .views((self) => ({

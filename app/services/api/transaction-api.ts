@@ -2,7 +2,11 @@
 import { Api } from "./api"
 import { GetTransactionsResult } from "./api.types"
 //import { getGeneralApiProblem } from "./api-problem"
+<<<<<<< HEAD
 import { Transaction } from "../../models/transaction/transaction"
+=======
+import { Transaction } from "../../models/transaction/Transaction"
+>>>>>>> 38b5999a9bd343d5601b34d217091748d6885637
 import { getUnixMinLater, getUnixMonthAgo, getUnixNow } from "../../utils/date"
 
 //const API_PAGE_SIZE = 50
@@ -98,6 +102,7 @@ export class TransactionApi {
             createdAt: getUnixMonthAgo(3),
             expiredAt: getUnixMinLater(15),
           },
+<<<<<<< HEAD
           {
             id: "7",
             amount: 2000,
@@ -134,6 +139,8 @@ export class TransactionApi {
             createdAt: getUnixMonthAgo(3),
             expiredAt: getUnixMinLater(15),
           },
+=======
+>>>>>>> 38b5999a9bd343d5601b34d217091748d6885637
         ],
       }
 
