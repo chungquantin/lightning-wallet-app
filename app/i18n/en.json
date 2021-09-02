@@ -30,6 +30,10 @@
         "label": "From",
         "placeholder": "Search for user"
       },
+      "transaction": {
+        "label": "Transactions",
+        "placeholder": "Search for transaction"
+      },
       "description": {
         "label": "Description",
         "placeholder": "Enter your description"

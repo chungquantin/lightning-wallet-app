@@ -39,7 +39,7 @@ export const TransactionItem = observer(function TransactionItem({
         <View style={{ flex: 1.5, ...Style.MiddleContainer, alignItems: "flex-end" }}>
           <Text>
             {transaction.type === "IN" ? (
-              <Text style={{ ...Style.TransactionAmount, color: color.primary }}>
+              <Text style={{ ...Style.TransactionAmount, color: color.palette.green }}>
                 +{getSymbolFromCurrency(transaction.currency)}
                 {transaction.amount}
               </Text>
