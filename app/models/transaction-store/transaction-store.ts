@@ -12,12 +12,32 @@ export const TransactionStoreModel = types
   })
   .extend(withEnvironment)
   .views((self) => ({
-    get groupTransactionByMonthAndYear(): {
+    get incomeTransactions() {
+      return self.transactions.filter((transaction) => transaction.type === "IN")
+    },
+    get expenseTransactions() {
+      return self.transactions.filter((transaction) => transaction.type === "OUT")
+    },
+    get incomeTransactionByMonthAndYear(): {
       month: string
       year: string
       data: Transaction[]
     }[] {
-      const transactionGroupedByAllMonth = _.groupBy(self.transactions, (item) => {
+      return this.groupTransactionByMonthAndYear(this.incomeTransactions)
+    },
+    get expenseTransactionByMonthAndYear(): {
+      month: string
+      year: string
+      data: Transaction[]
+    }[] {
+      return this.groupTransactionByMonthAndYear(this.expenseTransactions)
+    },
+    groupTransactionByMonthAndYear(transactions?: Transaction[]): {
+      month: string
+      year: string
+      data: Transaction[]
+    }[] {
+      const transactionGroupedByAllMonth = _.groupBy(transactions || self.transactions, (item) => {
         return `${getMonthFromUnix(item.createdAt) + 1}-${getYearFromUnix(item.createdAt)}`
       })
       const transactionList: {

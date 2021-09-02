@@ -35,7 +35,7 @@ export const WalletScreen = observer(function WalletScreen() {
   const { transactionStore, userStore } = useStores()
   const isFocused = useIsFocused()
   const transaction = transactionStore.transactions
-  const transactionList = transactionStore.groupTransactionByMonthAndYear
+  const transactionList = transactionStore.groupTransactionByMonthAndYear()
   const mockBalance = React.useMemo(() => {
     let totalBalance = 0
     transactionStore.transactions.filter((transaction) => {

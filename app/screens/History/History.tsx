@@ -38,7 +38,9 @@ export const HistoryScreen = observer(function HistoryScreen() {
   const { transactionStore } = useStores()
   const [selectedTab, setSelectedTab] = React.useState(1)
   const screenWidth = Dimensions.get("window").width
-  const transactionList = transactionStore.groupTransactionByMonthAndYear
+  const transactionList = transactionStore.groupTransactionByMonthAndYear()
+  const transactionIncomeList = transactionStore.incomeTransactionByMonthAndYear
+  const transactionExpenseList = transactionStore.expenseTransactionByMonthAndYear
   const { formValues, handleSetFieldValue } = useFormValidation<{
     transactionDescription: string
   }>({
@@ -48,34 +50,96 @@ export const HistoryScreen = observer(function HistoryScreen() {
   const pieChartData = [
     {
       name: "Income",
-      population: 21500000,
+      population: transactionStore.incomeTransactions
+        .map((transaction) => transaction.amount)
+        .reduce((a, b) => a + b),
       color: color.palette.purple,
       legendFontColor: color.text,
       legendFontSize: 15,
     },
     {
       name: "Expense",
-      population: 2800000,
+      population: transactionStore.expenseTransactions
+        .map((transaction) => transaction.amount)
+        .reduce((a, b) => a + b),
       color: color.palette.darkPurple,
       legendFontColor: color.text,
       legendFontSize: 15,
     },
   ]
-  const data = {
-    labels: ["January", "February", "March", "April"],
+  const lineChartDate = {
+    labels: (selectedTab === 2 ? transactionIncomeList : transactionExpenseList)
+      .map((transaction) => transaction.month)
+      .reverse(),
     datasets: [
       {
-        data: [
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-        ],
+        data: (selectedTab === 2 ? transactionIncomeList : transactionExpenseList)
+          .map((transaction) => transaction.data.map((data) => data.amount).reduce((a, b) => a + b))
+          .reverse(),
       },
     ],
   }
+  const RenderTabButtonContainer = () => (
+    <View>
+      <FlatList
+        style={Style.ButtonContainer}
+        horizontal
+        data={[
+          {
+            id: 1,
+            title: "All",
+          },
+          {
+            id: 2,
+            title: "Income",
+          },
+          {
+            id: 3,
+            title: "Expense",
+          },
+        ]}
+        renderItem={({ item }) => {
+          const isSelected = selectedTab === item.id
+          return (
+            <TouchableRipple onPress={() => handler.SwitchTab(item.id)}>
+              <View
+                style={{
+                  ...Style.TabContainer,
+                  marginRight: item.id === 3 ? 0 : 10,
+                  backgroundColor: isSelected ? color.primary : color.secondaryBackground,
+                }}
+              >
+                {item.id === 2 && (
+                  <Ionicons
+                    style={{ marginRight: 10 }}
+                    name="arrow-up-circle"
+                    size={15}
+                    color={isSelected ? color.palette.white : color.palette.offGray}
+                  />
+                )}
+                {item.id === 3 && (
+                  <Ionicons
+                    style={{ marginRight: 10 }}
+                    name="arrow-down-circle"
+                    size={15}
+                    color={isSelected ? color.palette.white : color.palette.offGray}
+                  />
+                )}
+                <Text
+                  style={{
+                    ...Style.TabButtonText,
+                    color: isSelected ? color.palette.white : color.palette.offGray,
+                  }}
+                >
+                  {item.title}
+                </Text>
+              </View>
+            </TouchableRipple>
+          )
+        }}
+      />
+    </View>
+  )
   const RenderPieChart = () => (
     <View style={{ ...Style.ChartContainer, paddingVertical: 15 }}>
       <PieChart
@@ -94,10 +158,30 @@ export const HistoryScreen = observer(function HistoryScreen() {
       />
     </View>
   )
+  const RenderSearchInputContainer = () => (
+    <View>
+      <Text tx="common.form.transaction.label" style={Style.InputLabel} />
+      <View style={Style.SearchContainer}>
+        <Ionicons
+          style={Style.SearchIcon}
+          name="search"
+          size={15}
+          color={color.palette.lightGray}
+        />
+        <TextInput
+          style={Style.InputField}
+          placeholderTextColor={color.palette.offGray}
+          placeholder={I18n.t("common.form.transaction.placeholder")}
+          onChangeText={(text) => handleSetFieldValue("transactionDescription", text)}
+          value={formValues.transactionDescription}
+        />
+      </View>
+    </View>
+  )
   const RenderLineChart = () => (
     <View style={Style.ChartContainer}>
       <LineChart
-        data={data}
+        data={lineChartDate}
         width={screenWidth - 60} // from react-native
         height={200}
         yAxisLabel={"$"}
@@ -115,7 +199,13 @@ export const HistoryScreen = observer(function HistoryScreen() {
     <View style={Style.BottomContainer}>
       <SectionList
         scrollEnabled={false}
-        sections={transactionList}
+        sections={
+          selectedTab === 1
+            ? transactionList
+            : selectedTab === 2
+            ? transactionIncomeList
+            : transactionExpenseList
+        }
         renderSectionHeader={({ section: { month, year } }) => (
           <View style={Style.BottomTransactionLabelContainer}>
             <Text style={Style.BottomTransactionLabelText}>{month}</Text>
@@ -143,85 +233,10 @@ export const HistoryScreen = observer(function HistoryScreen() {
 
   return (
     <View testID="HistoryScreen" style={Style.Container}>
-      <View>
-        <FlatList
-          style={Style.ButtonContainer}
-          horizontal
-          data={[
-            {
-              id: 1,
-              title: "All",
-            },
-            {
-              id: 2,
-              title: "Income",
-            },
-            {
-              id: 3,
-              title: "Expense",
-            },
-          ]}
-          renderItem={({ item }) => {
-            const isSelected = selectedTab === item.id
-            return (
-              <TouchableRipple onPress={() => handler.SwitchTab(item.id)}>
-                <View
-                  style={{
-                    ...Style.TabContainer,
-                    marginRight: item.id === 3 ? 0 : 10,
-                    backgroundColor: isSelected ? color.primary : color.secondaryBackground,
-                  }}
-                >
-                  {item.id === 2 && (
-                    <Ionicons
-                      style={{ marginRight: 10 }}
-                      name="arrow-up-circle"
-                      size={15}
-                      color={isSelected ? color.palette.white : color.palette.offGray}
-                    />
-                  )}
-                  {item.id === 3 && (
-                    <Ionicons
-                      style={{ marginRight: 10 }}
-                      name="arrow-down-circle"
-                      size={15}
-                      color={isSelected ? color.palette.white : color.palette.offGray}
-                    />
-                  )}
-                  <Text
-                    style={{
-                      ...Style.TabButtonText,
-                      color: isSelected ? color.palette.white : color.palette.offGray,
-                    }}
-                  >
-                    {item.title}
-                  </Text>
-                </View>
-              </TouchableRipple>
-            )
-          }}
-        />
-      </View>
+      <RenderTabButtonContainer />
       <Screen preset="scroll">
         {selectedTab == 1 ? <RenderPieChart /> : <RenderLineChart />}
-        <View>
-          <Text tx="common.form.transaction.label" style={Style.InputLabel} />
-          <View style={Style.SearchContainer}>
-            <Ionicons
-              style={Style.SearchIcon}
-              name="search"
-              size={15}
-              color={color.palette.lightGray}
-            />
-            <TextInput
-              style={Style.InputField}
-              placeholderTextColor={color.palette.offGray}
-              placeholder={I18n.t("common.form.transaction.placeholder")}
-              onChangeText={(text) => handleSetFieldValue("transactionDescription", text)}
-              value={formValues.transactionDescription}
-            />
-          </View>
-        </View>
+        <RenderSearchInputContainer />
         <RenderTransactionContainer />
       </Screen>
     </View>
