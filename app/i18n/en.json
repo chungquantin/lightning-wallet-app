@@ -12,6 +12,7 @@
     "next": "Next",
     "done": "Done",
     "confirm": "Confirm",
+    "welcome": "Welcome",
     "lightning": {
       "description": "Low fee, instant transfer"
     },
@@ -22,11 +23,31 @@
       "empty": "There is no contact"
     },
     "auth": {
+      "signInToContinue": "Signin to continue",
+      "createNewAccount": "Create a new account",
+      "haveAccount": "Already have an account?",
+      "noAccount": "Don't have an account",
+      "registerNow": "Register now",
+      "password": "Password",
+      "register": "Register",
       "signIn": "Sign In",
       "logout": "Logout",
-      "signUp": "Sign Up"
+      "signUp": "Sign Up",
+      "forgotPassword": "Forgot Password"
     },
     "form": {
+      "confirmPassword": {
+        "label": "Confirm Password",
+        "placeholder": "Confirm your password"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Enter your email address"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Enter your password"
+      },
       "to": {
         "label": "To",
         "placeholder": "Search for user"
