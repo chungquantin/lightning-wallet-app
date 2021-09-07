@@ -4,24 +4,24 @@ import { observer } from "mobx-react-lite"
 import { Screen, Text } from "../../components"
 import Style from "./Auth.style"
 import { color } from "../../theme"
-import { TextInput } from "react-native-gesture-handler"
-import I18n from "i18n-js"
-import { Ionicons } from "@expo/vector-icons"
 import { Button, TouchableRipple } from "react-native-paper"
 import { useNavigation } from "@react-navigation/core"
 import useFormValidation from "../../hooks/useFormValidation"
+import { InputField } from "./InputField"
 
 export const SignInScreen = observer(function SignInScreen() {
   const navigator = useNavigation()
-  const { formValues, handleSetFieldValue } = useFormValidation<{
+  type FormProps = {
     email: string
     password: string
-  }>({
-    email: "",
-    password: "",
-  })
+  }
+  const { formValues, handleSetFieldValue, handleSubmit, translateError, errors } =
+    useFormValidation<FormProps>({
+      email: "",
+      password: "",
+    })
   const handler = {
-    SignIn: () => {},
+    SignIn: () => handleSubmit((formValues) => console.log(formValues)),
     GoToSignUp: () => navigator.navigate("SignUp"),
   }
   return (
@@ -36,49 +36,25 @@ export const SignInScreen = observer(function SignInScreen() {
         >
           <Text style={Style.Header} tx="common.welcome" />
           <Text style={Style.SubHeader} tx="common.auth.signInToContinue" />
-          <View
-            style={{
-              ...Style.InputField,
-              marginTop: 30,
-            }}
-          >
-            <View>
-              <Ionicons style={Style.Icon} name="mail" size={15} color={color.palette.offGray} />
-            </View>
-            <View>
-              <Text style={Style.InputLabel} tx="common.form.email.label" />
-              <TextInput
-                placeholderTextColor={color.palette.offGray}
-                placeholder={I18n.t("common.form.email.placeholder")}
-                onChangeText={(text) => handleSetFieldValue("email", text)}
-                value={formValues.email}
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              ...Style.InputField,
-            }}
-          >
-            <View>
-              <Ionicons
-                style={Style.Icon}
-                name="lock-closed"
-                size={15}
-                color={color.palette.offGray}
-              />
-            </View>
-            <View>
-              <Text style={Style.InputLabel} tx="common.form.password.label" />
-              <TextInput
-                secureTextEntry={true}
-                placeholderTextColor={color.palette.offGray}
-                placeholder={I18n.t("common.form.password.placeholder")}
-                onChangeText={(text) => handleSetFieldValue("password", text)}
-                value={formValues.password}
-              />
-            </View>
-          </View>
+          <InputField
+            isPassword={false}
+            style={{ marginTop: 30 }}
+            value={formValues.email}
+            icon="mail"
+            txLabel="common.form.email.label"
+            txPlaceholder="common.form.email.placeholder"
+            onChangeHandler={(text) => handleSetFieldValue("email", text)}
+            error={translateError(errors !== {} ? (errors as FormProps).email : "")}
+          />
+          <InputField
+            isPassword={true}
+            value={formValues.password}
+            icon="lock-closed"
+            txLabel="common.form.password.label"
+            txPlaceholder="common.form.password.placeholder"
+            onChangeHandler={(text) => handleSetFieldValue("password", text)}
+            error={translateError(errors !== {} ? (errors as FormProps).password : "")}
+          />
           <View
             style={{
               ...Style.InputField,

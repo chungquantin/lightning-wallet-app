@@ -157,7 +157,9 @@ const AppStack = () => {
           />
           <Stack.Screen
             options={{
-              headerShown: false,
+              headerShown: true,
+              headerTitle: "",
+              headerBackTitle: i18n.t("common.auth.signIn"),
             }}
             name="SignUp"
             component={SignUpScreen}

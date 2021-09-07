@@ -9,16 +9,29 @@ import I18n from "i18n-js"
 import { Ionicons } from "@expo/vector-icons"
 import { Button, TouchableRipple } from "react-native-paper"
 import { useNavigation } from "@react-navigation/core"
+import useFormValidation from "../../hooks/useFormValidation"
+import { InputField } from "./InputField"
 
 export const SignUpScreen = observer(function SignUpScreen() {
   const navigator = useNavigation()
+  type FormProps = {
+    email: string
+    password: string
+    confirmPassword: string
+  }
+  const { formValues, handleSetFieldValue, handleSubmit, errors, translateError } =
+    useFormValidation<FormProps>({
+      email: "",
+      password: "",
+      confirmPassword: "",
+    })
   const handler = {
-    SignUp: () => {},
+    SignUp: () => handleSubmit((formValues) => console.log(formValues)),
     GoToSignIn: () => navigator.navigate("SignIn"),
   }
   return (
     <View testID="SignUpScreen" style={{ ...Style.Container }}>
-      <Screen>
+      <Screen unsafe={true}>
         <View
           style={{
             alignItems: "center",
@@ -28,73 +41,36 @@ export const SignUpScreen = observer(function SignUpScreen() {
         >
           <Text style={Style.Header} tx="common.auth.register" />
           <Text style={Style.SubHeader} tx="common.auth.createNewAccount" />
-          <View
-            style={{
-              ...Style.InputField,
-              marginTop: 30,
-            }}
-          >
-            <View>
-              <Ionicons style={Style.Icon} name="mail" size={15} color={color.palette.offGray} />
-            </View>
-            <View>
-              <Text style={Style.InputLabel} tx="common.form.email.label" />
-              <TextInput
-                placeholderTextColor={color.palette.offGray}
-                placeholder={I18n.t("common.form.email.placeholder")}
-                onChangeText={(text) => console.log("user", text)}
-                value={""}
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              ...Style.InputField,
-            }}
-          >
-            <View>
-              <Ionicons
-                style={Style.Icon}
-                name="lock-closed"
-                size={15}
-                color={color.palette.offGray}
-              />
-            </View>
-            <View>
-              <Text style={Style.InputLabel} tx="common.form.password.label" />
-              <TextInput
-                placeholderTextColor={color.palette.offGray}
-                placeholder={I18n.t("common.form.password.placeholder")}
-                onChangeText={(text) => console.log("user", text)}
-                value={""}
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              ...Style.InputField,
-            }}
-          >
-            <View>
-              <Ionicons
-                style={Style.Icon}
-                name="lock-closed"
-                size={15}
-                color={color.palette.offGray}
-              />
-            </View>
-            <View>
-              <Text style={Style.InputLabel} tx="common.form.confirmPassword.label" />
-              <TextInput
-                placeholderTextColor={color.palette.offGray}
-                placeholder={I18n.t("common.form.confirmPassword.placeholder")}
-                onChangeText={(text) => console.log("user", text)}
-                value={""}
-              />
-            </View>
-          </View>
+          <InputField
+            isPassword={false}
+            style={{ marginTop: 30 }}
+            value={formValues.email}
+            icon="mail"
+            txLabel="common.form.email.label"
+            txPlaceholder="common.form.email.placeholder"
+            onChangeHandler={(text) => handleSetFieldValue("email", text)}
+            error={translateError(errors !== {} ? (errors as FormProps).email : "")}
+          />
+          <InputField
+            isPassword={true}
+            value={formValues.password}
+            icon="lock-closed"
+            txLabel="common.form.password.label"
+            txPlaceholder="common.form.password.placeholder"
+            onChangeHandler={(text) => handleSetFieldValue("password", text)}
+            error={translateError(errors !== {} ? (errors as FormProps).password : "")}
+          />
+          <InputField
+            isPassword={true}
+            value={formValues.confirmPassword}
+            icon="lock-closed"
+            txLabel="common.form.confirmPassword.label"
+            txPlaceholder="common.form.confirmPassword.placeholder"
+            onChangeHandler={(text) => handleSetFieldValue("confirmPassword", text)}
+            error={translateError(errors !== {} ? (errors as FormProps).confirmPassword : "")}
+          />
           <Button onPress={handler.SignUp} style={Style.Button} color={color.text}>
-            {I18n.t("common.auth.signIn")}
+            {I18n.t("common.auth.signUp")}
           </Button>
           <View style={{ flexDirection: "row", marginTop: 20, alignItems: "center" }}>
             <Text

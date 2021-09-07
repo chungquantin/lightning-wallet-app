@@ -16,7 +16,16 @@ const Style = StyleSheet.create({
     borderRadius: 5,
     flexDirection: "row",
     alignItems: "center",
-    color: color.text,
+  },
+  InputHelperText: {
+    color: color.error,
+    marginTop: 6,
+    fontSize: 13,
+  },
+  InputFieldError: {
+    borderColor: color.error,
+    borderWidth: 1,
+    color: color.error,
   },
   Header: { fontSize: 35, fontWeight: "bold", fontFamily: textStyle.secondaryFontBold },
   SubHeader: { fontFamily: textStyle.primaryFont, color: color.palette.offGray },

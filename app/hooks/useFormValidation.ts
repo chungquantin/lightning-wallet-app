@@ -11,7 +11,7 @@ function useFormValidation<S = {}>(
   initialFormValues: S,
   validate = (formValues) => ({ valid: true, errors: [] }),
 ) {
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState<S | {}>({})
   const [formValues, setFormValues] = useState<S>(initialFormValues)
 
   const translateError = (message) => (message ? i18n.t(message) : "")
@@ -42,15 +42,6 @@ function useFormValidation<S = {}>(
     }
   }
 
-  const handleKeyDownEnter = (e, callback) => {
-    const charCode = e.keyCode || e.which
-
-    if (charCode === 13 && callback) {
-      e.preventDefault()
-      handleSubmit(callback)
-    }
-  }
-
   return {
     valid: validate(formValues).valid,
     formValues,
@@ -63,7 +54,6 @@ function useFormValidation<S = {}>(
     handleResetFormValues,
     handleResetFieldError,
     handleSubmit,
-    handleKeyDownEnter,
   }
 }
 
