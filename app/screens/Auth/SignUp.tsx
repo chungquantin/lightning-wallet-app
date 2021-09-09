@@ -4,13 +4,12 @@ import { observer } from "mobx-react-lite"
 import { Screen, Text } from "../../components"
 import Style from "./Auth.style"
 import { color } from "../../theme"
-import { TextInput } from "react-native-gesture-handler"
 import I18n from "i18n-js"
-import { Ionicons } from "@expo/vector-icons"
 import { Button, TouchableRipple } from "react-native-paper"
 import { useNavigation } from "@react-navigation/core"
 import useFormValidation from "../../hooks/useFormValidation"
 import { InputField } from "./InputField"
+import signUpValidate from "./SignUp.validate"
 
 export const SignUpScreen = observer(function SignUpScreen() {
   const navigator = useNavigation()
@@ -19,12 +18,21 @@ export const SignUpScreen = observer(function SignUpScreen() {
     password: string
     confirmPassword: string
   }
-  const { formValues, handleSetFieldValue, handleSubmit, errors, translateError } =
-    useFormValidation<FormProps>({
+  const {
+    formValues,
+    handleSetFieldValue,
+    handleSubmit,
+    handleResetFieldError,
+    errors,
+    translateError,
+  } = useFormValidation<FormProps>(
+    {
       email: "",
       password: "",
       confirmPassword: "",
-    })
+    },
+    signUpValidate as any,
+  )
   const handler = {
     SignUp: () => handleSubmit((formValues) => console.log(formValues)),
     GoToSignIn: () => navigator.navigate("SignIn"),
@@ -48,6 +56,7 @@ export const SignUpScreen = observer(function SignUpScreen() {
             icon="mail"
             txLabel="common.form.email.label"
             txPlaceholder="common.form.email.placeholder"
+            onFocusHandler={() => handleResetFieldError("email")}
             onChangeHandler={(text) => handleSetFieldValue("email", text)}
             error={translateError(errors !== {} ? (errors as FormProps).email : "")}
           />
@@ -57,6 +66,7 @@ export const SignUpScreen = observer(function SignUpScreen() {
             icon="lock-closed"
             txLabel="common.form.password.label"
             txPlaceholder="common.form.password.placeholder"
+            onFocusHandler={() => handleResetFieldError("password")}
             onChangeHandler={(text) => handleSetFieldValue("password", text)}
             error={translateError(errors !== {} ? (errors as FormProps).password : "")}
           />
@@ -66,6 +76,7 @@ export const SignUpScreen = observer(function SignUpScreen() {
             icon="lock-closed"
             txLabel="common.form.confirmPassword.label"
             txPlaceholder="common.form.confirmPassword.placeholder"
+            onFocusHandler={() => handleResetFieldError("confirmPassword")}
             onChangeHandler={(text) => handleSetFieldValue("confirmPassword", text)}
             error={translateError(errors !== {} ? (errors as FormProps).confirmPassword : "")}
           />

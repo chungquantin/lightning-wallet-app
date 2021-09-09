@@ -7,6 +7,15 @@ const Style = StyleSheet.create({
     flex: 1,
     alignItems: "center",
   },
+  InnerContainer: {
+    alignItems: "center",
+    height: "100%",
+    justifyContent: "center",
+  },
+  ImageContainer: {
+    width: "100%",
+    marginBottom: 60,
+  },
   InputField: {
     backgroundColor: color.secondaryBackground,
     paddingHorizontal: 20,

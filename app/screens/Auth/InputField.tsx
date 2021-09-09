@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons"
 import I18n from "i18n-js"
 import { observer } from "mobx-react-lite"
 import React from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import { StyleProp, View, ViewStyle } from "react-native"
 import { TextInput } from "react-native-gesture-handler"
 import { Text } from "../../components"
 import { TxKeyPath } from "../../i18n"
@@ -11,6 +11,7 @@ import Style from "./Auth.style"
 
 interface Props {
   value: string
+  onFocusHandler: () => void
   onChangeHandler: (text: string) => void
   txPlaceholder: TxKeyPath
   txLabel: TxKeyPath
@@ -45,6 +46,7 @@ export const InputField = observer(function InputField(props: Props) {
             tx={props.txLabel}
           />
           <TextInput
+            onFocus={props.onFocusHandler}
             secureTextEntry={props.isPassword}
             style={props.error ? { color: color.error } : { color: color.text }}
             placeholderTextColor={color.palette.offGray}

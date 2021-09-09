@@ -1,25 +1,37 @@
 import React from "react"
-import { View } from "react-native"
+import { Dimensions, Image, View } from "react-native"
 import { observer } from "mobx-react-lite"
-import { Screen, Text } from "../../components"
+import { AutoImage, Screen, Text } from "../../components"
 import Style from "./Auth.style"
 import { color } from "../../theme"
 import { Button, TouchableRipple } from "react-native-paper"
 import { useNavigation } from "@react-navigation/core"
 import useFormValidation from "../../hooks/useFormValidation"
 import { InputField } from "./InputField"
+import signInValidate from "./SignIn.validate"
+
+const NeutronPayHorizontal = require("../../../assets/images/logos/neutronpay-row-logo.png")
 
 export const SignInScreen = observer(function SignInScreen() {
   const navigator = useNavigation()
   type FormProps = {
-    email: string
+    emailAddress: string
     password: string
   }
-  const { formValues, handleSetFieldValue, handleSubmit, translateError, errors } =
-    useFormValidation<FormProps>({
-      email: "",
+  const {
+    formValues,
+    handleSetFieldValue,
+    handleSubmit,
+    handleResetFieldError,
+    translateError,
+    errors,
+  } = useFormValidation<FormProps>(
+    {
+      emailAddress: "",
       password: "",
-    })
+    },
+    signInValidate as any,
+  )
   const handler = {
     SignIn: () => handleSubmit((formValues) => console.log(formValues)),
     GoToSignUp: () => navigator.navigate("SignUp"),
@@ -27,24 +39,28 @@ export const SignInScreen = observer(function SignInScreen() {
   return (
     <View testID="SignInScreen" style={{ ...Style.Container }}>
       <Screen>
-        <View
-          style={{
-            alignItems: "center",
-            height: "100%",
-            justifyContent: "center",
-          }}
-        >
+        <View style={Style.InnerContainer}>
+          <View style={Style.ImageContainer}>
+            <AutoImage
+              style={{
+                resizeMode: "contain",
+              }}
+              height={40}
+              source={NeutronPayHorizontal}
+            />
+          </View>
           <Text style={Style.Header} tx="common.welcome" />
           <Text style={Style.SubHeader} tx="common.auth.signInToContinue" />
           <InputField
             isPassword={false}
             style={{ marginTop: 30 }}
-            value={formValues.email}
+            value={formValues.emailAddress}
             icon="mail"
             txLabel="common.form.email.label"
             txPlaceholder="common.form.email.placeholder"
-            onChangeHandler={(text) => handleSetFieldValue("email", text)}
-            error={translateError(errors !== {} ? (errors as FormProps).email : "")}
+            onFocusHandler={() => handleResetFieldError("emailAddress")}
+            onChangeHandler={(text) => handleSetFieldValue("emailAddress", text)}
+            error={translateError(errors !== {} ? (errors as FormProps).emailAddress : "")}
           />
           <InputField
             isPassword={true}
@@ -52,6 +68,7 @@ export const SignInScreen = observer(function SignInScreen() {
             icon="lock-closed"
             txLabel="common.form.password.label"
             txPlaceholder="common.form.password.placeholder"
+            onFocusHandler={() => handleResetFieldError("password")}
             onChangeHandler={(text) => handleSetFieldValue("password", text)}
             error={translateError(errors !== {} ? (errors as FormProps).password : "")}
           />
