@@ -42,6 +42,18 @@
       "forgotPassword": "Forgot Password"
     },
     "form": {
+      "firstName": {
+        "label": "First name",
+        "placeholder": "Enter your first name"
+      },
+      "lastName": {
+        "label": "Last name",
+        "placeholder": "Enter your last name"
+      },
+      "phoneNumber": {
+        "label": "Phone number",
+        "placeholder": "Enter your phone number"
+      },
       "confirmPassword": {
         "label": "Confirm Password",
         "placeholder": "Confirm your password"

@@ -1,5 +1,5 @@
 import React from "react"
-import { Dimensions, Image, View } from "react-native"
+import { Dimensions, View } from "react-native"
 import { observer } from "mobx-react-lite"
 import { AutoImage, Screen, Text } from "../../components"
 import Style from "./Auth.style"
@@ -9,10 +9,12 @@ import { useNavigation } from "@react-navigation/core"
 import useFormValidation from "../../hooks/useFormValidation"
 import { InputField } from "./InputField"
 import signInValidate from "./SignIn.validate"
+import { useStores } from "../../models"
 
 const NeutronPayHorizontal = require("../../../assets/images/logos/neutronpay-row-logo.png")
 
 export const SignInScreen = observer(function SignInScreen() {
+  const { authStore } = useStores()
   const navigator = useNavigation()
   type FormProps = {
     emailAddress: string
@@ -33,7 +35,7 @@ export const SignInScreen = observer(function SignInScreen() {
     signInValidate as any,
   )
   const handler = {
-    SignIn: () => handleSubmit((formValues) => console.log(formValues)),
+    SignIn: () => handleSubmit((formValues) => authStore.login(formValues)),
     GoToSignUp: () => navigator.navigate("SignUp"),
   }
   return (
@@ -45,6 +47,7 @@ export const SignInScreen = observer(function SignInScreen() {
               style={{
                 resizeMode: "contain",
               }}
+              width={Dimensions.get("screen").width - 90}
               height={40}
               source={NeutronPayHorizontal}
             />

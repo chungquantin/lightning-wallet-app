@@ -10,13 +10,17 @@ import { useNavigation } from "@react-navigation/core"
 import useFormValidation from "../../hooks/useFormValidation"
 import { InputField } from "./InputField"
 import signUpValidate from "./SignUp.validate"
+import { useStores } from "../../models"
 
 export const SignUpScreen = observer(function SignUpScreen() {
+  const { authStore } = useStores()
   const navigator = useNavigation()
   type FormProps = {
     email: string
     password: string
     confirmPassword: string
+    firstName: string
+    lastName: string
   }
   const {
     formValues,
@@ -30,11 +34,13 @@ export const SignUpScreen = observer(function SignUpScreen() {
       email: "",
       password: "",
       confirmPassword: "",
+      firstName: "",
+      lastName: "",
     },
     signUpValidate as any,
   )
   const handler = {
-    SignUp: () => handleSubmit((formValues) => console.log(formValues)),
+    SignUp: () => handleSubmit((formValues) => authStore.register(formValues)),
     GoToSignIn: () => navigator.navigate("SignIn"),
   }
   return (
@@ -52,6 +58,26 @@ export const SignUpScreen = observer(function SignUpScreen() {
           <InputField
             isPassword={false}
             style={{ marginTop: 30 }}
+            value={formValues.firstName}
+            icon="person"
+            txLabel="common.form.firstName.label"
+            txPlaceholder="common.form.firstName.placeholder"
+            onFocusHandler={() => handleResetFieldError("firstName")}
+            onChangeHandler={(text) => handleSetFieldValue("firstName", text)}
+            error={translateError(errors !== {} ? (errors as FormProps).email : "")}
+          />
+          <InputField
+            isPassword={false}
+            value={formValues.lastName}
+            icon="person"
+            txLabel="common.form.lastName.label"
+            txPlaceholder="common.form.lastName.placeholder"
+            onFocusHandler={() => handleResetFieldError("lastName")}
+            onChangeHandler={(text) => handleSetFieldValue("lastName", text)}
+            error={translateError(errors !== {} ? (errors as FormProps).email : "")}
+          />
+          <InputField
+            isPassword={false}
             value={formValues.email}
             icon="mail"
             txLabel="common.form.email.label"

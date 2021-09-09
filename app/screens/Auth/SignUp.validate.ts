@@ -1,7 +1,8 @@
 import { formValidateUtil, validationUtil } from "../../utils"
 
 const validations = {
-  companyName: [{ fn: validationUtil.require, error: "FORM_VALIDATION_REQUIRED" }],
+  firstName: [{ fn: validationUtil.require, error: "FORM_VALIDATION_REQUIRED" }],
+  lastName: [{ fn: validationUtil.require, error: "FORM_VALIDATION_REQUIRED" }],
   email: [
     { fn: validationUtil.require, error: "FORM_VALIDATION_REQUIRED" },
     { fn: validationUtil.email, error: "FORM_VALIDATION_EMAIL_INVALID" },
