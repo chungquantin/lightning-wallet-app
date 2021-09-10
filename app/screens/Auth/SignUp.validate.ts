@@ -1,8 +1,20 @@
 import { formValidateUtil, validationUtil } from "../../utils"
 
 const validations = {
-  firstName: [{ fn: validationUtil.require, error: "FORM_VALIDATION_REQUIRED" }],
-  lastName: [{ fn: validationUtil.require, error: "FORM_VALIDATION_REQUIRED" }],
+  firstName: [
+    { fn: validationUtil.require, error: "FORM_VALIDATION_REQUIRED" },
+    {
+      fn: validationUtil.notContainNumber,
+      error: "FORM_VALIDATION_NAME_HAS_NUMBER",
+    },
+  ],
+  lastName: [
+    { fn: validationUtil.require, error: "FORM_VALIDATION_REQUIRED" },
+    {
+      fn: validationUtil.notContainNumber,
+      error: "FORM_VALIDATION_NAME_HAS_NUMBER",
+    },
+  ],
   email: [
     { fn: validationUtil.require, error: "FORM_VALIDATION_REQUIRED" },
     { fn: validationUtil.email, error: "FORM_VALIDATION_EMAIL_INVALID" },
@@ -15,7 +27,7 @@ const validations = {
     },
     {
       fn: (password) => validationUtil.password(password),
-      error: "FORM_VALIDATION_PASSWORD_REGEX",
+      error: "FORM_VALIDATION_PASSWORD_INVALID",
     },
   ],
   confirmPassword: [

@@ -2,7 +2,7 @@ import { flow, Instance, SnapshotOut, types } from "mobx-state-tree"
 import { withEnvironment } from "../extensions/with-environment"
 import _ from "underscore"
 import { UserResolverAPI } from "../../services/resolvers/user/user-resolver-api"
-import { LoginDto, RegisterDto } from "../../generated/graphql"
+import { Login, LoginDto, Register, RegisterDto } from "../../generated/graphql"
 import { saveString } from "../../utils/storage"
 
 export const AuthStoreModel = types
@@ -26,6 +26,7 @@ export const AuthStoreModel = types
       } else {
         __DEV__ && console.tron.log(result.errors)
       }
+      return result as Login
     }),
     register: flow(function* (dto: RegisterDto) {
       const userApi = new UserResolverAPI()
@@ -36,6 +37,7 @@ export const AuthStoreModel = types
       } else {
         __DEV__ && console.tron.log(result.errors)
       }
+      return result as Register
     }),
   }))
 

@@ -1,42 +1,31 @@
 import { request } from "graphql-request"
 import { Login, LoginDto, Register, RegisterDto } from "../../../generated/graphql"
-import { LOGIN } from "./user.mutation"
+import { LOGIN, REGISTER } from "./user.mutation"
 
 export class UserResolverAPI {
-  private url = "http://localhost:3000/graphql"
+  private url = "http://192.168.1.102:3000/graphql"
 
-  public async login({ email, password }: LoginDto): Promise<Login> {
+  public async login(dto: LoginDto): Promise<Login> {
     try {
-      const response = await request(this.url, LOGIN, {
-        email,
-        password,
+      const response = await request<{ login: Login }, { loginData: LoginDto }>(this.url, LOGIN, {
+        loginData: dto,
       })
-      return response
+      return response.login
     } catch (error) {
-      throw new Error(error.message)
+      throw error
     }
   }
 
-  public async register({
-    avatar,
-    firstName,
-    lastName,
-    password,
-    email,
-    phoneNumber,
-  }: RegisterDto): Promise<Register> {
+  public async register(dto: RegisterDto): Promise<Register> {
     try {
-      const response = await request(this.url, LOGIN, {
-        email,
-        password,
-        avatar,
-        firstName,
-        lastName,
-        phoneNumber,
-      })
-      return response
+      const response = await request<{ register: Register }, { registerData: RegisterDto }>(
+        this.url,
+        REGISTER,
+        { registerData: dto },
+      )
+      return response.register
     } catch (error) {
-      throw new Error(error.message)
+      throw error.message
     }
   }
 }

@@ -1,11 +1,11 @@
 import React from "react"
-import { View } from "react-native"
+import { Alert, View } from "react-native"
 import { observer } from "mobx-react-lite"
 import { Screen, Text } from "../../components"
 import Style from "./Auth.style"
 import { color } from "../../theme"
 import I18n from "i18n-js"
-import { Button, TouchableRipple } from "react-native-paper"
+import { ActivityIndicator, Button, TouchableRipple } from "react-native-paper"
 import { useNavigation } from "@react-navigation/core"
 import useFormValidation from "../../hooks/useFormValidation"
 import { InputField } from "./InputField"
@@ -13,6 +13,7 @@ import signUpValidate from "./SignUp.validate"
 import { useStores } from "../../models"
 
 export const SignUpScreen = observer(function SignUpScreen() {
+  const [loading, setLoading] = React.useState(false)
   const { authStore } = useStores()
   const navigator = useNavigation()
   type FormProps = {
@@ -40,12 +41,34 @@ export const SignUpScreen = observer(function SignUpScreen() {
     signUpValidate as any,
   )
   const handler = {
-    SignUp: () => handleSubmit((formValues) => authStore.register(formValues)),
+    SignUp: () =>
+      handleSubmit((formValues) => {
+        setLoading(true)
+        authStore
+          .register({
+            email: formValues.email,
+            firstName: formValues.firstName,
+            lastName: formValues.lastName,
+            avatar: "",
+            password: formValues.password,
+            phoneNumber: Math.floor(Math.random() * (10000000 - 99999999 + 1)) + 10000000 + "",
+          })
+          .then((result) => {
+            setLoading(false)
+            if (!result.success && result.errors.length !== 0) {
+              Alert.alert(result.errors[0].message)
+            }
+            if (result.success) {
+              Alert.alert(I18n.t("Account is created successfully!"))
+              navigator.navigate("SignIn")
+            }
+          })
+      }),
     GoToSignIn: () => navigator.navigate("SignIn"),
   }
   return (
     <View testID="SignUpScreen" style={{ ...Style.Container }}>
-      <Screen unsafe={true}>
+      <Screen unsafe={true} preset="scroll">
         <View
           style={{
             alignItems: "center",
@@ -64,7 +87,7 @@ export const SignUpScreen = observer(function SignUpScreen() {
             txPlaceholder="common.form.firstName.placeholder"
             onFocusHandler={() => handleResetFieldError("firstName")}
             onChangeHandler={(text) => handleSetFieldValue("firstName", text)}
-            error={translateError(errors !== {} ? (errors as FormProps).email : "")}
+            error={translateError(errors !== {} ? (errors as FormProps).firstName : "")}
           />
           <InputField
             isPassword={false}
@@ -74,7 +97,7 @@ export const SignUpScreen = observer(function SignUpScreen() {
             txPlaceholder="common.form.lastName.placeholder"
             onFocusHandler={() => handleResetFieldError("lastName")}
             onChangeHandler={(text) => handleSetFieldValue("lastName", text)}
-            error={translateError(errors !== {} ? (errors as FormProps).email : "")}
+            error={translateError(errors !== {} ? (errors as FormProps).lastName : "")}
           />
           <InputField
             isPassword={false}
@@ -106,8 +129,20 @@ export const SignUpScreen = observer(function SignUpScreen() {
             onChangeHandler={(text) => handleSetFieldValue("confirmPassword", text)}
             error={translateError(errors !== {} ? (errors as FormProps).confirmPassword : "")}
           />
-          <Button onPress={handler.SignUp} style={Style.Button} color={color.text}>
-            {I18n.t("common.auth.signUp")}
+          <Button
+            onPress={handler.SignUp}
+            style={{ ...Style.Button, marginTop: 50 }}
+            color={color.text}
+          >
+            {loading ? (
+              <ActivityIndicator
+                size="small"
+                color={color.palette.deepPurple}
+                style={Style.Indicator}
+              />
+            ) : (
+              <Text>{I18n.t("common.auth.signUp")}</Text>
+            )}
           </Button>
           <View style={{ flexDirection: "row", marginTop: 20, alignItems: "center" }}>
             <Text

@@ -30,6 +30,7 @@ const Style = StyleSheet.create({
     color: color.error,
     marginTop: 6,
     fontSize: 13,
+    width: Dimensions.get("screen").width / 1.3,
   },
   InputFieldError: {
     borderColor: color.error,
@@ -51,6 +52,7 @@ const Style = StyleSheet.create({
     borderRadius: 5,
     color: color.palette.white,
   },
+  Indicator: { margin: 0, height: 18 },
 })
 
 export default Style

@@ -4,7 +4,8 @@
   "FORM_VALIDATION_PASSWORD_MIN_LENGTH": "Password must have at least 6 characters",
   "FORM_VALIDATION_CONFIRM_PASSWORD_NOT_MATCH": "Confirm password does not match",
   "FORM_VALIDATION_SAME_NEW_PASSWORD": "Your new password must be different from your previous",
-  "FORM_VALIDATION_PASSWORD_INVALID": "Password must be at least 8 characters, with 1 capital letter, and 1 special character",
+  "FORM_VALIDATION_PASSWORD_INVALID": "Must be at least 8 characters, with 1 capital letter, and 1 special character",
+  "FORM_VALIDATION_NAME_HAS_NUMBER": "Name must not contain any number",
   "common": {
     "send": "Send",
     "receive": "Receive",

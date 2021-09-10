@@ -1,19 +1,21 @@
 import React from "react"
-import { Dimensions, View } from "react-native"
+import { Alert, Dimensions, View } from "react-native"
 import { observer } from "mobx-react-lite"
 import { AutoImage, Screen, Text } from "../../components"
 import Style from "./Auth.style"
 import { color } from "../../theme"
-import { Button, TouchableRipple } from "react-native-paper"
+import { ActivityIndicator, Button, TouchableRipple } from "react-native-paper"
 import { useNavigation } from "@react-navigation/core"
 import useFormValidation from "../../hooks/useFormValidation"
 import { InputField } from "./InputField"
 import signInValidate from "./SignIn.validate"
 import { useStores } from "../../models"
+import I18n from "i18n-js"
 
 const NeutronPayHorizontal = require("../../../assets/images/logos/neutronpay-row-logo.png")
 
 export const SignInScreen = observer(function SignInScreen() {
+  const [loading, setLoading] = React.useState(false)
   const { authStore } = useStores()
   const navigator = useNavigation()
   type FormProps = {
@@ -35,7 +37,21 @@ export const SignInScreen = observer(function SignInScreen() {
     signInValidate as any,
   )
   const handler = {
-    SignIn: () => handleSubmit((formValues) => authStore.login(formValues)),
+    SignIn: () =>
+      handleSubmit((formValues) => {
+        setLoading(true)
+        authStore
+          .login({
+            email: formValues.emailAddress,
+            password: formValues.password,
+          })
+          .then((result) => {
+            setLoading(false)
+            if (!result.success && result.errors.length !== 0) {
+              Alert.alert(result.errors[0].message)
+            }
+          })
+      }),
     GoToSignUp: () => navigator.navigate("SignUp"),
   }
   return (
@@ -100,8 +116,16 @@ export const SignInScreen = observer(function SignInScreen() {
               />
             </View>
           </View>
-          <Button onPress={handler.SignIn} style={Style.Button} color={color.text}>
-            <Text tx="common.auth.signIn" />
+          <Button onPress={handler.SignIn} style={{ ...Style.Button }} color={color.text}>
+            {loading ? (
+              <ActivityIndicator
+                size="small"
+                color={color.palette.deepPurple}
+                style={Style.Indicator}
+              />
+            ) : (
+              <Text>{I18n.t("common.auth.signIn")}</Text>
+            )}
           </Button>
           <View style={{ flexDirection: "row", marginTop: 20, alignItems: "center" }}>
             <Text
