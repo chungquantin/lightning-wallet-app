@@ -59,8 +59,12 @@ export const SignUpScreen = observer(function SignUpScreen() {
               Alert.alert(result.errors[0].message)
             }
             if (result.success) {
-              Alert.alert(I18n.t("Account is created successfully!"))
-              navigator.navigate("SignIn")
+              Alert.alert(I18n.t("common.auth.register"), I18n.t("common.alert.accountIsCreated"), [
+                {
+                  text: "Go to Sign in",
+                  onPress: () => navigator.navigate("SignIn"),
+                },
+              ])
             }
           })
       }),

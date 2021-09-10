@@ -42,6 +42,9 @@
       "signUp": "Sign Up",
       "forgotPassword": "Forgot Password"
     },
+    "alert": {
+      "accountIsCreated": "Account is created successfully!"
+    },
     "form": {
       "firstName": {
         "label": "First name",

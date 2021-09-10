@@ -69,7 +69,7 @@ const screenOptions = {
 }
 
 const AppStack = () => {
-  const isSignedIn = false
+  const isSignedIn = true
   return (
     <Stack.Navigator
       screenOptions={{

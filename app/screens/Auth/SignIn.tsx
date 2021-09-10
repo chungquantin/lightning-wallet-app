@@ -50,6 +50,9 @@ export const SignInScreen = observer(function SignInScreen() {
             if (!result.success && result.errors.length !== 0) {
               Alert.alert(result.errors[0].message)
             }
+            if (result.success) {
+              // TODO set current user
+            }
           })
       }),
     GoToSignUp: () => navigator.navigate("SignUp"),
