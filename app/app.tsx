@@ -16,19 +16,19 @@ import { RootStore, RootStoreProvider, setupRootStore } from "./models"
 import { ToggleStorybook } from "../storybook/toggle-storybook"
 
 import { enableScreens } from "react-native-screens"
-import { Tron } from "./services/reactotron/tron"
+//import { Tron } from "./services/reactotron/tron"
 enableScreens()
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
-console.log = (...args) => {
-  Tron.display({
-    name: "CONSOLE.LOG",
-    important: true,
-    value: args,
-    preview: args.length ? JSON.stringify(args) : args[0],
-  })
-}
+//console.log = (...args) => {
+//  Tron.display({
+//    name: "CONSOLE.LOG",
+//    important: true,
+//    value: args,
+//    preview: args.length ? JSON.stringify(args) : args[0],
+//  })
+//}
 
 /**
  * This is the root component of our app.

@@ -14,7 +14,7 @@ import { useStores } from "../../models"
 
 export const SignUpScreen = observer(function SignUpScreen() {
   const [loading, setLoading] = React.useState(false)
-  const { authStore } = useStores()
+  const { userStore } = useStores()
   const navigator = useNavigation()
   type FormProps = {
     email: string
@@ -44,7 +44,7 @@ export const SignUpScreen = observer(function SignUpScreen() {
     SignUp: () =>
       handleSubmit((formValues) => {
         setLoading(true)
-        authStore
+        userStore
           .register({
             email: formValues.email,
             firstName: formValues.firstName,

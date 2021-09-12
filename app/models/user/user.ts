@@ -1,10 +1,9 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
-import { getListCurrency } from "../../utils/currency"
 
 export const UserModel = types.model("User").props({
   id: types.maybe(types.string),
   phoneNumber: types.maybe(types.string),
-  defaultCurrency: types.maybe(types.enumeration(getListCurrency)),
+  //defaultCurrency: types.maybe(types.enumeration(getListCurrency)),
   firstName: types.maybe(types.string),
   lastName: types.maybe(types.string),
   avatar: types.maybe(types.string),
@@ -12,7 +11,9 @@ export const UserModel = types.model("User").props({
   twoFactorVerified: types.maybe(types.boolean),
   phoneNumberVerified: types.maybe(types.boolean),
   emailVerified: types.maybe(types.boolean),
-  balance: types.maybe(types.number),
+  createdAt: types.maybe(types.string),
+  forgotPasswordLock: types.maybe(types.boolean),
+  name: types.maybe(types.string),
 })
 
 type UserType = Instance<typeof UserModel>

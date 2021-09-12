@@ -27,6 +27,8 @@ import {
   WithdrawScreen,
 } from "../screens"
 import i18n from "i18n-js"
+import { useStores } from "../models"
+import { observer } from "mobx-react-lite"
 
 export type NavigatorParamList = {
   Wallet: undefined
@@ -68,16 +70,28 @@ const screenOptions = {
   headerTintColor: color.primary,
 }
 
-const AppStack = () => {
-  const isSignedIn = true
+const AppStack = observer(() => {
+  const { userStore, walletStore } = useStores()
+  React.useEffect(() => {
+    userStore.fetchCurrentUser()
+    walletStore.fetchCurrentUserWallet()
+  }, [])
+
+  const isSignedIn = () => {
+    return (
+      userStore.currentUser.id !== undefined &&
+      walletStore.wallet.id !== undefined &&
+      userStore.currentUser.id === walletStore.wallet.userId
+    )
+  }
   return (
     <Stack.Navigator
       screenOptions={{
         ...screenOptions,
       }}
-      initialRouteName="Wallet"
+      initialRouteName={isSignedIn() ? "Wallet" : "SignIn"}
     >
-      {isSignedIn ? (
+      {isSignedIn() ? (
         <>
           <Stack.Screen options={{ headerShown: false }} name="Wallet" component={Tabs} />
 
@@ -168,7 +182,7 @@ const AppStack = () => {
       )}
     </Stack.Navigator>
   )
-}
+})
 
 export const AppNavigator = React.forwardRef<
   NavigationContainerRef,

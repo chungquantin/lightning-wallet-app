@@ -16,7 +16,7 @@ const NeutronPayHorizontal = require("../../../assets/images/logos/neutronpay-ro
 
 export const SignInScreen = observer(function SignInScreen() {
   const [loading, setLoading] = React.useState(false)
-  const { authStore } = useStores()
+  const { userStore } = useStores()
   const navigator = useNavigation()
   type FormProps = {
     emailAddress: string
@@ -38,21 +38,24 @@ export const SignInScreen = observer(function SignInScreen() {
   )
   const handler = {
     SignIn: () =>
-      handleSubmit((formValues) => {
+      handleSubmit(async (formValues) => {
         setLoading(true)
-        authStore
+        userStore
           .login({
             email: formValues.emailAddress,
             password: formValues.password,
           })
-          .then((result) => {
+          .then(async (result) => {
             setLoading(false)
             if (!result.success && result.errors.length !== 0) {
               Alert.alert(result.errors[0].message)
+            } else {
+              userStore.fetchCurrentUser()
             }
-            if (result.success) {
-              // TODO set current user
-            }
+          })
+          .catch((err) => {
+            Alert.alert(err.message)
+            setLoading(false)
           })
       }),
     GoToSignUp: () => navigator.navigate("SignUp"),

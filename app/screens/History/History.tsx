@@ -16,6 +16,7 @@ import { FlatList, TextInput } from "react-native-gesture-handler"
 import I18n from "i18n-js"
 import useFormValidation from "../../hooks/useFormValidation"
 import { TouchableRipple } from "react-native-paper"
+import { useIsFocused } from "@react-navigation/core"
 
 const chartConfig: ChartConfig = {
   backgroundGradientFrom: color.secondaryBackground,
@@ -35,8 +36,9 @@ const chartConfig: ChartConfig = {
 }
 
 export const HistoryScreen = observer(function HistoryScreen() {
-  const { transactionStore } = useStores()
+  const { transactionStore, walletStore } = useStores()
   const [selectedTab, setSelectedTab] = React.useState(1)
+  const isFocused = useIsFocused()
   const screenWidth = Dimensions.get("window").width
   const transactionList = transactionStore.groupTransactionByMonthAndYear()
   const transactionIncomeList = transactionStore.incomeTransactionByMonthAndYear
@@ -79,6 +81,7 @@ export const HistoryScreen = observer(function HistoryScreen() {
       },
     ],
   }
+
   const RenderTabButtonContainer = () => (
     <View>
       <FlatList

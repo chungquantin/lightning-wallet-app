@@ -9,9 +9,9 @@ import { color } from "../../theme"
 
 export const ProfileScreen = observer(function ProfileScreen() {
   const { userStore } = useStores()
-  const currentUser = userStore.user
+  const currentUser = userStore.currentUser
   const handler = {
-    Logout: () => {},
+    Logout: () => userStore.logout(),
   }
   return (
     <View testID="ProfileScreen" style={Style.Container}>
@@ -19,7 +19,9 @@ export const ProfileScreen = observer(function ProfileScreen() {
         <View style={Style.ProfileInfoContainer}>
           <Avatar.Image
             source={{
-              uri: currentUser.avatar,
+              uri:
+                currentUser.avatar ||
+                "https://pbs.twimg.com/profile_images/1197512896063787008/8Cagjqvn_400x400.jpg",
             }}
             size={60}
           />

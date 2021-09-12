@@ -32,7 +32,7 @@ const CustomButton = ({ onPressHandler, tx, children }: ButtonProps) => {
 }
 
 export const WalletScreen = observer(function WalletScreen() {
-  const { transactionStore, userStore } = useStores()
+  const { transactionStore, walletStore } = useStores()
   const isFocused = useIsFocused()
   const transaction = transactionStore.transactions
   const transactionList = transactionStore.groupTransactionByMonthAndYear()
@@ -48,7 +48,7 @@ export const WalletScreen = observer(function WalletScreen() {
     return totalBalance
   }, [transaction])
 
-  const currentUser = userStore.user
+  const currentWallet = walletStore.wallet
   const navigator = useNavigation()
 
   onSnapshot(transactionStore.transactions, (snapshot) => {
@@ -56,12 +56,12 @@ export const WalletScreen = observer(function WalletScreen() {
   })
 
   React.useEffect(() => {
+    walletStore.fetchCurrentUserWallet()
     transactionStore.fetchTransactions()
-    userStore.fetchUser("1")
   }, [isFocused])
 
   const handler = {
-    Send: () => navigator.navigate("Send"),
+    Send: async () => navigator.navigate("Send"),
     Receive: () => navigator.navigate("Receive"),
     Withdraw: () => navigator.navigate("Withdraw"),
     Deposit: () => navigator.navigate("Deposit"),
@@ -71,15 +71,15 @@ export const WalletScreen = observer(function WalletScreen() {
       }),
   }
 
-  const RenderTopContainer = () => (
+  const RenderTopContainer = observer(() => (
     <View style={Style.TopContainer}>
       <View style={Style.TopContainerStart}>
         <Text tx="wallet.balance" style={Style.TopContainerText} />
-        <Text style={Style.TopContainerText}>{currentUser.defaultCurrency}</Text>
+        <Text style={Style.TopContainerText}>{currentWallet.defaultCurrency}</Text>
       </View>
       <View style={Style.TopContainerCenter}>
         <Text style={Style.BalanceText}>
-          {formatByUnit(currentUser.balance + mockBalance, currentUser.defaultCurrency)}
+          {formatByUnit(currentWallet.balance + mockBalance, currentWallet.defaultCurrency)}
         </Text>
         <Text style={Style.BalanceRate}>+12.00%</Text>
       </View>
@@ -106,9 +106,9 @@ export const WalletScreen = observer(function WalletScreen() {
         </CustomButton>
       </View>
     </View>
-  )
+  ))
 
-  const RenderTransactionsContainer = () => (
+  const RenderTransactionsContainer = observer(() => (
     <View style={Style.BottomContainer}>
       <Text tx="common.transaction" style={Style.BottomHeader} />
       <Text style={{ marginBottom: 20 }}>
@@ -132,7 +132,7 @@ export const WalletScreen = observer(function WalletScreen() {
         keyExtractor={(item) => item.id}
       />
     </View>
-  )
+  ))
 
   return (
     <View testID="WalletScreen" style={Style.Container}>
