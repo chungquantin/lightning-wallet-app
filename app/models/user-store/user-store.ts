@@ -1,4 +1,4 @@
-import { flow, Instance, isAlive, SnapshotOut, types } from "mobx-state-tree"
+import { Instance, isAlive, SnapshotOut, types } from "mobx-state-tree"
 import { withEnvironment } from "../extensions/with-environment"
 import { User, UserModel, UserSnapshot } from "../user/user"
 import { UserApi } from "../../services/api/user-api"
