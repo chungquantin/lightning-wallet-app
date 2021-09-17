@@ -38,7 +38,7 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
   }
 
   React.useEffect(() => {
-    userStore.fetchUserContacts("1")
+    userStore.fetchUserContacts()
   }, [isFocused])
 
   React.useEffect(() => {

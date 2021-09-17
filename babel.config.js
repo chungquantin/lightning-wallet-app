@@ -13,5 +13,6 @@ module.exports = {
       },
     ],
     ["@babel/plugin-proposal-optional-catch-binding"],
+    ["@babel/plugin-transform-async-to-generator"],
   ],
 }

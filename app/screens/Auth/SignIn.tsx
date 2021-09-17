@@ -16,7 +16,7 @@ const NeutronPayHorizontal = require("../../../assets/images/logos/neutronpay-ro
 
 export const SignInScreen = observer(function SignInScreen() {
   const [loading, setLoading] = React.useState(false)
-  const { userStore } = useStores()
+  const { userStore, walletStore } = useStores()
   const navigator = useNavigation()
   type FormProps = {
     emailAddress: string
@@ -39,24 +39,23 @@ export const SignInScreen = observer(function SignInScreen() {
   const handler = {
     SignIn: () =>
       handleSubmit(async (formValues) => {
-        setLoading(true)
-        userStore
-          .login({
+        try {
+          setLoading(true)
+          const result = await userStore.login({
             email: formValues.emailAddress,
             password: formValues.password,
           })
-          .then(async (result) => {
-            setLoading(false)
-            if (!result.success && result.errors.length !== 0) {
-              Alert.alert(result.errors[0].message)
-            } else {
-              userStore.fetchCurrentUser()
-            }
-          })
-          .catch((err) => {
-            Alert.alert(err.message)
-            setLoading(false)
-          })
+          if (!result.success && result.errors.length !== 0) {
+            Alert.alert(result.errors[0].message)
+          } else {
+            userStore.fetchCurrentUser()
+            walletStore.fetchCurrentUserWallet()
+          }
+          setLoading(false)
+        } catch (err) {
+          setLoading(false)
+          Alert.alert(err.message)
+        }
       }),
     GoToSignUp: () => navigator.navigate("SignUp"),
   }
@@ -122,7 +121,12 @@ export const SignInScreen = observer(function SignInScreen() {
               />
             </View>
           </View>
-          <Button onPress={handler.SignIn} style={{ ...Style.Button }} color={color.text}>
+          <Button
+            disabled={loading}
+            onPress={handler.SignIn}
+            style={{ ...Style.Button }}
+            color={color.text}
+          >
             {loading ? (
               <ActivityIndicator
                 size="small"
@@ -139,7 +143,7 @@ export const SignInScreen = observer(function SignInScreen() {
                 color: color.palette.offGray,
                 fontSize: 13,
               }}
-              tx="common.auth.signInToContinue"
+              tx="common.auth.noAccount"
             />
             <TouchableRipple onPress={handler.GoToSignUp}>
               <Text

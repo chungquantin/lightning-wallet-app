@@ -74,24 +74,25 @@ const AppStack = observer(() => {
   const { userStore, walletStore } = useStores()
   React.useEffect(() => {
     userStore.fetchCurrentUser()
-    walletStore.fetchCurrentUserWallet()
   }, [])
 
-  const isSignedIn = () => {
-    return (
-      userStore.currentUser.id !== undefined &&
-      walletStore.wallet.id !== undefined &&
-      userStore.currentUser.id === walletStore.wallet.userId
-    )
-  }
+  React.useEffect(() => {
+    walletStore.fetchCurrentUserWallet()
+  }, [userStore.currentUser])
+
+  const isSignedIn =
+    userStore.currentUser.id !== undefined &&
+    walletStore.wallet.id !== undefined &&
+    userStore.currentUser.id === walletStore.wallet.userId
+
   return (
     <Stack.Navigator
       screenOptions={{
         ...screenOptions,
       }}
-      initialRouteName={isSignedIn() ? "Wallet" : "SignIn"}
+      initialRouteName={isSignedIn ? "Wallet" : "SignIn"}
     >
-      {isSignedIn() ? (
+      {isSignedIn ? (
         <>
           <Stack.Screen options={{ headerShown: false }} name="Wallet" component={Tabs} />
 

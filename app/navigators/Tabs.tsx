@@ -146,10 +146,6 @@ const TabItems = (
 ]
 
 export const Tabs = observer(function Tabs() {
-  const { userStore } = useStores()
-  React.useEffect(() => {
-    userStore.fetchUser("1")
-  }, [])
   return (
     <Tab.Navigator
       screenOptions={{

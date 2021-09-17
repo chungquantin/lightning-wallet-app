@@ -1,10 +1,10 @@
-import { gql } from "graphql-request"
+import { gql } from "@apollo/client"
 
 export interface LoginDto {
   email: string
   password: string
 }
-export const LOGIN = gql`
+export const LOGIN_MUTATION = gql`
   mutation ($loginData: LoginDto!) {
     login(data: $loginData) {
       data {
@@ -28,7 +28,7 @@ export interface RegisterDto {
   password: string
   phoneNumber: string
 }
-export const REGISTER = gql`
+export const REGISTER_MUTATION = gql`
   mutation ($registerData: RegisterDto!) {
     register(data: $registerData) {
       data {

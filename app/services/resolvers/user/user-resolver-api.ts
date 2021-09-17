@@ -1,19 +1,34 @@
 import { request } from "graphql-request"
-import { Login, LoginDto, Me, Register, RegisterDto } from "../../../generated/graphql"
+import {
+  GetMyContacts,
+  Login,
+  LoginDto,
+  Me,
+  Register,
+  RegisterDto,
+} from "../../../generated/graphql"
 import { STORAGE_KEY } from "../../../models/constants/AsyncStorageKey"
 import { loadString } from "../../../utils/storage"
-import { useGateway } from "../constants"
-import { LOGIN, REGISTER } from "./user.mutation"
-import { GET_CURRENT_USER } from "./user.query"
+import { API_URL, PRODUCTION_API_URL, useGateway } from "../constants"
+import { LOGIN_MUTATION, REGISTER_MUTATION } from "./user.mutation"
+import { GET_CURRENT_USER_CONTACTS, GET_CURRENT_USER_QUERY } from "./user.query"
 
 export class UserResolverAPI {
-  private url = useGateway ? "http://192.168.1.107:3001" : "http://192.168.1.107:3000/graphql"
+  private url = PRODUCTION_API_URL
+    ? PRODUCTION_API_URL
+    : !useGateway
+    ? `${API_URL}:3001`
+    : `${API_URL}:3000/graphql`
 
   public async login(dto: LoginDto): Promise<Login> {
     try {
-      const response = await request<{ login: Login }, { loginData: LoginDto }>(this.url, LOGIN, {
-        loginData: dto,
-      })
+      const response = await request<{ login: Login }, { loginData: LoginDto }>(
+        this.url,
+        LOGIN_MUTATION,
+        {
+          loginData: dto,
+        },
+      )
       return response.login
     } catch (error) {
       throw error
@@ -24,7 +39,7 @@ export class UserResolverAPI {
     try {
       const response = await request<{ register: Register }, { registerData: RegisterDto }>(
         this.url,
-        REGISTER,
+        REGISTER_MUTATION,
         { registerData: dto },
       )
       return response.register
@@ -32,6 +47,7 @@ export class UserResolverAPI {
       throw error.message
     }
   }
+
   public async getCurrentUser(): Promise<Me> {
     try {
       const [accessToken, refreshToken] = await Promise.all([
@@ -40,7 +56,7 @@ export class UserResolverAPI {
       ])
       const response = await request<{ getCurrentUser: Me }>(
         this.url,
-        GET_CURRENT_USER,
+        GET_CURRENT_USER_QUERY,
         {},
         {
           "x-access-token": accessToken,
@@ -48,6 +64,27 @@ export class UserResolverAPI {
         },
       )
       return response.getCurrentUser
+    } catch (error) {
+      throw error.message
+    }
+  }
+
+  public async getMyContacts(): Promise<GetMyContacts> {
+    try {
+      const [accessToken, refreshToken] = await Promise.all([
+        loadString(STORAGE_KEY.ACCESS_TOKEN),
+        loadString(STORAGE_KEY.REFRESH_TOKEN),
+      ])
+      const response = await request<{ getMyContacts: GetMyContacts }>(
+        this.url,
+        GET_CURRENT_USER_CONTACTS,
+        {},
+        {
+          "x-access-token": accessToken,
+          "x-refresh-token": refreshToken,
+        },
+      )
+      return response.getMyContacts
     } catch (error) {
       throw error.message
     }

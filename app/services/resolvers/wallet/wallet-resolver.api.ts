@@ -2,11 +2,15 @@ import { request } from "graphql-request"
 import { GetMeWallet } from "../../../generated/graphql"
 import { STORAGE_KEY } from "../../../models/constants/AsyncStorageKey"
 import { loadString } from "../../../utils/storage"
-import { useGateway } from "../constants"
-import { GET_CURRENT_USER_WALLET } from "./wallet.query"
+import { API_URL, PRODUCTION_API_URL, useGateway } from "../constants"
+import { GET_CURRENT_USER_WALLET_QUERY } from "./wallet.query"
 
 export class WalletResolverApi {
-  private url = useGateway ? "http://192.168.1.107:3004" : "http://192.168.1.107:3000/graphql"
+  private url = PRODUCTION_API_URL
+    ? PRODUCTION_API_URL
+    : !useGateway
+    ? `${API_URL}:3001`
+    : `${API_URL}:3000/graphql`
 
   public async getCurrentUserWallet(): Promise<any> {
     try {
@@ -17,7 +21,7 @@ export class WalletResolverApi {
 
       const response = await request<{ getMyWallet: GetMeWallet }>(
         this.url,
-        GET_CURRENT_USER_WALLET,
+        GET_CURRENT_USER_WALLET_QUERY,
         {},
         {
           "x-access-token": accessToken,

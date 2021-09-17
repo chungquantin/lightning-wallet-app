@@ -1,10 +1,10 @@
-import { Instance, isAlive, SnapshotOut, types } from "mobx-state-tree"
+import { flow, Instance, isAlive, SnapshotOut, types } from "mobx-state-tree"
 import { withEnvironment } from "../extensions/with-environment"
 import { User, UserModel, UserSnapshot } from "../user/user"
 import { UserApi } from "../../services/api/user-api"
 import _ from "underscore"
 import { UserResolverAPI } from "../../services/resolvers"
-import { Login, LoginDto, Me, Register, RegisterDto } from "../../generated/graphql"
+import { GetMyContacts, Login, LoginDto, Me, Register, RegisterDto } from "../../generated/graphql"
 import { clear, saveString } from "../../utils/storage"
 import { STORAGE_KEY } from "../constants/AsyncStorageKey"
 import { setUndefinedAl } from "../../utils/misc"
@@ -24,9 +24,7 @@ export const UserStoreModel = types
       }
     },
     saveUserContacts: (userContactsSnapshot: UserSnapshot[]) => {
-      if (isAlive(self.contacts)) {
-        self.contacts.replace(userContactsSnapshot)
-      }
+      self.contacts.replace(userContactsSnapshot)
     },
     saveCurrentUser: (userSnapshot: UserSnapshot) => {
       if (isAlive(self.contacts)) {
@@ -88,75 +86,71 @@ export const UserStoreModel = types
   }))
   .actions((self) => {
     return {
-      reset: async function () {
-        setUndefinedAl(self.user)
-        setUndefinedAl(self.currentUser)
-        setUndefinedAl(self.contacts)
-      },
-      logout: async function () {
+      logout: flow(function* () {
         try {
-          console.log("AuthStore - Logout")
-          this.reset()
+          console.log("UserStore - Logout")
+          setUndefinedAl(self.user)
+          setUndefinedAl(self.currentUser)
+          setUndefinedAl(self.contacts)
           clear()
         } catch (error) {
           console.tron.log(error.message)
         }
-      },
-      login: async function (dto: LoginDto) {
-        console.log("AuthStore - Login")
-        const userApi = new UserResolverAPI()
-        const result = await userApi.login(dto)
-
-        if (result.success) {
-          // store token
-          self.saveTokens(result.data)
-        } else {
-          __DEV__ && console.tron.log(result.errors)
-        }
-        return result as Login
-      },
-      register: async function (dto: RegisterDto) {
-        console.log("AuthStore - Register")
-        const userApi = new UserResolverAPI()
-        const result = await userApi.register(dto)
-
-        if (result.success) {
-          // handle successful creation
-        } else {
-          __DEV__ && console.tron.log(result.errors)
-        }
-        return result as Register
-      },
-      fetchUser: async function (id: string) {
-        const userApi = new UserApi(self.environment.api)
-        const result = await userApi.getUser(id)
-
-        if (result.kind === "ok") {
-          self.saveUser(result.user)
-        } else {
-          __DEV__ && console.tron.log(result.kind)
-        }
-      },
-      fetchUserContacts: async function (id: string) {
+      }),
+      login: flow(function* (dto: LoginDto) {
         try {
-          const userApi = new UserApi(self.environment.api)
-          const result = await userApi.getUserContacts(id)
-
-          if (result.kind === "ok") {
-            self.saveUserContacts(result.userContacts)
+          console.log("UserStore - Login")
+          const userApi = new UserResolverAPI()
+          const result = yield userApi.login(dto)
+          if (result.success) {
+            // store token
+            self.saveTokens(result.data)
           } else {
-            __DEV__ && console.tron.log(result.kind)
+            __DEV__ && console.tron.log(result.errors)
           }
+          return result as Login
         } catch (error) {
-          console.tron.error(error.message, "fetchUserContacts")
+          console.tron.error(error.message, "login")
           throw error
         }
-      },
-      fetchCurrentUser: async function () {
+      }),
+      register: flow(function* (dto: RegisterDto) {
+        try {
+          console.log("UserStore - Register")
+          const userApi = new UserResolverAPI()
+          const result = yield userApi.register(dto)
+          if (result.success) {
+            // handle successful creation
+          } else {
+            __DEV__ && console.tron.log(result.errors)
+          }
+          return result as Register
+        } catch (error) {
+          console.tron.error(error.message, "register")
+          throw error
+        }
+      }),
+      fetchUserContacts: flow(function* () {
+        try {
+          console.log("UserStore - FetchUserContacts")
+          const userApi = new UserResolverAPI()
+          const result = yield userApi.getMyContacts()
+          if (result.success) {
+            self.saveUserContacts(result.data)
+          } else {
+            __DEV__ && console.tron.log(result.errors)
+          }
+          return result as GetMyContacts
+        } catch (error) {
+          console.tron.error(error.message, "FetchUserContacts")
+          throw error
+        }
+      }),
+      fetchCurrentUser: flow(function* () {
         console.log("UserStore - FetchCurrentUser")
         try {
           const userApi = new UserResolverAPI()
-          const result = await userApi.getCurrentUser()
+          const result = yield userApi.getCurrentUser()
 
           if (result.success) {
             self.saveCurrentUser(result.data)
@@ -168,7 +162,7 @@ export const UserStoreModel = types
           console.tron.error(error.message, "fetchCurrentUser")
           throw error
         }
-      },
+      }),
     }
   })
 

@@ -39,7 +39,7 @@ export const SendScreen = observer(function SendScreen() {
   }
 
   React.useEffect(() => {
-    userStore.fetchUserContacts("1")
+    userStore.fetchUserContacts()
   }, [isFocused])
 
   React.useEffect(() => {

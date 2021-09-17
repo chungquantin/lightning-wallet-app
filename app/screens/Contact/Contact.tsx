@@ -29,7 +29,7 @@ export const ContactScreen = observer(function ContactScreen() {
   )
 
   React.useEffect(() => {
-    userStore.fetchUserContacts("1")
+    userStore.fetchUserContacts()
   }, [isFocused])
 
   React.useEffect(() => {
@@ -66,24 +66,28 @@ export const ContactScreen = observer(function ContactScreen() {
         />
       </View>
       <View>
-        <SectionList
-          sections={groupContactsByAlphabet}
-          renderSectionHeader={({ section: { letter } }) => (
-            <View>
-              <Text style={Style.AlphabetLetter}>{letter}</Text>
-            </View>
-          )}
-          renderItem={({ item }) => (
-            <UserItem
-              style={{
-                marginBottom: 5,
-              }}
-              user={item}
-              onPressHandler={() => handler.OpenUserDetail(item)}
-            />
-          )}
-          keyExtractor={(item) => item.id}
-        />
+        {userStore.contacts.length === 0 ? (
+          <Text>No contact</Text>
+        ) : (
+          <SectionList
+            sections={groupContactsByAlphabet}
+            renderSectionHeader={({ section: { letter } }) => (
+              <View>
+                <Text style={Style.AlphabetLetter}>{letter}</Text>
+              </View>
+            )}
+            renderItem={({ item }) => (
+              <UserItem
+                style={{
+                  marginBottom: 5,
+                }}
+                user={item}
+                onPressHandler={() => handler.OpenUserDetail(item)}
+              />
+            )}
+            keyExtractor={(item) => item.id}
+          />
+        )}
       </View>
     </View>
   )

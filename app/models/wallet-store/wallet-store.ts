@@ -24,8 +24,6 @@ export const WalletStoreModel = types
       const walletApi = new WalletResolverApi()
       const result = await walletApi.getCurrentUserWallet()
 
-      console.log(result)
-
       if (result.success) {
         // store token
         self.saveWallet(result.data)

@@ -42,10 +42,10 @@ export const SignUpScreen = observer(function SignUpScreen() {
   )
   const handler = {
     SignUp: () =>
-      handleSubmit((formValues) => {
-        setLoading(true)
-        userStore
-          .register({
+      handleSubmit(async (formValues) => {
+        try {
+          setLoading(true)
+          const result = await userStore.register({
             email: formValues.email,
             firstName: formValues.firstName,
             lastName: formValues.lastName,
@@ -53,20 +53,22 @@ export const SignUpScreen = observer(function SignUpScreen() {
             password: formValues.password,
             phoneNumber: Math.floor(Math.random() * (10000000 - 99999999 + 1)) + 10000000 + "",
           })
-          .then((result) => {
-            setLoading(false)
-            if (!result.success && result.errors.length !== 0) {
-              Alert.alert(result.errors[0].message)
-            }
-            if (result.success) {
-              Alert.alert(I18n.t("common.auth.register"), I18n.t("common.alert.accountIsCreated"), [
-                {
-                  text: "Go to Sign in",
-                  onPress: () => navigator.navigate("SignIn"),
-                },
-              ])
-            }
-          })
+          if (!result.success && result.errors.length !== 0) {
+            Alert.alert(result.errors[0].message)
+          }
+          if (result.success) {
+            Alert.alert(I18n.t("common.auth.register"), I18n.t("common.alert.accountIsCreated"), [
+              {
+                text: "Go to Sign in",
+                onPress: () => navigator.navigate("SignIn"),
+              },
+            ])
+          }
+          setLoading(false)
+        } catch (err) {
+          setLoading(false)
+          Alert.alert(err.message)
+        }
       }),
     GoToSignIn: () => navigator.navigate("SignIn"),
   }
@@ -134,6 +136,7 @@ export const SignUpScreen = observer(function SignUpScreen() {
             error={translateError(errors !== {} ? (errors as FormProps).confirmPassword : "")}
           />
           <Button
+            disabled={loading}
             onPress={handler.SignUp}
             style={{ ...Style.Button, marginTop: 50 }}
             color={color.text}
