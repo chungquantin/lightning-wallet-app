@@ -1,7 +1,7 @@
 import React from "react"
 import { SectionList, View } from "react-native"
 import { observer } from "mobx-react-lite"
-import { AutoImage, Button, Screen, Text } from "../../components"
+import { AutoImage, Screen, Text } from "../../components"
 import Style from "./History.style"
 import { LineChart, PieChart } from "react-native-chart-kit"
 import { Dimensions } from "react-native"
@@ -17,6 +17,7 @@ import I18n from "i18n-js"
 import useFormValidation from "../../hooks/useFormValidation"
 import { TouchableRipple } from "react-native-paper"
 import { useIsFocused } from "@react-navigation/core"
+import getSymbolFromCurrency from "currency-symbol-map"
 
 const NoTransactionIcon = require("../../../assets/images/icons/No-Transaction-Icon.png")
 
@@ -77,13 +78,21 @@ export const HistoryScreen = observer(function HistoryScreen() {
       legendFontSize: 15,
     },
   ]
-  const lineChartDate = {
-    labels: (selectedTab === 2 ? transactionIncomeList : transactionExpenseList)
-      .map((transaction) => transaction.month)
-      .reverse(),
+  const incomeLineChartData = {
+    labels: transactionIncomeList.map((transaction) => transaction.month).reverse(),
     datasets: [
       {
-        data: (selectedTab === 2 ? transactionIncomeList : transactionExpenseList)
+        data: transactionIncomeList
+          .map((transaction) => transaction.data.map((data) => data.amount).reduce((a, b) => a + b))
+          .reverse(),
+      },
+    ],
+  }
+  const expenseLineChartData = {
+    labels: transactionExpenseList.map((transaction) => transaction.month).reverse(),
+    datasets: [
+      {
+        data: transactionExpenseList
           .map((transaction) => transaction.data.map((data) => data.amount).reduce((a, b) => a + b))
           .reverse(),
       },
@@ -102,14 +111,14 @@ export const HistoryScreen = observer(function HistoryScreen() {
         width={Dimensions.get("screen").width}
         height={130}
         source={NoTransactionIcon}
+        defaultSource={NoTransactionIcon}
       />
       <Text
         style={{
           ...textStyle.subheader,
         }}
-      >
-        You have no transaction
-      </Text>
+        tx="common.empty.transaction"
+      />
     </View>
   )
 
@@ -214,22 +223,39 @@ export const HistoryScreen = observer(function HistoryScreen() {
     </View>
   )
   const RenderLineChart = () =>
-    (transactionIncomeList.length > 0 || transactionExpenseList.length > 0) && (
-      <View style={Style.ChartContainer}>
-        <LineChart
-          data={lineChartDate}
-          width={screenWidth - 80} // from react-native
-          height={200}
-          yAxisLabel={"$"}
-          chartConfig={chartConfig}
-          bezier
-          style={{
-            alignItems: "center",
-            borderRadius: 20,
-          }}
-        />
-      </View>
-    )
+    selectedTab === 2
+      ? transactionIncomeList.length > 0 && (
+          <View style={Style.ChartContainer}>
+            <LineChart
+              data={incomeLineChartData}
+              width={screenWidth - 80} // from react-native
+              height={200}
+              yAxisLabel={getSymbolFromCurrency(walletStore.wallet.defaultCurrency)}
+              chartConfig={chartConfig}
+              bezier
+              style={{
+                alignItems: "center",
+                borderRadius: 20,
+              }}
+            />
+          </View>
+        )
+      : transactionExpenseList.length > 0 && (
+          <View style={Style.ChartContainer}>
+            <LineChart
+              data={expenseLineChartData}
+              width={screenWidth - 80} // from react-native
+              height={200}
+              yAxisLabel={"$"}
+              chartConfig={chartConfig}
+              bezier
+              style={{
+                alignItems: "center",
+                borderRadius: 20,
+              }}
+            />
+          </View>
+        )
   const RenderTransactionContainer = () => (
     <View style={Style.BottomContainer}>
       {transactionList.length === 0 ? (

@@ -9,6 +9,7 @@ import getSymbolFromCurrency from "currency-symbol-map"
 import { TouchableRipple } from "react-native-paper"
 import { Style } from "./TransactionItem.style"
 import { GestureResponderEvent } from "react-native"
+import { useStores } from "../models"
 
 interface Props {
   transaction: Partial<Transaction>
@@ -21,6 +22,8 @@ export const TransactionItem = observer(function TransactionItem({
   style,
   onPressHandler,
 }: Props) {
+  const { walletStore } = useStores()
+		
   return (
     <TouchableRipple onPress={onPressHandler}>
       <View key={transaction.id} testID="TransactionItem" style={{ ...Style.Container, ...style }}>
@@ -38,7 +41,7 @@ export const TransactionItem = observer(function TransactionItem({
         </View>
         <View style={{ flex: 1.5, ...Style.MiddleContainer, alignItems: "flex-end" }}>
           <Text>
-            {transaction.type === "IN" ? (
+            {transaction.toWalletId === walletStore.wallet.id ? (
               <Text style={{ ...Style.TransactionAmount, color: color.palette.green }}>
                 +{getSymbolFromCurrency(transaction.currency)}
                 {transaction.amount}

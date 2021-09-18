@@ -36,10 +36,6 @@ export const WalletScreen = observer(function WalletScreen() {
   const isFocused = useIsFocused()
   const transaction = walletStore.transactions
   const transactionList = walletStore.groupTransactionByMonthAndYear()
-  const mockBalance = React.useMemo(() => {
-    let totalBalance = walletStore.totalWalletBalance
-    return totalBalance
-  }, [transaction])
 
   const currentWallet = walletStore.wallet
   const navigator = useNavigation()
@@ -72,7 +68,7 @@ export const WalletScreen = observer(function WalletScreen() {
       </View>
       <View style={Style.TopContainerCenter}>
         <Text style={Style.BalanceText}>
-          {formatByUnit(currentWallet.balance + mockBalance, currentWallet.defaultCurrency)}
+          {formatByUnit(currentWallet.balance, currentWallet.defaultCurrency)}
         </Text>
         <Text style={Style.BalanceRate}>
           {walletStore.percentageChange === 0 ? "+0.00" : walletStore.percentageChange.toString()}%

@@ -58,17 +58,16 @@ export const ContactScreen = observer(function ContactScreen() {
         width={Dimensions.get("screen").width}
         height={130}
         source={NoContactIcon}
+        defaultSource={NoContactIcon}
       />
       <Text
         style={{
           ...textStyle.subheader,
         }}
         tx="common.empty.contact"
-      >
-        You have no contact
-      </Text>
+      />
       <Button style={Style.EmptySectionButton}>
-        <Text tx="common.auth.createNewAccount" style={Style.EmptySectionSubHeader} />
+        <Text tx="contact.add-new-contact" style={Style.EmptySectionSubHeader} />
       </Button>
     </View>
   )

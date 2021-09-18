@@ -1,6 +1,8 @@
 import { request } from "graphql-request"
 import {
   GetMyContacts,
+  GetUser,
+  GetUserDto,
   Login,
   LoginDto,
   Me,
@@ -11,7 +13,7 @@ import { STORAGE_KEY } from "../../../models/constants/AsyncStorageKey"
 import { loadString } from "../../../utils/storage"
 import { API_URL, PRODUCTION_API_URL, useGateway } from "../constants"
 import { LOGIN_MUTATION, REGISTER_MUTATION } from "./user.mutation"
-import { GET_CURRENT_USER_CONTACTS, GET_CURRENT_USER_QUERY } from "./user.query"
+import { GET_CURRENT_USER_CONTACTS, GET_CURRENT_USER_QUERY, GET_USER_QUERY } from "./user.query"
 
 export class UserResolverAPI {
   private url = PRODUCTION_API_URL
@@ -85,6 +87,23 @@ export class UserResolverAPI {
         },
       )
       return response.getMyContacts
+    } catch (error) {
+      throw error.message
+    }
+  }
+
+  public async getUser(userId: string): Promise<GetUser> {
+    try {
+      const response = await request<{ getUser: GetUser }, { getUserData: GetUserDto }>(
+        this.url,
+        GET_USER_QUERY,
+        {
+          getUserData: {
+            userId,
+          },
+        },
+      )
+      return response.getUser
     } catch (error) {
       throw error.message
     }

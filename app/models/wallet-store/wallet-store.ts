@@ -3,7 +3,7 @@ import { withEnvironment } from "../extensions/with-environment"
 import _ from "underscore"
 import { GetMeWallet } from "../../generated/graphql"
 import { WalletModel, WalletSnapshot } from "../wallet/wallet"
-import { WalletResolverApi } from "../../services/resolvers"
+import { UserResolverAPI, WalletResolverApi } from "../../services/resolvers"
 import { Transaction, TransactionModel, TransactionSnapshot } from "../transaction/transaction"
 import {
   getMonthFromUnix,
@@ -12,6 +12,7 @@ import {
   isYesterday,
   monthList,
 } from "../../utils/date"
+import { User } from "../user/user"
 
 export const WalletStoreModel = types
   .model("WalletStore")
@@ -118,7 +119,7 @@ export const WalletStoreModel = types
     fetchTransactions: flow(function* () {
       console.log("WalletStore - FetchTransactions")
       const transactionApi = new WalletResolverApi()
-      const result = yield transactionApi.getMyWalletTransactions()
+      const result = yield transactionApi.getMyWalletTransactions({})
 
       if (result.success) {
         self.saveTransactions(result.data)
@@ -126,6 +127,22 @@ export const WalletStoreModel = types
         __DEV__ && console.tron.log(result.errors)
       }
     }),
+    fetchWalletOwner: async function (walletId: string): Promise<User> {
+      console.log("WalletStore - FetchWalletOwner")
+      const wallet = await new WalletResolverApi().getWallet(walletId)
+      if (wallet.success) {
+        const user = await new UserResolverAPI().getUser(wallet.data.userId)
+        if (user.success) {
+          return user.data
+        } else {
+          __DEV__ && console.tron.log(user.errors)
+          return null
+        }
+      } else {
+        __DEV__ && console.tron.log(wallet.errors)
+        return null
+      }
+    },
   }))
 
 type WalletStoreType = Instance<typeof WalletStoreModel>

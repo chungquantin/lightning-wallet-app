@@ -1,5 +1,22 @@
 import { gql } from "@apollo/client"
 
+export const GET_USER_QUERY = gql`
+  query GetUser($getUserData: GetUserDto!) {
+    getUser(data: $getUserData) {
+      data {
+        avatar
+        email
+        firstName
+        lastName
+        phoneNumber
+        phoneNumberVerified
+        emailVerified
+								name
+      }
+    }
+  }
+`
+
 export const GET_CURRENT_USER_QUERY = gql`
   query GetCurrentUser {
     getCurrentUser {

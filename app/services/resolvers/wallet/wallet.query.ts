@@ -1,5 +1,24 @@
 import { gql } from "@apollo/client"
 
+export const GET_WALLET_QUERY = gql`
+  query GetWallet($getWalletData: GetWalletDto!) {
+    getWallet(data: $getWalletData) {
+      data {
+        balance
+        createdAt
+        defaultCurrency
+        id
+        userId
+      }
+      errors {
+        message
+        path
+      }
+      success
+    }
+  }
+`
+
 export const GET_CURRENT_USER_WALLET_QUERY = gql`
   query GetCurrentUserWallet {
     getMyWallet {
@@ -20,8 +39,8 @@ export const GET_CURRENT_USER_WALLET_QUERY = gql`
 `
 
 export const GET_MY_WALLET_TRANSACTIONS_QUERY = gql`
-  query GetMyWalletTransactions {
-    getMyWalletTransactions {
+  query GetMyWalletTransactions($getMyWalletTransactionsPagination: PaginationInputType) {
+    getMyWalletTransactions(Pagination: $getMyWalletTransactionsPagination) {
       data {
         amount
         createdAt

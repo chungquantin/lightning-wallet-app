@@ -76,7 +76,6 @@ const Style = StyleSheet.create({
     marginTop: 20,
     justifyContent: "center",
     alignItems: "center",
-    height: "100%",
   },
   EmptySectionHeader: { fontSize: 30, fontWeight: "bold" },
   EmptySectionSubHeader: { fontSize: 14 },
