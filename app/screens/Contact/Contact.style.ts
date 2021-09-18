@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native"
+import { Dimensions, StyleSheet } from "react-native"
 import { color } from "../../theme"
 
 const Style = StyleSheet.create({
@@ -30,6 +30,25 @@ const Style = StyleSheet.create({
     marginBottom: 20,
     marginTop: 20,
     flexDirection: "row",
+  },
+  EmptySectionContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+    height: "100%",
+  },
+  EmptySectionButton: {
+    backgroundColor: color.primary,
+    width: Dimensions.get("screen").width / 2,
+    height: 40,
+    marginTop: 20,
+  },
+  EmptySectionHeader: { fontSize: 30, fontWeight: "bold" },
+  EmptySectionSubHeader: { fontSize: 14 },
+  EmptySectionImage: {
+    resizeMode: "contain",
+    marginBottom: 15,
+    marginTop: 20,
   },
 })
 

@@ -42,6 +42,7 @@ const Style: { [key: string]: ViewStyle | any } = {
     height: 70,
     borderRadius: 35,
   },
+  CustomHeaderRightButton: { marginRight: 20, fontSize: 22 },
 }
 
 export default Style

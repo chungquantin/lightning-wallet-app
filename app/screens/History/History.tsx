@@ -1,11 +1,11 @@
 import React from "react"
 import { SectionList, View } from "react-native"
 import { observer } from "mobx-react-lite"
-import { Screen, Text } from "../../components"
+import { AutoImage, Button, Screen, Text } from "../../components"
 import Style from "./History.style"
 import { LineChart, PieChart } from "react-native-chart-kit"
 import { Dimensions } from "react-native"
-import { color } from "../../theme"
+import { color, textStyle } from "../../theme"
 import { ChartConfig } from "react-native-chart-kit/dist/HelperTypes"
 import { useStores } from "../../models"
 import { TransactionItem } from "../TransactionItem"
@@ -17,6 +17,8 @@ import I18n from "i18n-js"
 import useFormValidation from "../../hooks/useFormValidation"
 import { TouchableRipple } from "react-native-paper"
 import { useIsFocused } from "@react-navigation/core"
+
+const NoTransactionIcon = require("../../../assets/images/icons/No-Transaction-Icon.png")
 
 const chartConfig: ChartConfig = {
   backgroundGradientFrom: color.secondaryBackground,
@@ -36,13 +38,13 @@ const chartConfig: ChartConfig = {
 }
 
 export const HistoryScreen = observer(function HistoryScreen() {
-  const { transactionStore, walletStore } = useStores()
+  const { walletStore } = useStores()
   const [selectedTab, setSelectedTab] = React.useState(1)
   const isFocused = useIsFocused()
   const screenWidth = Dimensions.get("window").width
-  const transactionList = transactionStore.groupTransactionByMonthAndYear()
-  const transactionIncomeList = transactionStore.incomeTransactionByMonthAndYear
-  const transactionExpenseList = transactionStore.expenseTransactionByMonthAndYear
+  const transactionList = walletStore.groupTransactionByMonthAndYear()
+  const transactionIncomeList = walletStore.incomeTransactionByMonthAndYear
+  const transactionExpenseList = walletStore.expenseTransactionByMonthAndYear
   const { formValues, handleSetFieldValue } = useFormValidation<{
     transactionDescription: string
   }>({
@@ -52,18 +54,24 @@ export const HistoryScreen = observer(function HistoryScreen() {
   const pieChartData = [
     {
       name: "Income",
-      population: transactionStore.incomeTransactions
-        .map((transaction) => transaction.amount)
-        .reduce((a, b) => a + b),
+      transactions:
+        walletStore.incomeTransactions.length > 0
+          ? walletStore.incomeTransactions
+              .map((transaction) => transaction.amount)
+              .reduce((a, b) => a + b)
+          : walletStore.incomeTransactions,
       color: color.palette.purple,
       legendFontColor: color.text,
       legendFontSize: 15,
     },
     {
       name: "Expense",
-      population: transactionStore.expenseTransactions
-        .map((transaction) => transaction.amount)
-        .reduce((a, b) => a + b),
+      transactions:
+        walletStore.expenseTransactions.length > 0
+          ? walletStore.expenseTransactions
+              .map((transaction) => transaction.amount)
+              .reduce((a, b) => a + b)
+          : walletStore.incomeTransactions,
       color: color.palette.darkPurple,
       legendFontColor: color.text,
       legendFontSize: 15,
@@ -81,6 +89,29 @@ export const HistoryScreen = observer(function HistoryScreen() {
       },
     ],
   }
+
+  React.useEffect(() => {
+    walletStore.fetchTransactions()
+  }, [isFocused])
+
+  const RenderEmptySection = () => (
+    <View style={Style.EmptySectionContainer}>
+      <Text style={Style.EmptySectionHeader}>Uh-oh!</Text>
+      <AutoImage
+        style={Style.EmptySectionImage}
+        width={Dimensions.get("screen").width}
+        height={130}
+        source={NoTransactionIcon}
+      />
+      <Text
+        style={{
+          ...textStyle.subheader,
+        }}
+      >
+        You have no transaction
+      </Text>
+    </View>
+  )
 
   const RenderTabButtonContainer = () => (
     <View>
@@ -143,24 +174,25 @@ export const HistoryScreen = observer(function HistoryScreen() {
       />
     </View>
   )
-  const RenderPieChart = () => (
-    <View style={{ ...Style.ChartContainer, paddingVertical: 15 }}>
-      <PieChart
-        data={pieChartData}
-        width={screenWidth - 100}
-        height={120}
-        chartConfig={chartConfig}
-        accessor={"population"}
-        backgroundColor={"transparent"}
-        paddingLeft={"-20"}
-        style={{
-          alignItems: "center",
-          borderRadius: 20,
-          marginRight: 10,
-        }}
-      />
-    </View>
-  )
+  const RenderPieChart = () =>
+    transactionList.length > 0 && (
+      <View style={{ ...Style.ChartContainer, paddingVertical: 15 }}>
+        <PieChart
+          data={pieChartData}
+          width={screenWidth - 100}
+          height={120}
+          chartConfig={chartConfig}
+          accessor={"transactions"}
+          backgroundColor={"transparent"}
+          paddingLeft={"-20"}
+          style={{
+            alignItems: "center",
+            borderRadius: 20,
+            marginRight: 10,
+          }}
+        />
+      </View>
+    )
   const RenderSearchInputContainer = () => (
     <View>
       <Text tx="common.form.transaction.label" style={Style.InputLabel} />
@@ -181,47 +213,53 @@ export const HistoryScreen = observer(function HistoryScreen() {
       </View>
     </View>
   )
-  const RenderLineChart = () => (
-    <View style={Style.ChartContainer}>
-      <LineChart
-        data={lineChartDate}
-        width={screenWidth - 80} // from react-native
-        height={200}
-        yAxisLabel={"$"}
-        chartConfig={chartConfig}
-        bezier
-        style={{
-          alignItems: "center",
-          borderRadius: 20,
-        }}
-      />
-    </View>
-  )
+  const RenderLineChart = () =>
+    (transactionIncomeList.length > 0 || transactionExpenseList.length > 0) && (
+      <View style={Style.ChartContainer}>
+        <LineChart
+          data={lineChartDate}
+          width={screenWidth - 80} // from react-native
+          height={200}
+          yAxisLabel={"$"}
+          chartConfig={chartConfig}
+          bezier
+          style={{
+            alignItems: "center",
+            borderRadius: 20,
+          }}
+        />
+      </View>
+    )
   const RenderTransactionContainer = () => (
     <View style={Style.BottomContainer}>
-      <SectionList
-        scrollEnabled={false}
-        sections={
-          selectedTab === 1
-            ? transactionList
-            : selectedTab === 2
-            ? transactionIncomeList
-            : transactionExpenseList
-        }
-        renderSectionHeader={({ section: { month, year } }) => (
-          <View style={Style.BottomTransactionLabelContainer}>
-            <Text style={Style.BottomTransactionLabelText}>{month}</Text>
-            <Text style={Style.BottomTransactionLabelText}>{year}</Text>
-          </View>
-        )}
-        renderItem={({ item }) => (
-          <TransactionItem
-            transaction={item}
-            onPressHandler={() => handler.OpenTransactionDetail(item)}
-          />
-        )}
-        keyExtractor={(item) => item.id}
-      />
+      {transactionList.length === 0 ? (
+        <RenderEmptySection />
+      ) : (
+        <SectionList
+          ListEmptyComponent={() => <RenderEmptySection />}
+          scrollEnabled={false}
+          sections={
+            selectedTab === 1
+              ? transactionList
+              : selectedTab === 2
+              ? transactionIncomeList
+              : transactionExpenseList
+          }
+          renderSectionHeader={({ section: { month, year } }) => (
+            <View style={Style.BottomTransactionLabelContainer}>
+              <Text style={Style.BottomTransactionLabelText}>{month}</Text>
+              <Text style={Style.BottomTransactionLabelText}>{year}</Text>
+            </View>
+          )}
+          renderItem={({ item }) => (
+            <TransactionItem
+              transaction={item}
+              onPressHandler={() => handler.OpenTransactionDetail(item)}
+            />
+          )}
+          keyExtractor={(item) => item.id}
+        />
+      )}
     </View>
   )
 

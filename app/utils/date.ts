@@ -14,6 +14,13 @@ export const monthList = [
   "November",
   "December",
 ]
+export const isToday = (unix: number) => {
+  return moment.unix(unix).format("DD-MM-YYYY") === moment().format("DD-MM-YYYY")
+}
+
+export const isYesterday = (unix: number) => {
+  return moment.unix(unix).format("DD-MM-YYYY") === moment().subtract(1, "day").format("DD-MM-YYYY")
+}
 export const getUnixNow = () => moment().unix()
 export const getUnixMinLater = (time: number) =>
   moment()

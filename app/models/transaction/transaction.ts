@@ -3,14 +3,17 @@ import { Instance, SnapshotOut, types } from "mobx-state-tree"
 export const TransactionModel = types.model("Transaction").props({
   id: types.maybe(types.string),
   description: types.maybe(types.string),
-  status: types.maybe(types.enumeration(["PENDING", "COMPLETED", "EXPIRED"])),
-  type: types.maybe(types.enumeration(["IN", "OUT"])),
+  status: types.maybe(types.enumeration(["PENDING", "DONE", "EXPIRED", "UNKNOWN"])),
   currency: types.maybe(types.enumeration(["USD", "VND", "CAD"])),
-  createdAt: types.maybe(types.number),
-  expiredAt: types.maybe(types.number),
+  method: types.maybe(types.enumeration(["LIGHTNING", "ON_CHAIN"])),
+  networkFee: types.maybe(types.number),
+  transactionFee: types.maybe(types.number),
+  createdAt: types.maybe(types.string),
   amount: types.maybe(types.number),
-  from: types.maybe(types.string),
-  to: types.maybe(types.string),
+  fromWalletId: types.maybe(types.string),
+  toWalletId: types.maybe(types.string),
+  btcAmount: types.maybe(types.number),
+  btcExchangeRate: types.maybe(types.number),
 })
 
 type TransactionType = Instance<typeof TransactionModel>

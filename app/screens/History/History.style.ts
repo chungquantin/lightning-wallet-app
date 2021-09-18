@@ -72,6 +72,19 @@ const Style = StyleSheet.create({
     fontSize: 14,
     fontFamily: textStyle.secondaryFontBold,
   },
+  EmptySectionContainer: {
+    marginTop: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
+  },
+  EmptySectionHeader: { fontSize: 30, fontWeight: "bold" },
+  EmptySectionSubHeader: { fontSize: 14 },
+  EmptySectionImage: {
+    resizeMode: "contain",
+    marginBottom: 15,
+    marginTop: 20,
+  },
 })
 
 export default Style

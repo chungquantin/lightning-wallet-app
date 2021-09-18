@@ -7,6 +7,10 @@
   "FORM_VALIDATION_PASSWORD_INVALID": "Must be at least 8 characters, with 1 capital letter, and 1 special character",
   "FORM_VALIDATION_NAME_HAS_NUMBER": "Name must not contain any number",
   "common": {
+    "empty": {
+      "transaction": "You have no transaction",
+      "contact": "You have no contact"
+    },
     "send": "Send",
     "receive": "Receive",
     "receive-description": "Show sender QR code",
@@ -25,9 +29,6 @@
     },
     "onchain": {
       "description": "High fee, flexible amount"
-    },
-    "contact": {
-      "empty": "There is no contact"
     },
     "auth": {
       "signInToContinue": "Signin to continue",

@@ -1,7 +1,6 @@
 import { flow, Instance, isAlive, SnapshotOut, types } from "mobx-state-tree"
 import { withEnvironment } from "../extensions/with-environment"
 import { User, UserModel, UserSnapshot } from "../user/user"
-import { UserApi } from "../../services/api/user-api"
 import _ from "underscore"
 import { UserResolverAPI } from "../../services/resolvers"
 import { GetMyContacts, Login, LoginDto, Me, Register, RegisterDto } from "../../generated/graphql"
@@ -12,17 +11,11 @@ import { setUndefinedAl } from "../../utils/misc"
 export const UserStoreModel = types
   .model("UserStore")
   .props({
-    user: types.optional(UserModel, {}),
     currentUser: types.optional(UserModel, {}),
     contacts: types.optional(types.array(UserModel), []),
   })
   .extend(withEnvironment)
   .actions((self) => ({
-    saveUser: (userSnapshot: UserSnapshot) => {
-      if (isAlive(self.contacts)) {
-        self.user = userSnapshot
-      }
-    },
     saveUserContacts: (userContactsSnapshot: UserSnapshot[]) => {
       self.contacts.replace(userContactsSnapshot)
     },
@@ -89,7 +82,6 @@ export const UserStoreModel = types
       logout: flow(function* () {
         try {
           console.log("UserStore - Logout")
-          setUndefinedAl(self.user)
           setUndefinedAl(self.currentUser)
           setUndefinedAl(self.contacts)
           clear()

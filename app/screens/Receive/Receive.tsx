@@ -95,7 +95,10 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
       keyExtractor={(item) => item.id}
       ListEmptyComponent={() => (
         <View style={Style.RequestEmptyContainer}>
-          <Text style={{ color: color.palette.offGray }} tx="common.contact.empty" />
+          <Text style={{ color: color.palette.offGray, fontSize: 25, marginBottom: 15 }}>
+            :-)
+          </Text>
+          <Text style={{ color: color.palette.offGray }} tx="common.empty.contact" />
         </View>
       )}
     />

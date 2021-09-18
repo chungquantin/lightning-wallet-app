@@ -32,32 +32,25 @@ const CustomButton = ({ onPressHandler, tx, children }: ButtonProps) => {
 }
 
 export const WalletScreen = observer(function WalletScreen() {
-  const { transactionStore, walletStore } = useStores()
+  const { walletStore } = useStores()
   const isFocused = useIsFocused()
-  const transaction = transactionStore.transactions
-  const transactionList = transactionStore.groupTransactionByMonthAndYear()
+  const transaction = walletStore.transactions
+  const transactionList = walletStore.groupTransactionByMonthAndYear()
   const mockBalance = React.useMemo(() => {
-    let totalBalance = 0
-    transactionStore.transactions.filter((transaction) => {
-      if (transaction.type === "IN") {
-        totalBalance += transaction.amount
-      } else {
-        totalBalance -= transaction.amount
-      }
-    })
+    let totalBalance = walletStore.totalWalletBalance
     return totalBalance
   }, [transaction])
 
   const currentWallet = walletStore.wallet
   const navigator = useNavigation()
 
-  onSnapshot(transactionStore.transactions, (snapshot) => {
+  onSnapshot(walletStore.transactions, (snapshot) => {
     transaction.replace(snapshot)
   })
 
   React.useEffect(() => {
     walletStore.fetchCurrentUserWallet()
-    transactionStore.fetchTransactions()
+    walletStore.fetchTransactions()
   }, [isFocused])
 
   const handler = {
@@ -81,7 +74,9 @@ export const WalletScreen = observer(function WalletScreen() {
         <Text style={Style.BalanceText}>
           {formatByUnit(currentWallet.balance + mockBalance, currentWallet.defaultCurrency)}
         </Text>
-        <Text style={Style.BalanceRate}>+12.00%</Text>
+        <Text style={Style.BalanceRate}>
+          {walletStore.percentageChange === 0 ? "+0.00" : walletStore.percentageChange.toString()}%
+        </Text>
       </View>
       <View style={Style.TopContainerEnd}>
         <CustomButton onPressHandler={handler.Send} tx="common.send">
@@ -108,29 +103,46 @@ export const WalletScreen = observer(function WalletScreen() {
     </View>
   ))
 
+  const RenderTransactionEmptyContainer = () => (
+    <View
+      style={{
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+      }}
+    >
+      <Text style={Style.EmptyContainerHeader}>ಠ_ಠ</Text>
+      <Text style={Style.EmptyContainerSubHeader} tx="common.empty.transaction" />
+    </View>
+  )
+
   const RenderTransactionsContainer = observer(() => (
     <View style={Style.BottomContainer}>
       <Text tx="common.transaction" style={Style.BottomHeader} />
-      <Text style={{ marginBottom: 20 }}>
+      <Text style={{ marginBottom: transactionList.length !== 0 ? 20 : 0 }}>
         <Text style={Style.BottomSubheader} tx="wallet.total-transactions" />
         <Text style={Style.BottomSubheader}>: {transaction.length}</Text>
       </Text>
-      <SectionList
-        sections={transactionList}
-        renderSectionHeader={({ section: { month, year } }) => (
-          <View style={Style.BottomTransactionLabelContainer}>
-            <Text style={Style.BottomTransactionLabelText}>{month}</Text>
-            <Text style={Style.BottomTransactionLabelText}>{year}</Text>
-          </View>
-        )}
-        renderItem={({ item }) => (
-          <TransactionItem
-            transaction={item}
-            onPressHandler={() => handler.OpenTransactionDetail(item)}
-          />
-        )}
-        keyExtractor={(item) => item.id}
-      />
+      {transactionList.length === 0 ? (
+        <RenderTransactionEmptyContainer />
+      ) : (
+        <SectionList
+          sections={transactionList}
+          renderSectionHeader={({ section: { month, year } }) => (
+            <View style={Style.BottomTransactionLabelContainer}>
+              <Text style={Style.BottomTransactionLabelText}>{month}</Text>
+              <Text style={Style.BottomTransactionLabelText}>{year}</Text>
+            </View>
+          )}
+          renderItem={({ item }) => (
+            <TransactionItem
+              transaction={item}
+              onPressHandler={() => handler.OpenTransactionDetail(item)}
+            />
+          )}
+          keyExtractor={(item) => item.id}
+        />
+      )}
     </View>
   ))
 

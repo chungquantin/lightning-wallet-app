@@ -1,7 +1,7 @@
 import React from "react"
-import { View } from "react-native"
+import { View, Dimensions } from "react-native"
 import { observer } from "mobx-react-lite"
-import { Text } from "../../components"
+import { Text, AutoImage, Button } from "../../components"
 import Style from "./Contact.style"
 import { useIsFocused, useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
@@ -9,10 +9,12 @@ import { UserItem } from "../UserItem"
 import { SectionList } from "react-native"
 import { TextInput } from "react-native-gesture-handler"
 import I18n from "i18n-js"
-import { color } from "../../theme"
+import { color, textStyle } from "../../theme"
 import useFormValidation from "../../hooks/useFormValidation"
 import { Ionicons } from "@expo/vector-icons"
 import { User } from "../../models/user/user"
+
+const NoContactIcon = require("../../../assets/images/icons/No-Contact-Icon.png")
 
 export const ContactScreen = observer(function ContactScreen() {
   const { userStore } = useStores()
@@ -48,6 +50,52 @@ export const ContactScreen = observer(function ContactScreen() {
       }),
   }
 
+  const RenderEmptySection = () => (
+    <View style={Style.EmptySectionContainer}>
+      <Text style={Style.EmptySectionHeader}>Oops!</Text>
+      <AutoImage
+        style={Style.EmptySectionImage}
+        width={Dimensions.get("screen").width}
+        height={130}
+        source={NoContactIcon}
+      />
+      <Text
+        style={{
+          ...textStyle.subheader,
+        }}
+        tx="common.empty.contact"
+      >
+        You have no contact
+      </Text>
+      <Button style={Style.EmptySectionButton}>
+        <Text tx="common.auth.createNewAccount" style={Style.EmptySectionSubHeader} />
+      </Button>
+    </View>
+  )
+
+  const RenderContactList = () => (
+    <View>
+      <SectionList
+        sections={groupContactsByAlphabet}
+        renderSectionHeader={({ section: { letter } }) => (
+          <View>
+            <Text style={Style.AlphabetLetter}>{letter}</Text>
+          </View>
+        )}
+        renderItem={({ item }) => (
+          <UserItem
+            style={{
+              marginBottom: 5,
+            }}
+            user={item}
+            onPressHandler={() => handler.OpenUserDetail(item)}
+          />
+        )}
+        keyExtractor={(item) => item.id}
+      />
+    </View>
+  )
+
   return (
     <View testID="ContactScreen" style={Style.Container}>
       <View style={Style.SearchContainer}>
@@ -65,30 +113,7 @@ export const ContactScreen = observer(function ContactScreen() {
           value={formValues.user}
         />
       </View>
-      <View>
-        {userStore.contacts.length === 0 ? (
-          <Text>No contact</Text>
-        ) : (
-          <SectionList
-            sections={groupContactsByAlphabet}
-            renderSectionHeader={({ section: { letter } }) => (
-              <View>
-                <Text style={Style.AlphabetLetter}>{letter}</Text>
-              </View>
-            )}
-            renderItem={({ item }) => (
-              <UserItem
-                style={{
-                  marginBottom: 5,
-                }}
-                user={item}
-                onPressHandler={() => handler.OpenUserDetail(item)}
-              />
-            )}
-            keyExtractor={(item) => item.id}
-          />
-        )}
-      </View>
+      {userStore.contacts.length === 0 ? <RenderEmptySection /> : <RenderContactList />}
     </View>
   )
 })

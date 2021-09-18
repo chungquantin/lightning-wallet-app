@@ -60,7 +60,10 @@ export const SendScreen = observer(function SendScreen() {
       keyExtractor={(item) => item.id}
       ListEmptyComponent={() => (
         <View style={Style.RequestEmptyContainer}>
-          <Text style={{ color: color.palette.offGray }} tx="common.contact.empty" />
+          <Text style={{ color: color.palette.offGray, fontSize: 25, marginBottom: 15 }}>
+            ¯\_(ツ)_/¯
+          </Text>
+          <Text style={{ color: color.palette.offGray }} tx="common.empty.contact" />
         </View>
       )}
     />
@@ -112,7 +115,14 @@ export const SendScreen = observer(function SendScreen() {
             colors={[color.palette.purple, color.palette.darkPurple]}
             style={Style.ScanButtonInner}
           >
-            <Ionicons name="scan-outline" color={color.palette.offWhite} size={25} />
+            <Ionicons
+              name="scan-outline"
+              style={{
+                marginLeft: Style.ScanButtonInner.width - 58,
+              }}
+              color={color.palette.offWhite}
+              size={30}
+            />
           </LinearGradient>
         </TouchableOpacity>
       </View>

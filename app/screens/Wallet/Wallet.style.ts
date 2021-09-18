@@ -98,6 +98,16 @@ const Style = StyleSheet.create({
     fontSize: textStyle.smallSize,
     color: color.palette.offGray,
   },
+  EmptyContainerHeader: {
+    color: color.palette.offGray,
+    fontSize: 40,
+    marginBottom: 10,
+  },
+  EmptyContainerSubHeader: {
+    color: color.palette.offGray,
+    fontSize: 16,
+    marginBottom: 50,
+  },
 })
 
 export default Style

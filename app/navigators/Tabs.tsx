@@ -9,7 +9,7 @@ import { Text } from "../components"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { LinearGradient } from "expo-linear-gradient"
 import { Ionicons } from "@expo/vector-icons"
-import { useStores } from "../models"
+import { useNavigation } from "@react-navigation/core"
 
 const Tab = createBottomTabNavigator()
 
@@ -24,6 +24,17 @@ const TabBarCustomButton = ({ children, onPress }) => (
   </TouchableOpacity>
 )
 
+const CustomHeaderIconButton = ({ size, name, onPress }) => (
+  <TouchableOpacity onPress={onPress}>
+    <Ionicons
+      style={Style.CustomHeaderRightButton}
+      name={name}
+      color={color.palette.white}
+      size={size}
+    />
+  </TouchableOpacity>
+)
+
 interface Props {
   iconStyle?: {
     inactiveColor: string
@@ -32,120 +43,147 @@ interface Props {
   }
 }
 
-const TabItems = (
-  props?: Props,
-): Partial<{
-  key: string
-  name: string
-  component: React.FunctionComponent<any>
-  layout: any
-  buttonLayout: any
-  headerShown: boolean
-}>[] => [
-  // First button - Wallet
-  {
-    headerShown: false,
-    key: "wallet-tab",
-    name: "Wallet",
-    component: WalletScreen,
-    layout: ({ focused }) => (
-      <View style={Style.TabItemsView}>
-        <Ionicons
-          name="wallet-outline"
-          color={focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor}
-          size={props.iconStyle.size}
-        />
-        <Text
-          tx="navigation.wallet"
-          style={{
-            color: focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor,
-            ...Style.TabItemsLabel,
-          }}
-        />
-      </View>
-    ),
-  },
-  // Second button - Contact
-  {
-    headerShown: true,
-    key: "contact-tab",
-    name: "Contact",
-    component: ContactScreen,
-    layout: ({ focused }) => (
-      <View style={Style.TabItemsView}>
-        <Ionicons
-          name="ios-globe"
-          color={focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor}
-          size={props.iconStyle.size}
-        />
-        <Text
-          tx="navigation.contact"
-          style={{
-            color: focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor,
-            ...Style.TabItemsLabel,
-          }}
-        />
-      </View>
-    ),
-  },
-  // Center Button
-  {
-    headerShown: false,
-    key: "qr-code",
-    name: "QR Code",
-    component: WalletScreen,
-    layout: () => <Ionicons name="scan-outline" color={color.palette.offWhite} size={25} />,
-    buttonLayout: (props) => <TabBarCustomButton {...props} />,
-  },
-  // Fourth Button - History
-  {
-    headerShown: true,
-    key: "history-tab",
-    name: "History",
-    component: HistoryScreen,
-    layout: ({ focused }) => (
-      <View style={Style.TabItemsView}>
-        <Ionicons
-          name="ios-stats-chart"
-          color={focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor}
-          size={props.iconStyle.size}
-        />
-        <Text
-          tx="navigation.history"
-          style={{
-            color: focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor,
-            ...Style.TabItemsLabel,
-          }}
-        />
-      </View>
-    ),
-  },
-  // Fifth Button - Profile
-  {
-    headerShown: true,
-    key: "profile-tab",
-    name: "Profile",
-    component: ProfileScreen,
-    layout: ({ focused }) => (
-      <View style={Style.TabItemsView}>
-        <Ionicons
-          name="person-outline"
-          color={focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor}
-          size={props.iconStyle.size}
-        />
-        <Text
-          tx="navigation.profile"
-          style={{
-            color: focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor,
-            ...Style.TabItemsLabel,
-          }}
-        />
-      </View>
-    ),
-  },
-]
-
 export const Tabs = observer(function Tabs() {
+  const navigator = useNavigation()
+  const handler = {
+    AddNewContact: () => {},
+    GoToWallet: () => navigator.navigate("Send"),
+    GoToSettings: () => {},
+  }
+  const TabItems = (
+    props?: Props,
+  ): Partial<{
+    key: string
+    name: string
+    component: React.FunctionComponent<any>
+    layout: any
+    buttonLayout: any
+    headerShown: boolean
+    headerRight: any
+  }>[] => [
+    // First button - Wallet
+    {
+      headerShown: false,
+      key: "wallet-tab",
+      name: "Wallet",
+      component: WalletScreen,
+      layout: ({ focused }) => (
+        <View style={Style.TabItemsView}>
+          <Ionicons
+            name="wallet-outline"
+            color={focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor}
+            size={props.iconStyle.size}
+          />
+          <Text
+            tx="navigation.wallet"
+            style={{
+              color: focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor,
+              ...Style.TabItemsLabel,
+            }}
+          />
+        </View>
+      ),
+    },
+    // Second button - Contact
+    {
+      headerShown: true,
+      key: "contact-tab",
+      name: "Contact",
+      component: ContactScreen,
+      headerRight: () => (
+        <CustomHeaderIconButton
+          size={props.iconStyle.size}
+          onPress={handler.AddNewContact}
+          name="add-circle"
+        />
+      ),
+      layout: ({ focused }) => (
+        <View style={Style.TabItemsView}>
+          <Ionicons
+            name="ios-globe"
+            color={focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor}
+            size={props.iconStyle.size}
+          />
+          <Text
+            tx="navigation.contact"
+            style={{
+              color: focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor,
+              ...Style.TabItemsLabel,
+            }}
+          />
+        </View>
+      ),
+    },
+    // Center Button
+    {
+      headerShown: false,
+      key: "qr-code",
+      name: "QR Code",
+      component: WalletScreen,
+      layout: () => <Ionicons name="scan-outline" color={color.palette.offWhite} size={25} />,
+      buttonLayout: (props) => <TabBarCustomButton {...props} />,
+    },
+    // Fourth Button - History
+    {
+      headerShown: true,
+      key: "history-tab",
+      name: "History",
+      component: HistoryScreen,
+      headerRight: () => (
+        <CustomHeaderIconButton
+          size={props.iconStyle.size}
+          onPress={handler.GoToWallet}
+          name="add-circle"
+        />
+      ),
+      layout: ({ focused }) => (
+        <View style={Style.TabItemsView}>
+          <Ionicons
+            name="ios-stats-chart"
+            color={focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor}
+            size={props.iconStyle.size}
+          />
+          <Text
+            tx="navigation.history"
+            style={{
+              color: focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor,
+              ...Style.TabItemsLabel,
+            }}
+          />
+        </View>
+      ),
+    },
+    // Fifth Button - Profile
+    {
+      headerShown: true,
+      key: "profile-tab",
+      name: "Profile",
+      component: ProfileScreen,
+      headerRight: () => (
+        <CustomHeaderIconButton
+          size={props.iconStyle.size}
+          onPress={handler.GoToSettings}
+          name="settings-sharp"
+        />
+      ),
+      layout: ({ focused }) => (
+        <View style={Style.TabItemsView}>
+          <Ionicons
+            name="person-outline"
+            color={focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor}
+            size={props.iconStyle.size}
+          />
+          <Text
+            tx="navigation.profile"
+            style={{
+              color: focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor,
+              ...Style.TabItemsLabel,
+            }}
+          />
+        </View>
+      ),
+    },
+  ]
   return (
     <Tab.Navigator
       screenOptions={{
@@ -176,6 +214,7 @@ export const Tabs = observer(function Tabs() {
           component={tab.component}
           options={{
             headerShown: tab.headerShown,
+            headerRight: tab.headerRight,
             tabBarIcon: tab.layout,
             tabBarButton: tab.buttonLayout,
           }}

@@ -95,7 +95,6 @@ const AppStack = observer(() => {
       {isSignedIn ? (
         <>
           <Stack.Screen options={{ headerShown: false }} name="Wallet" component={Tabs} />
-
           {/* Send screen stack */}
           <Stack.Screen name="Send" component={SendScreen} />
           <Stack.Screen
