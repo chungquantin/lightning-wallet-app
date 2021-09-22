@@ -1,5 +1,5 @@
 import React from "react"
-import { View } from "react-native"
+import { Alert, View } from "react-native"
 import { observer } from "mobx-react-lite"
 import { Button, Text } from "../../components"
 import Style from "./Send.style"
@@ -30,9 +30,17 @@ export const SendScreen = observer(function SendScreen() {
   const [contactList, setContactList] = React.useState<User[]>(userStore.contacts)
 
   const handler = {
-    OutAppRequest: () => navigator.navigate("SendOutAppRequest"),
+    OutAppRequest: () => {
+      if (formValues.description === "") {
+        return Alert.alert("You must enter the description first!")
+      }
+      return navigator.navigate("SendOutAppRequest")
+    },
     InAppRequest: (user: User) => {
-      navigator.navigate("SendInAppRequest", {
+      if (formValues.description === "") {
+        return Alert.alert("You must enter the description first!")
+      }
+      return navigator.navigate("SendInAppRequest", {
         user,
       })
     },
@@ -116,7 +124,7 @@ export const SendScreen = observer(function SendScreen() {
             style={Style.ScanButtonInner}
           >
             <Ionicons
-              name="qr-code-outline"
+              name="scan-outline"
               style={{
                 marginLeft: Style.ScanButtonInner.width - 61,
               }}
@@ -138,7 +146,10 @@ export const SendScreen = observer(function SendScreen() {
           />
         </View>
         <View style={Style.Input}>
-          <Text tx="common.form.description.label" style={Style.InputLabel} />
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text tx="common.form.description.label" style={Style.InputLabel} />
+            <Text style={{ color: color.error }}>*</Text>
+          </View>
           <TextInput
             style={Style.InputField}
             placeholderTextColor={color.palette.offGray}

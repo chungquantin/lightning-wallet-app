@@ -1,7 +1,7 @@
 import React from "react"
 import { View } from "react-native"
 import { observer } from "mobx-react-lite"
-import { AutoImage, Screen, Text } from "../components"
+import { Screen, Text } from "../components"
 import Style from "./TransactionDetail.style"
 import { ParamListBase, RouteProp, useRoute } from "@react-navigation/native"
 import { Transaction } from "../models/transaction/transaction"
@@ -19,7 +19,7 @@ interface TransactionDetailRouteProps extends ParamListBase {
 
 export const TransactionDetailScreen = observer(function TransactionDetailScreen() {
   const route = useRoute<RouteProp<TransactionDetailRouteProps, "TransactionDetail">>()
-  const { walletStore, userStore } = useStores()
+  const { walletStore } = useStores()
   const [user, setUser] = React.useState<User>()
   const { transaction } = route.params
   const userWalletId =

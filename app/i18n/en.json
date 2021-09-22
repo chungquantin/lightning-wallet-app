@@ -48,6 +48,13 @@
       "accountIsCreated": "Account is created successfully!"
     },
     "form": {
+      "expirationTime": {
+        "label": "Expiration time"
+      },
+      "amount": {
+        "label": "Amount",
+        "placeholder": "Add amount"
+      },
       "firstName": {
         "label": "First name",
         "placeholder": "Enter your first name"
