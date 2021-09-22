@@ -116,12 +116,12 @@ export const SendScreen = observer(function SendScreen() {
             style={Style.ScanButtonInner}
           >
             <Ionicons
-              name="scan-outline"
+              name="qr-code-outline"
               style={{
-                marginLeft: Style.ScanButtonInner.width - 58,
+                marginLeft: Style.ScanButtonInner.width - 61,
               }}
               color={color.palette.offWhite}
-              size={30}
+              size={33}
             />
           </LinearGradient>
         </TouchableOpacity>

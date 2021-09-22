@@ -101,7 +101,7 @@
     "request": "Request",
     "transaction": "Transaction",
     "sendToFriend": "Send to Friend",
-    "scanQrCode": "Scan QR Code",
+    "scanQrCode": "QR Code",
     "confirmSend": "Confirm Send",
     "paymentComplete": "Payment Complete",
     "back": "Back"
