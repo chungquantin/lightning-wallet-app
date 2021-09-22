@@ -1,5 +1,5 @@
 import React from "react"
-import { View } from "react-native"
+import { Alert, View } from "react-native"
 import { observer } from "mobx-react-lite"
 import { Button, Text } from "../../components"
 import Style from "./Receive.style"
@@ -29,9 +29,19 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
   const [contactList, setContactList] = React.useState<User[]>(userStore.contacts)
 
   const handler = {
-    OutAppRequest: () => navigator.navigate("ReceiveOutAppRequest"),
+    OutAppRequest: () => {
+      if (formValues.description === "") {
+        return Alert.alert(I18n.t("FORM_VALIDATION_DESCRIPTION_INVALID"))
+      }
+      return navigator.navigate("ReceiveOutAppRequest", {
+        description: formValues.description,
+      })
+    },
     InAppRequest: ({ id }: Pick<User, "id">) => {
-      navigator.navigate("ReceiveInAppRequest", {
+      if (formValues.description === "") {
+        return Alert.alert(I18n.t("FORM_VALIDATION_DESCRIPTION_INVALID"))
+      }
+      return navigator.navigate("ReceiveInAppRequest", {
         userId: id,
       })
     },
@@ -95,9 +105,7 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
       keyExtractor={(item) => item.id}
       ListEmptyComponent={() => (
         <View style={Style.RequestEmptyContainer}>
-          <Text style={{ color: color.palette.offGray, fontSize: 25, marginBottom: 15 }}>
-            :-)
-          </Text>
+          <Text style={{ color: color.palette.offGray, fontSize: 25, marginBottom: 15 }}>:-)</Text>
           <Text style={{ color: color.palette.offGray }} tx="common.empty.contact" />
         </View>
       )}
