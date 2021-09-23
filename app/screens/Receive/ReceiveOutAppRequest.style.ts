@@ -41,7 +41,7 @@ const Style = StyleSheet.create({
     alignItems: "center",
   },
   ButtonPlaceholder: {
-    fontSize: 13,
+    fontSize: 18,
     fontWeight: "bold",
     color: color.palette.green,
     marginLeft: 5,

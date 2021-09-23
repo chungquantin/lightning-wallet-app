@@ -2,6 +2,11 @@ import getSymbolFromCurrency from "currency-symbol-map"
 import currency from "currency.js"
 
 const getListCurrency = ["USD", "VND", "CAD"]
+const translateCurrency = {
+  USD: { symbol: "USD", text: "US Dollar" },
+  VND: { symbol: "VND", text: "Vietnamese Dong" },
+  CAD: { symbol: "CAD", text: "Canadian Dollar" },
+}
 
 const abbreviator = (num, dec) => {
   // 2 decimal places => 100, 3 => 1000, etc
@@ -28,7 +33,7 @@ const abbreviator = (num, dec) => {
   return number
 }
 
-const formatByUnit = (value, unit = null, isCompacted = false) => {
+const formatByUnit = (value, unit = null, isCompacted = false, hasSymbol = true) => {
   const showSign = unit !== "BTC" && unit !== "USDt" && unit !== "BUSD"
   const symbol = unit ? `${unit} ` : ""
   if (value >= 1000000 && isCompacted) {
@@ -38,7 +43,7 @@ const formatByUnit = (value, unit = null, isCompacted = false) => {
   switch (unit) {
     case "VND":
       return currency(Math.round(value), {
-        symbol: showSign && unit ? getSymbolFromCurrency(unit) : symbol,
+        symbol: showSign && unit ? (hasSymbol ? getSymbolFromCurrency(unit) : "") : symbol,
         separator: ",",
         decimal: ".",
         precision: 0,
@@ -46,7 +51,7 @@ const formatByUnit = (value, unit = null, isCompacted = false) => {
 
     default:
       return currency(value, {
-        symbol: showSign && unit ? getSymbolFromCurrency(unit) : symbol,
+        symbol: showSign && unit ? (hasSymbol ? getSymbolFromCurrency(unit) : "") : symbol,
         separator: ",",
         decimal: ".",
         precision: 2,
@@ -54,4 +59,4 @@ const formatByUnit = (value, unit = null, isCompacted = false) => {
   }
 }
 
-export { formatByUnit, abbreviator, getListCurrency }
+export { formatByUnit, abbreviator, getListCurrency, translateCurrency }

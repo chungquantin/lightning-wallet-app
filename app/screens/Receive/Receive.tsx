@@ -33,8 +33,10 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
       if (formValues.description === "") {
         return Alert.alert(I18n.t("FORM_VALIDATION_DESCRIPTION_INVALID"))
       }
-      return navigator.navigate("ReceiveOutAppRequest", {
+      return navigator.navigate("TransactionAmountCreation", {
         description: formValues.description,
+        action: "RECEIVE",
+        type: "OUT_APP",
       })
     },
     InAppRequest: ({ id }: Pick<User, "id">) => {

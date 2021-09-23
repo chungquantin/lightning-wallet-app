@@ -29,6 +29,7 @@ import {
 import i18n from "i18n-js"
 import { useStores } from "../models"
 import { observer } from "mobx-react-lite"
+import { TransactionAmountCreationScreen } from "../screens/TransactionAmountCreation"
 
 export type NavigatorParamList = {
   Wallet: undefined
@@ -44,6 +45,7 @@ export type NavigatorParamList = {
   TransactionDetail: undefined
   TransactionConfirm: undefined
   TransactionComplete: undefined
+  TransactionAmountCreation: undefined
   SignIn: undefined
   SignUp: undefined
 }
@@ -135,6 +137,14 @@ const AppStack = observer(() => {
               headerBackTitle: i18n.t("navigation.contact"),
             }}
             component={UserDetailScreen}
+          />
+          <Stack.Screen
+            name="TransactionAmountCreation"
+            options={{
+              headerShown: true,
+              headerTitle: "",
+            }}
+            component={TransactionAmountCreationScreen}
           />
           <Stack.Screen
             name="TransactionDetail"

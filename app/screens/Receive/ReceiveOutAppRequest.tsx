@@ -8,18 +8,21 @@ import { Ionicons } from "@expo/vector-icons"
 import { color } from "../../theme"
 import { ParamListBase } from "@react-navigation/routers"
 import { RouteProp, useRoute } from "@react-navigation/core"
+import { formatByUnit } from "../../utils/currency"
 
-const NeutronpayLogo = require("../../../assets/images/logos/neutronpay-logo.png")
+//const NeutronpayLogo = require("../../../assets/images/logos/neutronpay-logo.png")
 
 interface ReceiveOutAppUserRouteProps extends ParamListBase {
   InvoiceDetail: {
     description: string
+    amount: number
+    currency: string
   }
 }
 
 export const ReceiveOutAppRequestScreen = observer(function ReceiveOutAppRequestScreen() {
   const route = useRoute<RouteProp<ReceiveOutAppUserRouteProps, "InvoiceDetail">>()
-  const { description } = route.params
+  const { description, amount, currency } = route.params
   const [tab, switchTab] = React.useState<number>(0)
   const [expirationTime, setExpirationTime] = React.useState({
     minute: 60,
@@ -105,9 +108,9 @@ export const ReceiveOutAppRequestScreen = observer(function ReceiveOutAppRequest
           >
             <QRCode
               size={Dimensions.get("screen").width - 70}
-              logo={NeutronpayLogo}
+              //logo={NeutronpayLogo}
               logoSize={60}
-              logoBackgroundColor={color.palette.white}
+              //logoBackgroundColor={color.palette.white}
               logoBorderRadius={15}
               logoMargin={5}
               value={qrCodeData}
@@ -149,10 +152,7 @@ export const ReceiveOutAppRequestScreen = observer(function ReceiveOutAppRequest
             fontSize: 14,
           }}
         />
-        <Button style={Style.ButtonContainer}>
-          <Ionicons name="add" color={color.palette.green} size={15} />
-          <Text style={Style.ButtonPlaceholder} tx="common.form.amount.placeholder" />
-        </Button>
+        <Text style={Style.ButtonPlaceholder}>{formatByUnit(amount, currency)}</Text>
       </View>
       {tab === 1 && (
         <View style={Style.ListItemContainer}>

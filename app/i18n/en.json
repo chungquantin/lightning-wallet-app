@@ -13,6 +13,7 @@
       "contact": "You have no contact"
     },
     "you": "You",
+    "currency": "Currency",
     "send": "Send",
     "receive": "Receive",
     "receive-description": "Show sender QR code",

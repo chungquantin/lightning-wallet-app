@@ -12,13 +12,11 @@ import {
   setAppNavigation,
   useNavigationPersistence,
 } from "./navigators"
+import { Provider } from "react-native-paper"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models"
 import { ToggleStorybook } from "../storybook/toggle-storybook"
-import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink, from } from "@apollo/client"
-import { onError } from "@apollo/client/link/error"
 import { enableScreens } from "react-native-screens"
 import { Tron } from "./services/reactotron/tron"
-import { API_URL } from "./services/resolvers/constants"
 enableScreens()
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
@@ -31,19 +29,6 @@ console.log = (...args) => {
     preview: args.length ? JSON.stringify(args) : args[0],
   })
 }
-
-const errorLink = onError(({ graphQLErrors }) => {
-  if (graphQLErrors) {
-    graphQLErrors.map(({ message, path }) => {
-      console.log(`GraphQL error ${message} ${path}`)
-    })
-  }
-})
-const link = from([errorLink, new HttpLink({ uri: `${API_URL}:3000/graphql` })])
-const client = new ApolloClient({
-  link,
-  cache: new InMemoryCache(),
-})
 
 /**
  * This is the root component of our app.
@@ -76,7 +61,7 @@ function App() {
   // otherwise, we're ready to render the app
   return (
     <ToggleStorybook>
-      <ApolloProvider client={client}>
+      <Provider>
         <RootStoreProvider value={rootStore}>
           <SafeAreaProvider initialMetrics={initialWindowMetrics}>
             <AppNavigator
@@ -86,7 +71,7 @@ function App() {
             />
           </SafeAreaProvider>
         </RootStoreProvider>
-      </ApolloProvider>
+      </Provider>
     </ToggleStorybook>
   )
 }
