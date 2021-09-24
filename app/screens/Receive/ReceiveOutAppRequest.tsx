@@ -157,16 +157,20 @@ export const ReceiveOutAppRequestScreen = observer(function ReceiveOutAppRequest
         <Text style={Style.ButtonPlaceholder}>{formatByUnit(amount, currency)}</Text>
       </View>
       {tab === 1 && (
-        <View style={Style.ListItemContainer}>
-          <Text
-            tx="common.form.expirationTime.label"
-            style={{ fontWeight: "bold", fontSize: 14 }}
-          />
-          <Text>
-            {`${
-              expirationTime.minute >= 10 ? expirationTime.minute : `0${expirationTime.minute}`
-            }:${expirationTime.second >= 10 ? expirationTime.second : `0${expirationTime.second}`}`}
-          </Text>
+        <View>
+          <View style={Style.ListItemContainer}>
+            <Text
+              tx="common.form.expirationTime.label"
+              style={{ fontWeight: "bold", fontSize: 14 }}
+            />
+            <Text>
+              {`${
+                expirationTime.minute >= 10 ? expirationTime.minute : `0${expirationTime.minute}`
+              }:${
+                expirationTime.second >= 10 ? expirationTime.second : `0${expirationTime.second}`
+              }`}
+            </Text>
+          </View>
         </View>
       )}
     </View>
@@ -252,7 +256,7 @@ export const ReceiveOutAppRequestScreen = observer(function ReceiveOutAppRequest
 
   return (
     <View testID="ReceiveOutAppRequestScreen" style={Style.Container}>
-      <Screen unsafe={true}>
+      <Screen unsafe={true} preset="scroll">
         <RenderTabContainer />
         <RenderQRContainer />
         <RenderMetaListContainer />

@@ -34,7 +34,9 @@ export const SendScreen = observer(function SendScreen() {
       if (formValues.description === "") {
         return Alert.alert("You must enter the description first!")
       }
-      return navigator.navigate("SendOutAppRequest")
+      return navigator.navigate("SendOutAppRequest", {
+        description: formValues.description,
+      })
     },
     InAppRequest: (user: User) => {
       if (formValues.description === "") {
