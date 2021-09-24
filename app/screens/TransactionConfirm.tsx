@@ -127,6 +127,7 @@ export const TransactionConfirmScreen = observer(function TransactionConfirmScre
   }
 
   switch (method) {
+    case "LIGHTNING":
     case "ON_CHAIN":
       return (
         <View testID="TransactionConfirmScreen" style={Style.Container}>
@@ -139,7 +140,6 @@ export const TransactionConfirmScreen = observer(function TransactionConfirmScre
           <RenderAddressModal />
         </View>
       )
-      break
     default:
       return <></>
   }
