@@ -50,6 +50,7 @@ const Style = StyleSheet.create({
   },
   MenuItemNormal: { color: color.palette.offGray, fontSize: 15 },
   CurrencySymbol: { fontWeight: "bold", fontSize: 35, marginRight: 5 },
+  MaxAmountText: { marginTop: 10, fontFamily: textStyle.primaryFont, color: color.palette.offGray },
 })
 
 export default Style

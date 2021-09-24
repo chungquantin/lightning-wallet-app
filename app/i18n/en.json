@@ -8,6 +8,8 @@
   "FORM_VALIDATION_NAME_HAS_NUMBER": "Name must not contain any number",
   "FORM_VALIDATION_DESCRIPTION_INVALID": "You must enter the description first!",
   "SNACKBAR_TEXT_COPY_TO_CLIPBOARD": "Copied to clipboard.",
+  "SNACKBAR_TEXT_VALID_BITCOIN_ADDRESS": "Valid bitcoin address",
+  "SNACKBAR_TEXT_VALID_LIGHTNING_ADDRESS": "Valid lightning network address",
   "common": {
     "empty": {
       "transaction": "You have no transaction",
@@ -29,6 +31,10 @@
     "transaction": "Transaction",
     "friends": "Friends",
     "request": "Request",
+    "cancel": "Cancel",
+    "toBitcoinAddress": "To Bitcoin address: ",
+    "method": "Method",
+    "networkFee": "Network fee",
     "pay": "Pay",
     "next": "Next",
     "done": "Done",

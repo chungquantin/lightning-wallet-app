@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite"
 import { Button, Text } from "../components"
 import Style from "./Calculator.style"
 import { color } from "../theme/color"
+import { useStores } from "../models"
 
 export const Calculator = observer(function Calculator({
   onChangeEvent,
@@ -21,6 +22,7 @@ export const Calculator = observer(function Calculator({
 }) {
   const [isDecimal, setIsDecimal] = React.useState(false)
   const [decimal, setDecimal] = React.useState("")
+  const { walletStore } = useStores()
   const calculatorButtons = [
     [1, 2, 3],
     [4, 5, 6],
@@ -87,20 +89,49 @@ export const Calculator = observer(function Calculator({
     <View style={Style.Container}>
       {calculatorButtons.map((row, index) => (
         <View key={index} testID="Calculator" style={Style.ButtonContainer}>
-          {row.map((button) => (
-            <Button onPress={button.onPressHandler} style={Style.CalculatorButton} key={button.key}>
-              <Text style={Style.CalculatorButtonText}>{button.value}</Text>
-            </Button>
-          ))}
+          {row.map((button) => {
+            const buttonDisabledCondition =
+              button.key !== "<" && formValues.amount > walletStore.wallet.balance
+            return (
+              <Button
+                disabled={buttonDisabledCondition}
+                onPress={button.onPressHandler}
+                style={Object.assign(
+                  { ...Style.CalculatorButton },
+                  buttonDisabledCondition
+                    ? {
+                        backgroundColor: color.palette.offBlackShade,
+                      }
+                    : {},
+                )}
+                key={button.key}
+              >
+                <Text
+                  style={Object.assign(
+                    { ...Style.CalculatorButtonText },
+                    buttonDisabledCondition
+                      ? {
+                          color: color.palette.offGray,
+                        }
+                      : {},
+                  )}
+                >
+                  {button.value}
+                </Text>
+              </Button>
+            )
+          })}
         </View>
       ))}
       <Button
         textStyle={{ fontSize: 15 }}
-        disabled={submitButtonDisabled}
+        disabled={submitButtonDisabled || formValues.amount > walletStore.wallet.balance}
         onPress={onSubmitEvent}
         style={Object.assign(
           { ...Style.SubmitButton },
-          submitButtonDisabled ? { backgroundColor: color.palette.darkPurple } : {},
+          submitButtonDisabled || formValues.amount > walletStore.wallet.balance
+            ? { backgroundColor: color.palette.darkPurple }
+            : {},
         )}
         tx="common.next"
       />

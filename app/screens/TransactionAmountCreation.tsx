@@ -22,6 +22,8 @@ interface TransactionAmountCreationRouteProps extends ParamListBase {
     description: string
     action: "RECEIVE" | "SEND"
     type: "IN_APP" | "OUT_APP"
+    address: string
+    method: "ON_CHAIN" | "LIGHTNING"
   }
 }
 
@@ -35,7 +37,7 @@ export const TransactionAmountCreationScreen = observer(function TransactionAmou
     currency: walletStore.wallet.defaultCurrency,
   })
   const route = useRoute<RouteProp<TransactionAmountCreationRouteProps, "InvoiceDetail">>()
-  const { action, type, description } = route.params
+  const { action, type, description, address, method, user } = route.params
   const [toggleModal, setToggleModal] = React.useState(false)
   const navigator = useNavigation()
 
@@ -55,12 +57,28 @@ export const TransactionAmountCreationScreen = observer(function TransactionAmou
             ? navigator.navigate("ReceiveInAppRequest", payload)
             : navigator.navigate("ReceiveOutAppRequest", payload)
         case "SEND":
-          return type === "IN_APP" ? <></> : <></>
+          return type === "IN_APP"
+            ? navigator.navigate(
+                "TransactionConfirm",
+                Object.assign(payload, {
+                  user,
+                }),
+              )
+            : navigator.navigate(
+                "TransactionConfirm",
+                Object.assign(payload, {
+                  address,
+                  method,
+                }),
+              )
         default:
           break
       }
     },
   }
+
+  const disableCondition =
+    formValues.amount > walletStore.wallet.balance ? color.error : color.palette.white
 
   const RenderUpperContainer = () => (
     <View style={Style.UpperContainer}>
@@ -73,7 +91,20 @@ export const TransactionAmountCreationScreen = observer(function TransactionAmou
         <Text>: {description}</Text>
       </View>
       <View style={Style.AmountContainer}>
-        <Text style={Style.CurrencySymbol}>{getSymbolFromCurrency(formValues.currency)}</Text>
+        <Text
+          style={{
+            ...Style.CurrencySymbol,
+            fontSize:
+              formValues.amount < 1000
+                ? Style.CurrencySymbol.fontSize
+                : formValues.amount < 100000
+                ? 35
+                : 25,
+            color: disableCondition,
+          }}
+        >
+          {getSymbolFromCurrency(formValues.currency)}
+        </Text>
         <Text
           style={{
             ...Style.AmountText,
@@ -83,11 +114,19 @@ export const TransactionAmountCreationScreen = observer(function TransactionAmou
                 : formValues.amount < 100000
                 ? 50
                 : 40,
+            color: disableCondition,
           }}
         >
           {formatByUnit(formValues.amount, formValues.currency, false, false)}
         </Text>
       </View>
+      <View style={{ flexDirection: "row" }}>
+        <Text style={Style.MaxAmountText}>Max: </Text>
+        <Text style={Style.MaxAmountText}>
+          {formatByUnit(walletStore.wallet.balance, walletStore.wallet.defaultCurrency)}
+        </Text>
+      </View>
+
       <Button style={Style.ButtonContainer} onPress={handler.OpenMenu}>
         <Text style={Style.ButtonPlaceholder}>{formValues.currency}</Text>
       </Button>

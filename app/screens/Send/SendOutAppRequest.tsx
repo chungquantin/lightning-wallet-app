@@ -10,7 +10,7 @@ import { decode as lightningDecode } from "bolt11"
 import { validate as bitcoinValidate } from "bitcoin-address-validation"
 import I18n from "i18n-js"
 import { ParamListBase } from "@react-navigation/routers"
-import { RouteProp, useRoute } from "@react-navigation/core"
+import { RouteProp, useIsFocused, useNavigation, useRoute } from "@react-navigation/core"
 
 interface SendOutAppUserRouteProps extends ParamListBase {
   InvoiceDetail: {
@@ -20,6 +20,8 @@ interface SendOutAppUserRouteProps extends ParamListBase {
 
 export const SendOutAppRequestScreen = observer(function SendOutAppRequestScreen() {
   const route = useRoute<RouteProp<SendOutAppUserRouteProps, "InvoiceDetail">>()
+  const navigator = useNavigation()
+  const isFocused = useIsFocused()
   const { description } = route.params
   const [hasPermission, setHasPermission] = React.useState(null)
   const [scanned, setScanned] = React.useState(false)
@@ -29,19 +31,25 @@ export const SendOutAppRequestScreen = observer(function SendOutAppRequestScreen
       const { status } = await BarCodeScanner.requestPermissionsAsync()
       setHasPermission(status === "granted")
     })()
-  }, [])
+  }, [isFocused])
 
   const handler = {
     ScanQRCode: ({ data }) => {
       try {
         setScanned(true)
-        console.log(data)
-        const isBitcoinAddress = bitcoinValidate(data.split(":")[1] || data)
+        const address = data.split(":")[1] || data
+        const isBitcoinAddress = bitcoinValidate(address)
         if (isBitcoinAddress) {
           // Handle bitcoin address QR code
-          return alert("Valid bitcoin address")
+          return navigator.navigate("TransactionAmountCreation", {
+            description: description,
+            action: "SEND",
+            type: "OUT_APP",
+            address: address,
+            method: "ON_CHAIN",
+          })
         }
-        const lnPayReq = lightningDecode((data.split(":")[1] || data).toLowerCase())
+        const lnPayReq = lightningDecode(address.toLowerCase())
         if (lnPayReq) {
           // Handle lightning address QR code
           return alert("Valid lightning address")
