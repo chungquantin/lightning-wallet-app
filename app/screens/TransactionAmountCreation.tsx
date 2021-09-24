@@ -1,5 +1,5 @@
 import React from "react"
-import { Dimensions, FlatList, Modal, View } from "react-native"
+import { FlatList, View } from "react-native"
 import { observer } from "mobx-react-lite"
 import { Button, Text } from "../components"
 import Style from "./TransactionAmountCreation.style"
@@ -8,7 +8,7 @@ import { ParamListBase } from "@react-navigation/routers"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/core"
 import getSymbolFromCurrency from "currency-symbol-map"
 import { formatByUnit, getListCurrency, translateCurrency } from "../utils/currency"
-import { TouchableRipple } from "react-native-paper"
+import { TouchableRipple, Portal, Modal } from "react-native-paper"
 import useFormValidation from "../hooks/useFormValidation"
 import { useStores } from "../models"
 import { color } from "../theme"
@@ -61,54 +61,49 @@ export const TransactionAmountCreationScreen = observer(function TransactionAmou
       }
     },
   }
-  return (
-    <View testID="TransactionAmountCreationScreen" style={Style.Container}>
-      <View style={Style.UpperContainer}>
-        <View
+
+  const RenderUpperContainer = () => (
+    <View style={Style.UpperContainer}>
+      <View
+        style={{
+          flexDirection: "row",
+        }}
+      >
+        <Text tx="common.form.description.label" />
+        <Text>: {description}</Text>
+      </View>
+      <View style={Style.AmountContainer}>
+        <Text style={Style.CurrencySymbol}>{getSymbolFromCurrency(formValues.currency)}</Text>
+        <Text
           style={{
-            flexDirection: "row",
+            ...Style.AmountText,
+            fontSize:
+              formValues.amount < 1000
+                ? Style.AmountText.fontSize
+                : formValues.amount < 100000
+                ? 50
+                : 40,
           }}
         >
-          <Text tx="common.form.description.label" />
-          <Text>: {description}</Text>
-        </View>
-        <View style={Style.AmountContainer}>
-          <Text style={Style.CurrencySymbol}>{getSymbolFromCurrency(formValues.currency)}</Text>
-          <Text
-            style={{
-              ...Style.AmountText,
-              fontSize:
-                formValues.amount < 1000
-                  ? Style.AmountText.fontSize
-                  : formValues.amount < 100000
-                  ? 50
-                  : 40,
-            }}
-          >
-            {formatByUnit(formValues.amount, formValues.currency, false, false)}
-          </Text>
-        </View>
-        <Button style={Style.ButtonContainer} onPress={handler.OpenMenu}>
-          <Text style={Style.ButtonPlaceholder}>{formValues.currency}</Text>
-        </Button>
+          {formatByUnit(formValues.amount, formValues.currency, false, false)}
+        </Text>
       </View>
-      <Calculator
-        formValues={formValues}
-        onChangeEvent={handleSetFieldValue}
-        submitButtonDisabled={formValues.amount <= 0}
-        onSubmitEvent={handler.Next}
-      />
+      <Button style={Style.ButtonContainer} onPress={handler.OpenMenu}>
+        <Text style={Style.ButtonPlaceholder}>{formValues.currency}</Text>
+      </Button>
+    </View>
+  )
+  const RenderCurrencyModal = () => (
+    <Portal>
       <Modal
-        animationType="slide"
-        transparent={true}
-        presentationStyle="pageSheet"
         visible={toggleModal}
-        onRequestClose={() => setToggleModal(!toggleModal)}
+        onDismiss={handler.CloseMenu}
+        contentContainerStyle={{ paddingHorizontal: 30 }}
       >
         <View style={Style.ModalContainer}>
           <Text
             tx="common.currency"
-            style={{ fontWeight: "bold", marginBottom: 50, fontSize: 18, marginTop: 15 }}
+            style={{ fontWeight: "bold", marginBottom: 10, fontSize: 18, marginTop: 15 }}
           />
           <FlatList
             data={getListCurrency}
@@ -148,6 +143,18 @@ export const TransactionAmountCreationScreen = observer(function TransactionAmou
           />
         </View>
       </Modal>
+    </Portal>
+  )
+  return (
+    <View testID="TransactionAmountCreationScreen" style={Style.Container}>
+      <RenderUpperContainer />
+      <Calculator
+        formValues={formValues}
+        onChangeEvent={handleSetFieldValue}
+        submitButtonDisabled={formValues.amount <= 0}
+        onSubmitEvent={handler.Next}
+      />
+      <RenderCurrencyModal />
     </View>
   )
 })

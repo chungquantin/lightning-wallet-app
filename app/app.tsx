@@ -12,11 +12,12 @@ import {
   setAppNavigation,
   useNavigationPersistence,
 } from "./navigators"
-import { Provider } from "react-native-paper"
+import { Provider, Snackbar } from "react-native-paper"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models"
 import { ToggleStorybook } from "../storybook/toggle-storybook"
 import { enableScreens } from "react-native-screens"
 import { Tron } from "./services/reactotron/tron"
+import { SnackBarContext } from "./constants/Context"
 enableScreens()
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
@@ -36,6 +37,13 @@ console.log = (...args) => {
 function App() {
   const navigationRef = useRef<NavigationContainerRef>(null)
   const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)
+  const [visible, setVisible] = useState<boolean>(false)
+  const [snackBar, setSnackBar] = useState({
+    text: "",
+    actionLabel: "",
+    actionOnPress: () => {},
+    duration: 500,
+  })
 
   setAppNavigation(navigationRef)
   useBackButtonHandler(navigationRef, canExit)
@@ -58,17 +66,35 @@ function App() {
   // with your own loading component if you wish.
   if (!rootStore) return null
 
+  const onToggleSnackBar = () => setVisible(!visible)
+  const onDismissSnackBar = () => setVisible(false)
+
   // otherwise, we're ready to render the app
   return (
     <ToggleStorybook>
       <Provider>
         <RootStoreProvider value={rootStore}>
           <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-            <AppNavigator
-              ref={navigationRef}
-              initialState={initialNavigationState}
-              onStateChange={onNavigationStateChange}
-            />
+            <SnackBarContext.Provider
+              value={{ ...snackBar, onDismissSnackBar, onToggleSnackBar, setSnackBar }}
+            >
+              <AppNavigator
+                ref={navigationRef}
+                initialState={initialNavigationState}
+                onStateChange={onNavigationStateChange}
+              />
+              <Snackbar
+                visible={visible}
+                onDismiss={onDismissSnackBar}
+                duration={snackBar.duration}
+                action={{
+                  label: snackBar.actionLabel,
+                  onPress: () => snackBar.actionOnPress,
+                }}
+              >
+                {snackBar.text}
+              </Snackbar>
+            </SnackBarContext.Provider>
           </SafeAreaProvider>
         </RootStoreProvider>
       </Provider>

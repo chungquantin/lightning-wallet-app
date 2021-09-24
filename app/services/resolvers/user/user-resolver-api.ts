@@ -9,7 +9,7 @@ import {
   Register,
   RegisterDto,
 } from "../../../generated/graphql"
-import { STORAGE_KEY } from "../../../models/constants/AsyncStorageKey"
+import { STORAGE_KEY } from "../../../constants/AsyncStorageKey"
 import { loadString } from "../../../utils/storage"
 import { API_URL, PRODUCTION_API_URL, useGateway } from "../constants"
 import { LOGIN_MUTATION, REGISTER_MUTATION } from "./user.mutation"

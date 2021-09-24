@@ -5,7 +5,7 @@ import _ from "underscore"
 import { UserResolverAPI } from "../../services/resolvers"
 import { GetMyContacts, Login, LoginDto, Me, Register, RegisterDto } from "../../generated/graphql"
 import { clear, saveString } from "../../utils/storage"
-import { STORAGE_KEY } from "../constants/AsyncStorageKey"
+import { STORAGE_KEY } from "../../constants/AsyncStorageKey"
 import { setUndefinedAl } from "../../utils/misc"
 
 export const UserStoreModel = types

@@ -66,7 +66,6 @@ export const Calculator = observer(function Calculator({
     })),
   )
   React.useEffect(() => {
-    console.log(formValues.amount, decimal, decimal.length)
     if (decimal.length > 0) {
       if (decimal.length > 1) {
         onChangeEvent(
