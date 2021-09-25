@@ -166,6 +166,7 @@ const AppStack = observer(() => {
             options={{
               headerTitle: i18n.t("navigation.paymentComplete"),
               headerLeft: () => <></>,
+              gestureEnabled: false,
             }}
             component={TransactionCompleteScreen}
           />

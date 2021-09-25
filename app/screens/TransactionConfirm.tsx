@@ -1,5 +1,5 @@
 import React from "react"
-import { Clipboard, Dimensions, Share, View } from "react-native"
+import { Clipboard, Share, View } from "react-native"
 import { observer } from "mobx-react-lite"
 import { Button, Screen, Text } from "../components"
 import Style from "./TransactionConfirm.style"
@@ -63,7 +63,7 @@ export const TransactionConfirmScreen = observer(function TransactionConfirmScre
     <>
       <View style={Style.DescriptionText}>
         <Text tx="common.method" />
-        <Text>{method === "ON_CHAIN" ? "On-chain" : "Lightning"}</Text>
+        {method && <Text>{method === "ON_CHAIN" ? ": On-chain" : ": Lightning"}</Text>}
       </View>
       <Text style={Style.AmountText}>{`${formatByUnit(amount, currency, false)} ${currency}`}</Text>
       <View style={Style.DescriptionText}>
@@ -101,6 +101,7 @@ export const TransactionConfirmScreen = observer(function TransactionConfirmScre
 
   const handler = {
     Confirm: () => navigator.navigate("TransactionComplete", route.params),
+    Cancel: () => {},
     CopyText: () => {
       Clipboard.setString(address)
       setSnackBar(
