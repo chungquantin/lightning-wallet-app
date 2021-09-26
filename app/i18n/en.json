@@ -35,6 +35,8 @@
     "toBitcoinAddress": "To Bitcoin address: ",
     "method": "Method",
     "networkFee": "Network fee",
+    "addPaymentMethod": "Add payment method",
+    "switchPaymentMethod": "Switch payment method",
     "pay": "Pay",
     "next": "Next",
     "done": "Done",

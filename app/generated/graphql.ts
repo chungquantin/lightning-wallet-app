@@ -39,6 +39,10 @@ export type CancelPaymentRequestDto = {
   paymentRequestId: Scalars['String'];
 };
 
+export type ExchangeTokenDto = {
+  publicToken: Scalars['String'];
+};
+
 /** Fiat currency */
 export enum FiatCurrency {
   Cad = 'CAD',
@@ -298,8 +302,16 @@ export type PlaidCreateLinkToken = {
   success: Scalars['Boolean'];
 };
 
+export type PlaidExchangePublicToken = {
+  __typename?: 'PlaidExchangePublicToken';
+  data?: Maybe<Scalars['String']>;
+  errors?: Maybe<Array<ApiError>>;
+  success: Scalars['Boolean'];
+};
+
 export type Query = {
   __typename?: 'Query';
+  exchangePublicToken?: Maybe<PlaidExchangePublicToken>;
   getCurrentUser?: Maybe<Me>;
   getMyContacts?: Maybe<GetMyContacts>;
   getMyPaymentRequests?: Maybe<GetMyPaymentRequests>;
@@ -315,6 +327,11 @@ export type Query = {
   getWallets?: Maybe<GetWallets>;
   helloWorld?: Maybe<HelloWorld>;
   lightningGetTransactions?: Maybe<LndGetTransactions>;
+};
+
+
+export type QueryExchangePublicTokenArgs = {
+  data: ExchangeTokenDto;
 };
 
 

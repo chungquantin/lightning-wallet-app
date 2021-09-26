@@ -30,6 +30,7 @@ import i18n from "i18n-js"
 import { useStores } from "../models"
 import { observer } from "mobx-react-lite"
 import { TransactionAmountCreationScreen } from "../screens/TransactionAmountCreation"
+import { PlaidScreen } from "../screens/Plaid/Plaid"
 
 export type NavigatorParamList = {
   Wallet: undefined
@@ -48,6 +49,7 @@ export type NavigatorParamList = {
   TransactionAmountCreation: undefined
   SignIn: undefined
   SignUp: undefined
+  Plaid: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -131,6 +133,19 @@ const AppStack = observer(() => {
           />
           <Stack.Screen name="Withdraw" component={WithdrawScreen} />
           <Stack.Screen name="Deposit" component={DepositScreen} />
+          <Stack.Screen
+            options={{
+              headerStyle: {
+                backgroundColor: color.palette.white,
+                elevation: 0,
+              },
+              headerTitleStyle: {
+                color: color.background,
+              },
+            }}
+            name="Plaid"
+            component={PlaidScreen}
+          />
           <Stack.Screen
             name="UserDetail"
             options={{
