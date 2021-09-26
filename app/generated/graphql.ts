@@ -175,6 +175,13 @@ export type LightningTransaction = {
   timeStamp: Scalars['Float'];
 };
 
+export type LinkTokenCreateResponseImpl = {
+  __typename?: 'LinkTokenCreateResponseImpl';
+  expiration: Scalars['String'];
+  link_token: Scalars['String'];
+  request_id: Scalars['String'];
+};
+
 export type LndGetTransactions = {
   __typename?: 'LndGetTransactions';
   data: Array<LightningTransaction>;
@@ -212,6 +219,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   addNewContact?: Maybe<AddNewContact>;
   cancelPaymentRequest?: Maybe<CancelPaymentRequest>;
+  createLinkToken?: Maybe<PlaidCreateLinkToken>;
   forgotPasswordChange?: Maybe<SendForgotPassword>;
   login?: Maybe<Login>;
   logout?: Maybe<Logout>;
@@ -281,6 +289,13 @@ export type PaginationInputType = {
 export type PaymentResponse = {
   __typename?: 'PaymentResponse';
   transaction: TransactionSchema;
+};
+
+export type PlaidCreateLinkToken = {
+  __typename?: 'PlaidCreateLinkToken';
+  data?: Maybe<LinkTokenCreateResponseImpl>;
+  errors?: Maybe<Array<ApiError>>;
+  success: Scalars['Boolean'];
 };
 
 export type Query = {

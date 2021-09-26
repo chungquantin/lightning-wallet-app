@@ -4,6 +4,7 @@ import {
   GetMyWalletTransactions,
   GetWallet,
   GetWalletDto,
+  PaginationInputType,
   QueryGetMyWalletTransactionsArgs,
 } from "../../../generated/graphql"
 import { STORAGE_KEY } from "../../../constants/AsyncStorageKey"
@@ -78,16 +79,14 @@ export class WalletResolverApi {
 
       const response = await request<
         { getMyWalletTransactions: GetMyWalletTransactions },
-        { getMyWalletTransactionsPagination: QueryGetMyWalletTransactionsArgs }
+        { getMyWalletTransactionsPagination: PaginationInputType }
       >(
         this.url,
         GET_MY_WALLET_TRANSACTIONS_QUERY,
         {
           getMyWalletTransactionsPagination: {
-            Pagination: {
-              limit,
-              skip,
-            },
+            limit,
+            skip,
           },
         },
         {

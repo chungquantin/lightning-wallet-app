@@ -119,7 +119,12 @@ export const WalletStoreModel = types
     fetchTransactions: flow(function* () {
       console.log("WalletStore - FetchTransactions")
       const transactionApi = new WalletResolverApi()
-      const result = yield transactionApi.getMyWalletTransactions({})
+      const result = yield transactionApi.getMyWalletTransactions({
+        limit: 10,
+        skip: 0,
+      })
+
+      console.log(result)
 
       if (result.success) {
         self.saveTransactions(result.data)

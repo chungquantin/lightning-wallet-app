@@ -60,7 +60,7 @@ export const HistoryScreen = observer(function HistoryScreen() {
           ? walletStore.incomeTransactions
               .map((transaction) => transaction.amount)
               .reduce((a, b) => a + b)
-          : walletStore.incomeTransactions,
+          : 0,
       color: color.palette.purple,
       legendFontColor: color.text,
       legendFontSize: 15,
@@ -72,7 +72,7 @@ export const HistoryScreen = observer(function HistoryScreen() {
           ? walletStore.expenseTransactions
               .map((transaction) => transaction.amount)
               .reduce((a, b) => a + b)
-          : walletStore.incomeTransactions,
+          : 0,
       color: color.palette.darkPurple,
       legendFontColor: color.text,
       legendFontSize: 15,
@@ -301,7 +301,11 @@ export const HistoryScreen = observer(function HistoryScreen() {
     <View testID="HistoryScreen" style={Style.Container}>
       <RenderTabButtonContainer />
       <Screen preset="scroll">
-        {selectedTab == 1 ? <RenderPieChart /> : <RenderLineChart />}
+        {selectedTab == 1 ? (
+          transactionList.length !== 0 && <RenderPieChart />
+        ) : (
+          <RenderLineChart />
+        )}
         <RenderSearchInputContainer />
         <RenderTransactionContainer />
       </Screen>

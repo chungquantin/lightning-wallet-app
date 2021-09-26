@@ -176,6 +176,8 @@ const AppStack = observer(() => {
           <Stack.Screen
             options={{
               headerShown: false,
+              headerLeft: () => <></>,
+              gestureEnabled: false,
             }}
             name="SignIn"
             component={SignInScreen}
@@ -184,6 +186,9 @@ const AppStack = observer(() => {
             options={{
               headerShown: true,
               headerTitle: "",
+              headerLeft: () => <></>,
+              gestureEnabled: false,
+              animationEnabled: false,
               headerBackTitle: i18n.t("common.auth.signIn"),
             }}
             name="SignUp"
