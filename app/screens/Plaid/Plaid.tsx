@@ -6,6 +6,7 @@ import PlaidLink from "@burstware/expo-plaid-link"
 import Style from "./Plaid.style"
 import { useStores } from "../../models"
 import { useIsFocused, useNavigation } from "@react-navigation/core"
+import I18n from "i18n-js"
 
 export const PlaidScreen = observer(function PlaidScreen() {
   const { bankStore } = useStores()
@@ -24,13 +25,14 @@ export const PlaidScreen = observer(function PlaidScreen() {
           onEvent={(event) => console.log(event)}
           onExit={(exit) => {
             console.log(exit)
-            alert(exit.error.errorMessage)
+            alert(__DEV__ ? exit.error.errorMessage : I18n.t("somethingWrong"))
+            navigator.navigate("PaymentMethod")
           }}
           onSuccess={async ({ publicToken, metadata }) =>
             bankStore.connectBankAccount({ publicToken, metadata }).then((res) => {
               if (res.success) {
                 bankStore.fetchMyBankAccounts()
-                navigator.navigate("BankAccounts")
+                navigator.navigate("PaymentMethod")
               }
             })
           }

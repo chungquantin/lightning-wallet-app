@@ -25,12 +25,16 @@ import {
   TransactionDetailScreen,
   UserDetailScreen,
   WithdrawScreen,
+  PlaidScreen,
+  PaymentMethodScreen,
+  NotificationScreen,
+  SettingScreen,
+  ContactCreationScreen,
 } from "../screens"
 import i18n from "i18n-js"
 import { useStores } from "../models"
 import { observer } from "mobx-react-lite"
 import { TransactionAmountCreationScreen } from "../screens/TransactionAmountCreation"
-import { PlaidScreen } from "../screens/Plaid/Plaid"
 
 export type NavigatorParamList = {
   Wallet: undefined
@@ -47,9 +51,13 @@ export type NavigatorParamList = {
   TransactionConfirm: undefined
   TransactionComplete: undefined
   TransactionAmountCreation: undefined
+  ContactCreation: undefined
   SignIn: undefined
   SignUp: undefined
   Plaid: undefined
+  PaymentMethod: undefined
+  Notification: undefined
+  Setting: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -131,6 +139,16 @@ const AppStack = observer(() => {
             }}
             component={ReceiveInAppRequestScreen}
           />
+          {/* Reusable screens */}
+          <Stack.Screen
+            options={{
+              headerTitle: "Payment Method",
+            }}
+            name="PaymentMethod"
+            component={PaymentMethodScreen}
+          />
+          <Stack.Screen name="Notification" component={NotificationScreen} />
+          <Stack.Screen name="Setting" component={SettingScreen} />
           <Stack.Screen name="Withdraw" component={WithdrawScreen} />
           <Stack.Screen name="Deposit" component={DepositScreen} />
           <Stack.Screen
@@ -153,6 +171,7 @@ const AppStack = observer(() => {
             }}
             component={UserDetailScreen}
           />
+          <Stack.Screen name="ContactCreation" component={ContactCreationScreen} />
           <Stack.Screen
             name="TransactionAmountCreation"
             options={{

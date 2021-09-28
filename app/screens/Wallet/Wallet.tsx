@@ -58,6 +58,7 @@ export const WalletScreen = observer(function WalletScreen() {
       navigator.navigate("TransactionDetail", {
         transaction,
       }),
+    GoToPaymentMethod: () => navigator.navigate("PaymentMethod"),
   }
 
   const RenderTopContainer = React.memo(() => (
@@ -139,9 +140,9 @@ export const WalletScreen = observer(function WalletScreen() {
   ))
 
   const RenderPaymentMethodContainer = React.memo(() => (
-    <View style={Style.PaymentMethodContainer}>
+    <Button style={Style.PaymentMethodContainer} onPress={handler.GoToPaymentMethod}>
       <View>
-        <Text style={Style.PaymentMethodHeader}>Payment method</Text>
+        <Text style={Style.PaymentMethodHeader} tx="common.paymentMethod" />
         <Text style={Style.PaymentMethodSubHeader}>
           {bankStore.bankAccounts.length === 0
             ? "No payment method connected"
@@ -151,7 +152,7 @@ export const WalletScreen = observer(function WalletScreen() {
       <View>
         <MaterialIcons name="keyboard-arrow-right" color={color.palette.offGray} size={25} />
       </View>
-    </View>
+    </Button>
   ))
 
   return (

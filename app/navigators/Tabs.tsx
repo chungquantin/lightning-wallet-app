@@ -8,7 +8,7 @@ import { View } from "react-native"
 import { Text } from "../components"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { LinearGradient } from "expo-linear-gradient"
-import { Feather, FontAwesome5, Ionicons } from "@expo/vector-icons"
+import { Feather, Ionicons } from "@expo/vector-icons"
 import { useNavigation } from "@react-navigation/core"
 
 const Tab = createBottomTabNavigator()
@@ -46,9 +46,11 @@ interface Props {
 export const Tabs = observer(function Tabs() {
   const navigator = useNavigation()
   const handler = {
-    AddNewContact: () => {},
+    AddNewContact: () => navigator.navigate("ContactCreation"),
     GoToWallet: () => navigator.navigate("Send"),
-    GoToSettings: () => {},
+    GoToSettings: () => navigator.navigate("Setting"),
+    GoToNotification: () => navigator.navigate("Notification"),
+    GoToDashboardMenu: () => {},
   }
   const TabItems = (
     props?: Props,
@@ -67,6 +69,26 @@ export const Tabs = observer(function Tabs() {
     {
       headerShown: true,
       headerTitle: "",
+      headerRight: () => (
+        <TouchableOpacity onPress={handler.GoToNotification}>
+          <Ionicons
+            style={Style.CustomHeaderRightButton}
+            name={"notifications"}
+            color={color.palette.offWhite}
+          />
+        </TouchableOpacity>
+      ),
+      headerLeft: () => (
+        <View style={{ marginLeft: 25 }}>
+          <TouchableOpacity onPress={handler.GoToDashboardMenu}>
+            <Ionicons
+              style={Style.CustomHeaderRightButton}
+              name={"menu"}
+              color={color.palette.offWhite}
+            />
+          </TouchableOpacity>
+        </View>
+      ),
       key: "wallet-tab",
       name: "Wallet",
       component: WalletScreen,

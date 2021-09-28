@@ -48,6 +48,7 @@ export const ContactScreen = observer(function ContactScreen() {
       navigator.navigate("UserDetail", {
         user,
       }),
+    AddNewContact: () => navigator.navigate("ContactCreation"),
   }
 
   const RenderEmptySection = () => (
@@ -66,7 +67,7 @@ export const ContactScreen = observer(function ContactScreen() {
         }}
         tx="common.empty.contact"
       />
-      <Button style={Style.EmptySectionButton}>
+      <Button style={Style.EmptySectionButton} onPress={handler.AddNewContact}>
         <Text tx="contact.add-new-contact" style={Style.EmptySectionSubHeader} />
       </Button>
     </View>

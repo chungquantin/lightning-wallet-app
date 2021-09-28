@@ -34,31 +34,10 @@ const ListItem = ({ children, text }) => (
 export const ProfileScreen = observer(function ProfileScreen() {
   const { userStore } = useStores()
   const currentUser = userStore.currentUser
-  const navigator = useNavigation()
   const handler = {
     Logout: () => userStore.logout(),
     ChangeAvatar: () => {},
-    SwitchPaymentMethod: () => navigator.navigate("Plaid"),
   }
-
-  const bankInfoList = [
-    {
-      label: "Bank name",
-      content: "Western Union",
-    },
-    {
-      label: "Balance",
-      content: formatByUnit(100, "USD"),
-    },
-    {
-      label: "Routing number",
-      content: "041 215 663",
-    },
-    {
-      label: "Account",
-      content: "88 1234 5678",
-    },
-  ]
 
   const settingList = [
     {
@@ -121,36 +100,6 @@ export const ProfileScreen = observer(function ProfileScreen() {
             )}
           />
         </View>
-        <View
-          style={{
-            backgroundColor: color.secondaryBackground,
-            padding: 20,
-            borderRadius: 20,
-            marginTop: 20,
-          }}
-        >
-          <FlatList
-            data={bankInfoList}
-            renderItem={({ item }) => (
-              <ListItem text={item.label}>
-                <Text
-                  style={{
-                    fontSize: 13,
-                  }}
-                >
-                  {item.content}
-                </Text>
-              </ListItem>
-            )}
-          />
-          <Button
-            onPress={handler.SwitchPaymentMethod}
-            style={{ backgroundColor: color.background, marginTop: 10, height: 50 }}
-            textStyle={{ fontSize: 13 }}
-            tx="common.switchPaymentMethod"
-          />
-        </View>
-
         <Button
           onPress={handler.Logout}
           style={{ backgroundColor: color.primary, marginTop: 20, marginBottom: 150 }}

@@ -1,7 +1,7 @@
 import { flow, Instance, SnapshotOut, types } from "mobx-state-tree"
 import { withEnvironment } from "../extensions/with-environment"
 import { BankResolverApi } from "../../services/resolvers"
-import { GetBankAccounts, GetMyBankAccounts, PlaidCreateLinkToken } from "../../generated/graphql"
+import { GetMyBankAccounts, PlaidCreateLinkToken } from "../../generated/graphql"
 import { BankAccount, BankAccountModel, BankAccountSnapshot } from "../bank/bank-account"
 
 export const BankStoreModel = types
@@ -23,18 +23,16 @@ export const BankStoreModel = types
     return {
       connectBankAccount: async function ({ publicToken, metadata }) {
         try {
-          if (publicToken) {
-            const result = await new BankResolverApi().connectBankAccount({
-              accountId: metadata.accounts[0].id,
-              institutionId: metadata.institution.id,
-              institutionName: metadata.institution.name,
-              publicToken,
-            })
-            if (!result.success) {
-              __DEV__ && console.tron.log(result.errors)
-            }
-            return result
+          const result = await new BankResolverApi().connectBankAccount({
+            accountId: metadata.accounts[0].id,
+            institutionId: metadata.institution.id,
+            institutionName: metadata.institution.name,
+            publicToken,
+          })
+          if (!result.success) {
+            __DEV__ && console.tron.log(result.errors)
           }
+          return result
         } catch (error) {
           console.tron.error(error.message, "fetchBankAccounts")
           throw error
