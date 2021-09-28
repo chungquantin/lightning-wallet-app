@@ -14,12 +14,15 @@ const Style = StyleSheet.create({
     backgroundColor: color.secondaryBackground,
     borderRadius: 15,
     marginTop: 20,
-    justifyContent: "center",
-    alignItems: "center",
   },
-  BankAccountImage: { alignItems: "center", justifyContent: "center", marginRight: 40 },
+  BankAccountImage: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 20,
+    marginLeft: 25,
+  },
   BankAccountTopContainer: {
-    paddingTop: 15,
+    paddingVertical: 15,
     flexDirection: "row",
   },
   BankAccountBottomContainer: {

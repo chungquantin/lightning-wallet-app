@@ -30,6 +30,7 @@ import {
   NotificationScreen,
   SettingScreen,
   ContactCreationScreen,
+  BankAccountDetailScreen,
 } from "../screens"
 import i18n from "i18n-js"
 import { useStores } from "../models"
@@ -52,6 +53,7 @@ export type NavigatorParamList = {
   TransactionComplete: undefined
   TransactionAmountCreation: undefined
   ContactCreation: undefined
+  BankAccountDetail: undefined
   SignIn: undefined
   SignUp: undefined
   Plaid: undefined
@@ -170,6 +172,13 @@ const AppStack = observer(() => {
               headerBackTitle: i18n.t("navigation.contact"),
             }}
             component={UserDetailScreen}
+          />
+          <Stack.Screen
+            name="BankAccountDetail"
+            options={{
+              headerBackTitle: i18n.t("navigation.contact"),
+            }}
+            component={BankAccountDetailScreen}
           />
           <Stack.Screen name="ContactCreation" component={ContactCreationScreen} />
           <Stack.Screen

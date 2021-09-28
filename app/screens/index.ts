@@ -23,6 +23,7 @@ export * from "./TransactionComplete"
 export * from "./TransactionConfirm"
 export * from "./UserDetail"
 export * from "./ContactCreation"
+export * from "./BankAccountDetail"
 // Auth
 export * from "./Auth/SignIn"
 export * from "./Auth/SignUp"

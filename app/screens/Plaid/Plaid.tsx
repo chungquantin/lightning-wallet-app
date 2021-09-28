@@ -24,7 +24,6 @@ export const PlaidScreen = observer(function PlaidScreen() {
           linkToken={bankStore.linkToken}
           onEvent={(event) => console.log(event)}
           onExit={(exit) => {
-            console.log(exit)
             alert(__DEV__ ? exit.error.errorMessage : I18n.t("somethingWrong"))
             navigator.navigate("PaymentMethod")
           }}

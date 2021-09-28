@@ -4,9 +4,10 @@ import { observer } from "mobx-react-lite"
 import { Screen, Text, Button } from "../../components"
 import Style from "./PaymentMethod.style"
 import { color } from "../../theme"
-import { Avatar } from "react-native-paper"
 import { useStores } from "../../models"
 import { useIsFocused, useNavigation } from "@react-navigation/core"
+import { Avatar } from "react-native-paper"
+import { TouchableOpacity } from "react-native-gesture-handler"
 
 export const PaymentMethodScreen = observer(function PaymentMethodScreen() {
   const { bankStore } = useStores()
@@ -15,45 +16,32 @@ export const PaymentMethodScreen = observer(function PaymentMethodScreen() {
 
   const handler = {
     SwitchPaymentMethod: () => navigator.navigate("Plaid"),
+    OpenBankAccountDetail: () => navigator.navigate("BankAccountDetail"),
   }
 
   React.useEffect(() => {
     bankStore.fetchMyBankAccounts()
   }, [isFocused])
 
-  const RenderBankAccountItem = ({ name, type, accountNumber, routingNumber }) => (
-    <View style={Style.BankAccountContainer}>
-      <View style={Style.BankAccountTopContainer}>
-        <View style={Style.BankAccountImage}>
-          <Avatar.Image
-            source={{
-              uri: "https://logodownload.org/wp-content/uploads/2018/05/western-union-logo-3-1.png",
-            }}
-            size={50}
-          />
-        </View>
-        <View style={{ alignItems: "center", justifyContent: "center" }}>
-          <Text style={{ fontWeight: "bold" }}>{name}</Text>
-          <Text style={{ fontSize: 13, marginTop: 3 }}>{type}</Text>
-        </View>
-      </View>
-      <View
-        style={{
-          marginVertical: 10,
-        }}
-      />
-      <View style={Style.BankAccountBottomContainer}>
-        <View style={{ alignItems: "center", flex: 1 }}>
-          <Text style={{ fontWeight: "bold" }} tx="common.account" />
-          <Text style={{ fontSize: 13, marginTop: 3 }}>{accountNumber}</Text>
-        </View>
-        <View style={{ backgroundColor: color.palette.offGray, height: "100%", width: 0.5 }} />
-        <View style={{ alignItems: "center", flex: 1 }}>
-          <Text style={{ fontWeight: "bold" }} tx="common.routing" />
-          <Text style={{ fontSize: 13, marginTop: 3 }}>{routingNumber}</Text>
+  const RenderBankAccountItem = ({ name, type }) => (
+    <TouchableOpacity onPress={handler.OpenBankAccountDetail}>
+      <View style={Style.BankAccountContainer}>
+        <View style={Style.BankAccountTopContainer}>
+          <View style={Style.BankAccountImage}>
+            <Avatar.Image
+              source={{
+                uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdgbvcok9tCSpuzi2YkDTFBvKBe5m8G73Bj6BmRq2StUMVlCUTHWLP69-5MInp0hpqqy8&usqp=CAU",
+              }}
+              size={30}
+            />
+          </View>
+          <View>
+            <Text style={{ fontWeight: "bold" }}>{name}</Text>
+            <Text style={{ fontSize: 13, marginTop: 3 }}>{type}</Text>
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   )
   return (
     <View testID="PaymentMethodScreen" style={Style.Container}>
@@ -62,9 +50,7 @@ export const PaymentMethodScreen = observer(function PaymentMethodScreen() {
         {bankStore.bankAccounts.map((bankAccount) => (
           <RenderBankAccountItem
             key={bankAccount.id}
-            accountNumber={bankAccount.accountNumber}
             name={bankAccount.institutionName}
-            routingNumber={bankAccount.routingNumber}
             type={bankAccount.name}
           />
         ))}

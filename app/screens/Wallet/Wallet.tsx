@@ -45,6 +45,7 @@ export const WalletScreen = observer(function WalletScreen() {
   })
 
   React.useEffect(() => {
+    bankStore.fetchMyBankAccounts()
     walletStore.fetchCurrentUserWallet()
     walletStore.fetchTransactions()
   }, [isFocused])
