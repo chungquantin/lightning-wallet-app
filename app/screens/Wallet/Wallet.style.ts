@@ -9,10 +9,10 @@ const Style = StyleSheet.create({
     flex: 1,
   },
   BottomContainer: {
-    position: "absolute",
-    bottom: 95,
+    //position: "absolute",
+    //bottom: 95,
     backgroundColor: color.secondaryBackground,
-    height: height / 1.9,
+    height: height / 1.7,
     width: "100%",
     borderTopRightRadius: 40,
     borderTopLeftRadius: 40,
@@ -40,14 +40,15 @@ const Style = StyleSheet.create({
   },
   BottomHeader: {
     ...textStyle.header,
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: textStyle.secondaryFontBold,
     textAlign: "center",
     marginBottom: 5,
   },
   TopContainer: {
     display: "flex",
-    height: height / 4,
+    height: height / 2.8,
+    marginBottom: 30,
   },
   TopContainerStart: {
     flex: 0,
@@ -78,7 +79,7 @@ const Style = StyleSheet.create({
     flexDirection: "row",
   },
   TopContainerEnd: {
-    flex: 2,
+    flex: 2.5,
     flexDirection: "row",
     justifyContent: "space-evenly",
   },
@@ -98,6 +99,11 @@ const Style = StyleSheet.create({
     fontSize: textStyle.smallSize,
     color: color.palette.offGray,
   },
+  EmptyContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
+  },
   EmptyContainerHeader: {
     color: color.palette.offGray,
     fontSize: 40,
@@ -106,8 +112,21 @@ const Style = StyleSheet.create({
   EmptyContainerSubHeader: {
     color: color.palette.offGray,
     fontSize: 16,
-    marginBottom: 50,
+    marginBottom: 100,
   },
+  PaymentMethodContainer: {
+    marginBottom: 25,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginHorizontal: 25,
+    backgroundColor: color.secondaryBackground,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+  },
+  PaymentMethodHeader: { fontWeight: "bold", fontSize: 14 },
+  PaymentMethodSubHeader: { marginTop: 5, fontSize: 12, color: color.palette.offGray },
 })
 
 export default Style

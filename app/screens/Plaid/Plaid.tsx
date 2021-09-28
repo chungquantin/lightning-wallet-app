@@ -5,12 +5,12 @@ import { Screen } from "../../components"
 import PlaidLink from "@burstware/expo-plaid-link"
 import Style from "./Plaid.style"
 import { useStores } from "../../models"
-import { useIsFocused } from "@react-navigation/core"
-import { BankResolverApi } from "../../services/resolvers"
+import { useIsFocused, useNavigation } from "@react-navigation/core"
 
 export const PlaidScreen = observer(function PlaidScreen() {
   const { bankStore } = useStores()
   const isFocused = useIsFocused()
+  const navigator = useNavigation()
 
   React.useEffect(() => {
     bankStore.fetchLinkToken()
@@ -24,22 +24,16 @@ export const PlaidScreen = observer(function PlaidScreen() {
           onEvent={(event) => console.log(event)}
           onExit={(exit) => {
             console.log(exit)
-            alert(exit.error)
+            alert(exit.error.errorMessage)
           }}
-          onSuccess={async ({ publicToken, metadata }) => {
-            console.log(publicToken, metadata)
-            // public-sandbox-3fbddaba-3daf-44f9-942d-50e805c18d28
-            try {
-              if (publicToken) {
-                const response = await new BankResolverApi().plaidExchangePublicToken(publicToken)
-                if (response.success) {
-                  console.log(response.data)
-                }
+          onSuccess={async ({ publicToken, metadata }) =>
+            bankStore.connectBankAccount({ publicToken, metadata }).then((res) => {
+              if (res.success) {
+                bankStore.fetchMyBankAccounts()
+                navigator.navigate("BankAccounts")
               }
-            } catch (error) {
-              alert(error.message)
-            }
-          }}
+            })
+          }
         />
       </Screen>
     </View>

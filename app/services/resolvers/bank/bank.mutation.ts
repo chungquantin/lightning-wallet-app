@@ -16,3 +16,16 @@ export const CREATE_LINK_TOKEN = gql`
     }
   }
 `
+
+export const CONNECT_BANK_ACCOUNT_MUTATION = gql`
+  mutation ConnectBankAccount($connectBankAccountData: ConnectBankAccountDto!) {
+    connectBankAccount(data: $connectBankAccountData) {
+      data
+      errors {
+        message
+        path
+      }
+      success
+    }
+  }
+`

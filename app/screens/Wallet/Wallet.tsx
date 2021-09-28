@@ -9,7 +9,7 @@ import { useIsFocused, useNavigation } from "@react-navigation/native"
 import { TransactionItem } from "../TransactionItem"
 import { color } from "../../theme"
 import { TxKeyPath } from "../../i18n"
-import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons"
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons"
 import { formatByUnit } from "../../utils/currency"
 import { SectionList } from "react-native"
 import { Transaction } from "../../models/transaction/transaction"
@@ -32,7 +32,7 @@ const CustomButton = ({ onPressHandler, tx, children }: ButtonProps) => {
 }
 
 export const WalletScreen = observer(function WalletScreen() {
-  const { walletStore } = useStores()
+  const { walletStore, bankStore } = useStores()
   const isFocused = useIsFocused()
   const transaction = walletStore.transactions
   const transactionList = walletStore.groupTransactionByMonthAndYear()
@@ -60,7 +60,7 @@ export const WalletScreen = observer(function WalletScreen() {
       }),
   }
 
-  const RenderTopContainer = observer(() => (
+  const RenderTopContainer = React.memo(() => (
     <View style={Style.TopContainer}>
       <View style={Style.TopContainerStart}>
         <Text tx="wallet.balance" style={Style.TopContainerText} />
@@ -74,12 +74,13 @@ export const WalletScreen = observer(function WalletScreen() {
           {walletStore.percentageChange === 0 ? "+0.00" : walletStore.percentageChange.toString()}%
         </Text>
       </View>
+      <RenderPaymentMethodContainer />
       <View style={Style.TopContainerEnd}>
         <CustomButton onPressHandler={handler.Send} tx="common.send">
-          <FontAwesome5 name="donate" color={color.palette.offWhite} size={20} />
+          <MaterialCommunityIcons name="cash-plus" color={color.palette.offWhite} size={27} />
         </CustomButton>
         <CustomButton onPressHandler={handler.Receive} tx="common.receive">
-          <FontAwesome5 name="hand-holding-usd" color={color.palette.offWhite} size={20} />
+          <MaterialCommunityIcons name="cash-minus" color={color.palette.offWhite} size={27} />
         </CustomButton>
         <CustomButton onPressHandler={handler.Deposit} tx="common.deposit">
           <MaterialCommunityIcons
@@ -99,20 +100,14 @@ export const WalletScreen = observer(function WalletScreen() {
     </View>
   ))
 
-  const RenderTransactionEmptyContainer = () => (
-    <View
-      style={{
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100%",
-      }}
-    >
+  const RenderTransactionEmptyContainer = React.memo(() => (
+    <View style={Style.EmptyContainer}>
       <Text style={Style.EmptyContainerHeader}>ಠ_ಠ</Text>
       <Text style={Style.EmptyContainerSubHeader} tx="common.empty.transaction" />
     </View>
-  )
+  ))
 
-  const RenderTransactionsContainer = observer(() => (
+  const RenderTransactionsContainer = React.memo(() => (
     <View style={Style.BottomContainer}>
       <Text tx="common.transaction" style={Style.BottomHeader} />
       <Text style={{ marginBottom: transactionList.length !== 0 ? 20 : 0 }}>
@@ -123,6 +118,7 @@ export const WalletScreen = observer(function WalletScreen() {
         <RenderTransactionEmptyContainer />
       ) : (
         <SectionList
+          scrollEnabled={false}
           sections={transactionList}
           renderSectionHeader={({ section: { month, year } }) => (
             <View style={Style.BottomTransactionLabelContainer}>
@@ -142,9 +138,25 @@ export const WalletScreen = observer(function WalletScreen() {
     </View>
   ))
 
+  const RenderPaymentMethodContainer = React.memo(() => (
+    <View style={Style.PaymentMethodContainer}>
+      <View>
+        <Text style={Style.PaymentMethodHeader}>Payment method</Text>
+        <Text style={Style.PaymentMethodSubHeader}>
+          {bankStore.bankAccounts.length === 0
+            ? "No payment method connected"
+            : `${bankStore.bankAccounts.length} bank accounts`}
+        </Text>
+      </View>
+      <View>
+        <MaterialIcons name="keyboard-arrow-right" color={color.palette.offGray} size={25} />
+      </View>
+    </View>
+  ))
+
   return (
     <View testID="WalletScreen" style={Style.Container}>
-      <Screen preset="fixed">
+      <Screen unsafe={true} preset="scroll">
         <RenderTopContainer />
         <RenderTransactionsContainer />
       </Screen>

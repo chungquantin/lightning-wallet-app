@@ -8,7 +8,7 @@ import { View } from "react-native"
 import { Text } from "../components"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { LinearGradient } from "expo-linear-gradient"
-import { Ionicons } from "@expo/vector-icons"
+import { Feather, FontAwesome5, Ionicons } from "@expo/vector-icons"
 import { useNavigation } from "@react-navigation/core"
 
 const Tab = createBottomTabNavigator()
@@ -60,10 +60,13 @@ export const Tabs = observer(function Tabs() {
     buttonLayout: any
     headerShown: boolean
     headerRight: any
+    headerLeft: any
+    headerTitle: string
   }>[] => [
     // First button - Wallet
     {
-      headerShown: false,
+      headerShown: true,
+      headerTitle: "",
       key: "wallet-tab",
       name: "Wallet",
       component: WalletScreen,
@@ -99,8 +102,8 @@ export const Tabs = observer(function Tabs() {
       ),
       layout: ({ focused }) => (
         <View style={Style.TabItemsView}>
-          <Ionicons
-            name="ios-globe"
+          <Feather
+            name="users"
             color={focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor}
             size={props.iconStyle.size}
           />
@@ -139,7 +142,7 @@ export const Tabs = observer(function Tabs() {
       layout: ({ focused }) => (
         <View style={Style.TabItemsView}>
           <Ionicons
-            name="ios-stats-chart"
+            name="stats-chart-outline"
             color={focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor}
             size={props.iconStyle.size}
           />
@@ -168,8 +171,8 @@ export const Tabs = observer(function Tabs() {
       ),
       layout: ({ focused }) => (
         <View style={Style.TabItemsView}>
-          <Ionicons
-            name="person-outline"
+          <Feather
+            name="user"
             color={focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor}
             size={props.iconStyle.size}
           />
@@ -215,6 +218,8 @@ export const Tabs = observer(function Tabs() {
           options={{
             headerShown: tab.headerShown,
             headerRight: tab.headerRight,
+            headerLeft: tab.headerLeft,
+            headerTitle: tab.headerTitle,
             tabBarIcon: tab.layout,
             tabBarButton: tab.buttonLayout,
           }}

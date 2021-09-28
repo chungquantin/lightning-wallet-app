@@ -28,6 +28,50 @@ export type ApiError = {
   path: Scalars['String'];
 };
 
+export type BankAccountAchSchema = {
+  __typename?: 'BankAccountAchSchema';
+  account: Scalars['String'];
+  id: Scalars['ID'];
+  routingNumber: Scalars['String'];
+  wire_routing: Scalars['String'];
+};
+
+export type BankAccountBalanceSchema = {
+  __typename?: 'BankAccountBalanceSchema';
+  availableBalance?: Maybe<Scalars['Float']>;
+  currentBalance?: Maybe<Scalars['Float']>;
+  id: Scalars['ID'];
+  isoCurrencyCode: Scalars['String'];
+  limitBalance: Scalars['Float'];
+  unofficialCurrencyCode: Scalars['String'];
+};
+
+export type BankAccountSchema = {
+  __typename?: 'BankAccountSchema';
+  accountId: Scalars['String'];
+  ach: BankAccountAchSchema;
+  addedAt: Scalars['String'];
+  balance: BankAccountBalanceSchema;
+  id: Scalars['ID'];
+  institutionId: Scalars['String'];
+  institutionName: Scalars['String'];
+  name: Scalars['String'];
+  officialName?: Maybe<Scalars['String']>;
+  subType?: Maybe<Scalars['String']>;
+  type: BankAccountType;
+  userId: Scalars['String'];
+};
+
+/** Values of the Bank Account Type field */
+export enum BankAccountType {
+  Brokerage = 'Brokerage',
+  Credit = 'Credit',
+  Depository = 'Depository',
+  Investment = 'Investment',
+  Loan = 'Loan',
+  Other = 'Other'
+}
+
 export type CancelPaymentRequest = {
   __typename?: 'CancelPaymentRequest';
   data?: Maybe<Scalars['String']>;
@@ -37,6 +81,39 @@ export type CancelPaymentRequest = {
 
 export type CancelPaymentRequestDto = {
   paymentRequestId: Scalars['String'];
+};
+
+export type ConnectBankAccount = {
+  __typename?: 'ConnectBankAccount';
+  data?: Maybe<Scalars['String']>;
+  errors?: Maybe<Array<ApiError>>;
+  success: Scalars['Boolean'];
+};
+
+export type ConnectBankAccountDto = {
+  /** account id [Plaid] */
+  accountId: Scalars['String'];
+  institutionId: Scalars['String'];
+  institutionName: Scalars['String'];
+  publicToken: Scalars['String'];
+};
+
+export type ConnectDebitCard = {
+  __typename?: 'ConnectDebitCard';
+  data?: Maybe<Scalars['String']>;
+  errors?: Maybe<Array<ApiError>>;
+  success: Scalars['Boolean'];
+};
+
+export type DeleteBankAccount = {
+  __typename?: 'DeleteBankAccount';
+  data?: Maybe<Scalars['String']>;
+  errors?: Maybe<Array<ApiError>>;
+  success: Scalars['Boolean'];
+};
+
+export type DeleteBankAccountDto = {
+  bankAccountId: Scalars['String'];
 };
 
 export type ExchangeTokenDto = {
@@ -62,9 +139,34 @@ export type ForgotPasswordChangeDto = {
   newPassword: Scalars['String'];
 };
 
+export type GetBankAccount = {
+  __typename?: 'GetBankAccount';
+  data?: Maybe<BankAccountSchema>;
+  errors?: Maybe<Array<ApiError>>;
+  success: Scalars['Boolean'];
+};
+
+export type GetBankAccountDto = {
+  bankAccountId: Scalars['String'];
+};
+
+export type GetBankAccounts = {
+  __typename?: 'GetBankAccounts';
+  data: Array<BankAccountSchema>;
+  errors?: Maybe<Array<ApiError>>;
+  success: Scalars['Boolean'];
+};
+
 export type GetMeWallet = {
   __typename?: 'GetMeWallet';
   data?: Maybe<WalletSchema>;
+  errors?: Maybe<Array<ApiError>>;
+  success: Scalars['Boolean'];
+};
+
+export type GetMyBankAccounts = {
+  __typename?: 'GetMyBankAccounts';
+  data: Array<BankAccountSchema>;
   errors?: Maybe<Array<ApiError>>;
   success: Scalars['Boolean'];
 };
@@ -163,13 +265,6 @@ export type GetWallets = {
   success: Scalars['Boolean'];
 };
 
-export type HelloWorld = {
-  __typename?: 'HelloWorld';
-  data?: Maybe<Scalars['String']>;
-  errors?: Maybe<Array<ApiError>>;
-  success: Scalars['Boolean'];
-};
-
 export type LightningTransaction = {
   __typename?: 'LightningTransaction';
   amount: Scalars['Float'];
@@ -223,7 +318,10 @@ export type Mutation = {
   __typename?: 'Mutation';
   addNewContact?: Maybe<AddNewContact>;
   cancelPaymentRequest?: Maybe<CancelPaymentRequest>;
+  connectBankAccount?: Maybe<ConnectBankAccount>;
+  connectDebitCard?: Maybe<ConnectDebitCard>;
   createLinkToken?: Maybe<PlaidCreateLinkToken>;
+  deleteBankAccount?: Maybe<DeleteBankAccount>;
   forgotPasswordChange?: Maybe<SendForgotPassword>;
   login?: Maybe<Login>;
   logout?: Maybe<Logout>;
@@ -243,6 +341,16 @@ export type MutationAddNewContactArgs = {
 
 export type MutationCancelPaymentRequestArgs = {
   data: CancelPaymentRequestDto;
+};
+
+
+export type MutationConnectBankAccountArgs = {
+  data: ConnectBankAccountDto;
+};
+
+
+export type MutationDeleteBankAccountArgs = {
+  data: DeleteBankAccountDto;
 };
 
 
@@ -312,7 +420,10 @@ export type PlaidExchangePublicToken = {
 export type Query = {
   __typename?: 'Query';
   exchangePublicToken?: Maybe<PlaidExchangePublicToken>;
+  getBankAccount?: Maybe<GetBankAccount>;
+  getBankAccounts?: Maybe<GetBankAccounts>;
   getCurrentUser?: Maybe<Me>;
+  getMyBankAccounts?: Maybe<GetMyBankAccounts>;
   getMyContacts?: Maybe<GetMyContacts>;
   getMyPaymentRequests?: Maybe<GetMyPaymentRequests>;
   getMyWallet?: Maybe<GetMeWallet>;
@@ -325,13 +436,17 @@ export type Query = {
   getUsers?: Maybe<GetUsers>;
   getWallet?: Maybe<GetWallet>;
   getWallets?: Maybe<GetWallets>;
-  helloWorld?: Maybe<HelloWorld>;
   lightningGetTransactions?: Maybe<LndGetTransactions>;
 };
 
 
 export type QueryExchangePublicTokenArgs = {
   data: ExchangeTokenDto;
+};
+
+
+export type QueryGetBankAccountArgs = {
+  data: GetBankAccountDto;
 };
 
 
