@@ -17577,6 +17577,11 @@ react-native-keychain@6.2.0:
   resolved "https://registry.yarnpkg.com/react-native-keychain/-/react-native-keychain-6.2.0.tgz#8f4cff503aad367141db5aea0189ead9240c28ff"
   integrity sha512-U6fnOQRJPq+c0Abl+FoYy9v0H3kQU587tMamU/o+MoBSUScFLE3DQpkyT1PW4NF5IObgiGuqQdmjC2KgtBpjGA==
 
+react-native-linear-gradient@^2.5.6:
+  version "2.5.6"
+  resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz#96215cbc5ec7a01247a20890888aa75b834d44a0"
+  integrity sha512-HDwEaXcQIuXXCV70O+bK1rizFong3wj+5Q/jSyifKFLg0VWF95xh8XQgfzXwtq0NggL9vNjPKXa016KuFu+VFg==
+
 react-native-paper@^4.9.2:
   version "4.9.2"
   resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-4.9.2.tgz#6ecdd81acf2cf4d6d5f0247d4c1812dea93eade0"
@@ -17610,6 +17615,11 @@ react-native-screens@~2.15.2:
   version "2.15.2"
   resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-2.15.2.tgz#a449700e895b462937211ec72ed6f09652758f06"
   integrity sha512-CagNf2APXkVoRlF3Mugr264FbKbrBg9eXUkqhIPVeZB8EsdS8XPrnt99yj/pzmT+yJMBY0dGrjXT8+68WYh6YQ==
+
+react-native-skeleton-placeholder@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-skeleton-placeholder/-/react-native-skeleton-placeholder-5.0.0.tgz#899fca447c2f0b81f98566e350e792157a3c9df9"
+  integrity sha512-7sdG+Y2ENEVcxFC9XlpCgHy59XKkxaUyVqDwuAb66hvl7lwFr25uA5kHJ+JuDJ84ptVil5UEowW/2avwhsfoYg==
 
 react-native-svg@12.1.0:
   version "12.1.0"

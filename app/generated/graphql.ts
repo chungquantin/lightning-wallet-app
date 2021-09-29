@@ -53,8 +53,7 @@ export type BankAccountSchema = {
   addedAt: Scalars['String'];
   balance: BankAccountBalanceSchema;
   id: Scalars['ID'];
-  institutionId: Scalars['String'];
-  institutionName: Scalars['String'];
+  institution: InstitutionSchema;
   name: Scalars['String'];
   officialName?: Maybe<Scalars['String']>;
   subType?: Maybe<Scalars['String']>;
@@ -94,7 +93,6 @@ export type ConnectBankAccountDto = {
   /** account id [Plaid] */
   accountId: Scalars['String'];
   institutionId: Scalars['String'];
-  institutionName: Scalars['String'];
   publicToken: Scalars['String'];
 };
 
@@ -263,6 +261,15 @@ export type GetWallets = {
   data: Array<WalletSchema>;
   errors?: Maybe<Array<ApiError>>;
   success: Scalars['Boolean'];
+};
+
+export type InstitutionSchema = {
+  __typename?: 'InstitutionSchema';
+  institutionId: Scalars['String'];
+  institutionLogo?: Maybe<Scalars['String']>;
+  institutionName: Scalars['String'];
+  primaryColor?: Maybe<Scalars['String']>;
+  websiteUrl?: Maybe<Scalars['String']>;
 };
 
 export type LightningTransaction = {

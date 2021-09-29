@@ -23,14 +23,14 @@ export const PaymentMethodScreen = observer(function PaymentMethodScreen() {
     bankStore.fetchMyBankAccounts()
   }, [isFocused])
 
-  const RenderBankAccountItem = ({ name, type }) => (
+  const RenderBankAccountItem = ({ name, type, logo, primaryColor }) => (
     <TouchableOpacity onPress={handler.OpenBankAccountDetail}>
       <View style={Style.BankAccountContainer}>
         <View style={Style.BankAccountTopContainer}>
           <View style={Style.BankAccountImage}>
             <Avatar.Image
               source={{
-                uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdgbvcok9tCSpuzi2YkDTFBvKBe5m8G73Bj6BmRq2StUMVlCUTHWLP69-5MInp0hpqqy8&usqp=CAU",
+                uri: logo,
               }}
               size={30}
             />
@@ -50,6 +50,8 @@ export const PaymentMethodScreen = observer(function PaymentMethodScreen() {
         {bankStore.bankAccounts.map((bankAccount) => (
           <RenderBankAccountItem
             key={bankAccount.id}
+            logo={bankAccount.institutionLogo}
+            primaryColor={bankAccount.institutionPrimaryColor}
             name={bankAccount.institutionName}
             type={bankAccount.name}
           />

@@ -24,11 +24,16 @@ export const GET_MY_BANK_ACCOUNTS_QUERY = gql`
           availableBalance
           currentBalance
           isoCurrencyCode
-          #limitBalance
-          #unofficialCurrencyCode
+          limitBalance
+          unofficialCurrencyCode
         }
-        institutionId
-        institutionName
+        institution {
+          institutionId
+          institutionLogo
+          institutionName
+          primaryColor
+          websiteUrl
+        }
         name
         officialName
         subType

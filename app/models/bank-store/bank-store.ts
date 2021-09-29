@@ -2,7 +2,7 @@ import { flow, Instance, SnapshotOut, types } from "mobx-state-tree"
 import { withEnvironment } from "../extensions/with-environment"
 import { BankResolverApi } from "../../services/resolvers"
 import { GetMyBankAccounts, PlaidCreateLinkToken } from "../../generated/graphql"
-import { BankAccount, BankAccountModel, BankAccountSnapshot } from "../bank/bank-account"
+import { BankAccount, BankAccountModel, BankAccountSnapshot } from "../bank-account/bank-account"
 
 export const BankStoreModel = types
   .model("BankStore")
@@ -26,7 +26,6 @@ export const BankStoreModel = types
           const result = await new BankResolverApi().connectBankAccount({
             accountId: metadata.accounts[0]._id,
             institutionId: metadata.institution.id,
-            institutionName: metadata.institution.name,
             publicToken,
           })
           if (!result.success) {
@@ -54,13 +53,16 @@ export const BankStoreModel = types
                 addedAt: bankAccount.addedAt,
                 name: bankAccount.name,
                 officialName: bankAccount.officialName,
-                institutionName: bankAccount.institutionName,
                 availableBalance: balance.availableBalance,
                 currentBalance: balance.currentBalance,
                 limitBalance: balance.limitBalance,
                 currencyCode: balance.isoCurrencyCode,
                 routingNumber: ach.routingNumber,
                 accountNumber: ach.account,
+                institutionName: bankAccount.institution.institutionName,
+                institutionLogo: bankAccount.institution.institutionLogo,
+                institutionPrimaryColor: bankAccount.institution.primaryColor,
+                institutionWebsite: bankAccount.institution.websiteUrl,
               }
             })
             self.saveBankAccounts(convertedData)
