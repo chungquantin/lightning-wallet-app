@@ -1,0 +1,18 @@
+mutation generateLightningInvoice($data: GenerateLightningInvoiceDto!){
+    generateLightningInvoice(data: $data){
+        data{
+            addIndex
+            createdAt
+            expiresAt
+            id
+            payReq
+            rHash
+            userId
+        }
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

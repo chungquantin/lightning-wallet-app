@@ -1,0 +1,10 @@
+mutation deleteBankAccount($data: DeleteBankAccountDto!){
+    deleteBankAccount(data: $data){
+        data
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

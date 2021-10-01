@@ -1,4 +1,3 @@
-import { request } from "graphql-request"
 import {
   GetMyContacts,
   GetUser,
@@ -12,100 +11,71 @@ import {
 import { STORAGE_KEY } from "../../../constants/AsyncStorageKey"
 import { loadString } from "../../../utils/storage"
 import { API_URL, PRODUCTION_API_URL, useGateway } from "../constants"
-import { LOGIN_MUTATION, REGISTER_MUTATION } from "./user.mutation"
-import { GET_CURRENT_USER_CONTACTS, GET_CURRENT_USER_QUERY, GET_USER_QUERY } from "./user.query"
+import { ResolverApi } from "../resolver"
 
-export class UserResolverAPI {
-  private url = PRODUCTION_API_URL
-    ? PRODUCTION_API_URL
-    : !useGateway
-    ? `${API_URL}:3001`
-    : `${API_URL}:3000/graphql`
+export class UserResolverAPI extends ResolverApi {
+  constructor() {
+    super()
+    this.url = PRODUCTION_API_URL
+      ? PRODUCTION_API_URL
+      : !useGateway
+      ? `${API_URL}:3001`
+      : `${API_URL}:3000/graphql`
+  }
 
   public async login(dto: LoginDto): Promise<Login> {
-    try {
-      const response = await request<{ login: Login }, { loginData: LoginDto }>(
-        this.url,
-        LOGIN_MUTATION,
-        {
-          loginData: dto,
-        },
-      )
-      return response.login
-    } catch (error) {
-      throw error
-    }
+    console.log(this.url)
+    const res = await this.mutation<Login, LoginDto>("login", {
+      data: { email: dto.email, password: dto.password },
+    })
+    return res.login
   }
 
   public async register(dto: RegisterDto): Promise<Register> {
-    try {
-      const response = await request<{ register: Register }, { registerData: RegisterDto }>(
-        this.url,
-        REGISTER_MUTATION,
-        { registerData: dto },
-      )
-      return response.register
-    } catch (error) {
-      throw error.message
-    }
+    const res = await this.mutation<Register, RegisterDto>("register", {
+      data: dto,
+    })
+    return res.register
   }
 
   public async getCurrentUser(): Promise<Me> {
-    try {
-      const [accessToken, refreshToken] = await Promise.all([
-        loadString(STORAGE_KEY.ACCESS_TOKEN),
-        loadString(STORAGE_KEY.REFRESH_TOKEN),
-      ])
-      const response = await request<{ getCurrentUser: Me }>(
-        this.url,
-        GET_CURRENT_USER_QUERY,
-        {},
-        {
-          "x-access-token": accessToken,
-          "x-refresh-token": refreshToken,
-        },
-      )
-      return response.getCurrentUser
-    } catch (error) {
-      throw error.message
-    }
+    const [accessToken, refreshToken] = await Promise.all([
+      loadString(STORAGE_KEY.ACCESS_TOKEN),
+      loadString(STORAGE_KEY.REFRESH_TOKEN),
+    ])
+    const res = await this.query<Me, {}>(
+      "getCurrentUser",
+      {},
+      {
+        accessToken,
+        refreshToken,
+      },
+    )
+    return res.getCurrentUser
   }
 
   public async getMyContacts(): Promise<GetMyContacts> {
-    try {
-      const [accessToken, refreshToken] = await Promise.all([
-        loadString(STORAGE_KEY.ACCESS_TOKEN),
-        loadString(STORAGE_KEY.REFRESH_TOKEN),
-      ])
-      const response = await request<{ getMyContacts: GetMyContacts }>(
-        this.url,
-        GET_CURRENT_USER_CONTACTS,
-        {},
-        {
-          "x-access-token": accessToken,
-          "x-refresh-token": refreshToken,
-        },
-      )
-      return response.getMyContacts
-    } catch (error) {
-      throw error.message
-    }
+    const [accessToken, refreshToken] = await Promise.all([
+      loadString(STORAGE_KEY.ACCESS_TOKEN),
+      loadString(STORAGE_KEY.REFRESH_TOKEN),
+    ])
+    const res = await this.query<GetMyContacts, {}>(
+      "getMyContacts",
+      {},
+      {
+        accessToken,
+        refreshToken,
+      },
+    )
+    return res.getMyContacts
   }
 
   public async getUser(userId: string): Promise<GetUser> {
-    try {
-      const response = await request<{ getUser: GetUser }, { getUserData: GetUserDto }>(
-        this.url,
-        GET_USER_QUERY,
-        {
-          getUserData: {
-            userId,
-          },
-        },
-      )
-      return response.getUser
-    } catch (error) {
-      throw error.message
-    }
+    const res = await this.query<GetUser, GetUserDto>("getMyContacts", {
+      data: {
+        userId,
+      },
+    })
+    return res.getUser
   }
 }

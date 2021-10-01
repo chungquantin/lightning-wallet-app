@@ -1,0 +1,10 @@
+mutation connectBankAccount($data: ConnectBankAccountDto!){
+    connectBankAccount(data: $data){
+        data
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

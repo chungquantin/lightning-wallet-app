@@ -1,0 +1,27 @@
+query getBankTransfer($data: GetBankTransferDto!){
+    getBankTransfer(data: $data){
+        data{
+            account_id
+            ach_class
+            amount
+            cancellable
+            created
+            currency
+            customTag
+            description
+            direction
+            failure_reason
+            id
+            legalName
+            network
+            originationAccountId
+            status
+            type
+        }
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

@@ -1,0 +1,16 @@
+query getMyWallet {
+  getMyWallet {
+    data {
+      balance
+      createdAt
+      defaultCurrency
+      id
+      userId
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}

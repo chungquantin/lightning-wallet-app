@@ -1,0 +1,26 @@
+query getBtcAddress{
+    getBtcAddress{
+        data{
+            chainInvoice{
+                address
+                createdAt
+                id
+                userId
+            }
+            lightningInvoice{
+                addIndex
+                createdAt
+                expiresAt
+                id
+                payReq
+                rHash
+                userId
+            }
+        }
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

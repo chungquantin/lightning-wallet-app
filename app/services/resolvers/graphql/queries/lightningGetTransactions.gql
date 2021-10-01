@@ -1,0 +1,16 @@
+query lightningGetTransactions($Pagination: PaginationInputType){
+    lightningGetTransactions(Pagination: $Pagination){
+        data{
+            amount
+            blockHash
+            fees
+            hash
+            timeStamp
+        }
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

@@ -1,0 +1,636 @@
+"""Exposes a URL that specifies the behaviour of this scalar."""
+directive @specifiedBy(
+  """The URL that specifies the behaviour of this scalar."""
+  url: String!
+) on SCALAR
+
+type AddNewContact {
+  data: String
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input AddNewContactDto {
+  userId: String!
+}
+
+type ApiError {
+  message: String!
+  path: String!
+}
+
+type BankAccountAchSchema {
+  account: String!
+  id: ID!
+  routingNumber: String!
+  wire_routing: String!
+}
+
+type BankAccountBalanceSchema {
+  availableBalance: Float
+  currentBalance: Float
+  id: ID!
+  isoCurrencyCode: String!
+  limitBalance: Float!
+  unofficialCurrencyCode: String!
+}
+
+type BankAccountSchema {
+  accountId: String!
+  ach: BankAccountAchSchema!
+  addedAt: String!
+  balance: BankAccountBalanceSchema!
+  id: ID!
+  institution: InstitutionSchema!
+  name: String!
+  officialName: String
+  subType: String
+  type: BankAccountType!
+  userId: String!
+}
+
+"""Values of the Bank Account Type field"""
+enum BankAccountType {
+  Brokerage
+  Credit
+  Depository
+  Investment
+  Loan
+  Other
+}
+
+type BankTransfer {
+  account_id: String!
+  ach_class: String!
+  amount: String!
+  cancellable: Boolean!
+  created: String!
+  currency: String!
+  customTag: String!
+  description: String!
+  direction: String!
+  failure_reason: String!
+  id: String!
+  legalName: String!
+  network: String!
+  originationAccountId: String!
+  status: String!
+  type: String!
+}
+
+type BtcAddress {
+  chainInvoice: ChainInvoiceSchema!
+  lightningInvoice: LightningInvoiceSchema!
+}
+
+type BtcAddresses {
+  chainInvoices: [ChainInvoiceSchema!]!
+  lightningInvoices: [LightningInvoiceSchema!]!
+}
+
+type CancelPaymentRequest {
+  data: String
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input CancelPaymentRequestDto {
+  paymentRequestId: String!
+}
+
+type ChainInvoiceSchema {
+  address: String!
+  createdAt: String!
+  id: ID!
+  userId: String!
+}
+
+type ConnectBankAccount {
+  data: String
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input ConnectBankAccountDto {
+  """account id [Plaid]"""
+  accountId: String!
+  institutionId: String!
+  publicToken: String!
+}
+
+type ConnectDebitCard {
+  data: String
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+type DeleteBankAccount {
+  data: String
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input DeleteBankAccountDto {
+  bankAccountId: String!
+}
+
+type Deposit {
+  data: String
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input ExchangeTokenDto {
+  publicToken: String!
+}
+
+"""Fiat currency"""
+enum FiatCurrency {
+  CAD
+  USD
+  VND
+}
+
+type ForgotPassword {
+  data: String
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input ForgotPasswordChangeDto {
+  key: String!
+  newPassword: String!
+}
+
+type GenerateChainInvoice {
+  data: ChainInvoiceSchema
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+type GenerateLightningInvoice {
+  data: LightningInvoiceSchema
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input GenerateLightningInvoiceDto {
+  amount: Float!
+  currency: String!
+  description: String!
+}
+
+type GetBankAccount {
+  data: BankAccountSchema
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input GetBankAccountDto {
+  bankAccountId: String!
+}
+
+type GetBankAccounts {
+  data: [BankAccountSchema!]!
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+type GetBankTransfer {
+  data: BankTransfer
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input GetBankTransferDto {
+  bankTransferId: String!
+}
+
+type GetBankTransfers {
+  data: [BankTransfer!]!
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input GetBankTransfersDto {
+  count: Float!
+  direction: String!
+  endDate: String!
+  offset: Float!
+  originationAccountId: String!
+  startDate: String!
+}
+
+type getBtcAddress {
+  data: BtcAddress
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+type getBtcAddresses {
+  data: BtcAddresses
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+type GetMeWallet {
+  data: WalletSchema
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+type GetMyBankAccounts {
+  data: [BankAccountSchema!]!
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+type GetMyContacts {
+  data: [UserSchema!]!
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+type GetMyPaymentRequests {
+  data: [TransactionRequestSchema!]!
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+type GetMyWalletTransactions {
+  data: [TransactionSchema!]!
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+type GetPaymentRequest {
+  data: TransactionRequestSchema
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input GetPaymentRequestDto {
+  paymentRequestId: String!
+}
+
+type GetPaymentRequests {
+  data: [TransactionRequestSchema!]!
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+type GetTransaction {
+  data: TransactionSchema
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input GetTransactionDto {
+  transactionId: String!
+}
+
+type GetTransactions {
+  data: [TransactionSchema!]!
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+type GetUser {
+  data: UserSchema
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input GetUserDto {
+  userId: String!
+}
+
+type GetUsers {
+  data: [UserSchema!]!
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+type GetWallet {
+  data: WalletSchema
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input GetWalletDto {
+  userId: String
+  walletId: String
+}
+
+type GetWallets {
+  data: [WalletSchema!]!
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+type InstitutionSchema {
+  institutionId: String!
+  institutionLogo: String
+  institutionName: String!
+  primaryColor: String
+  websiteUrl: String
+}
+
+type LightningInvoiceSchema {
+  addIndex: Float!
+  createdAt: String!
+  expiresAt: String!
+  id: ID!
+  payReq: String!
+  rHash: String!
+  userId: String!
+}
+
+type LightningTransaction {
+  amount: Float!
+  blockHash: String!
+  fees: Float!
+  hash: String!
+  timeStamp: Float!
+}
+
+type LinkTokenCreateResponseImpl {
+  expiration: String!
+  link_token: String!
+  request_id: String!
+}
+
+type LndGetTransactions {
+  data: [LightningTransaction!]!
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+type Login {
+  data: TokenResponse
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input LoginDto {
+  email: String!
+  password: String!
+}
+
+type Logout {
+  data: String
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+type Me {
+  data: UserSchema
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+type Mutation {
+  addNewContact(data: AddNewContactDto!): AddNewContact
+  cancelPaymentRequest(data: CancelPaymentRequestDto!): CancelPaymentRequest
+  connectBankAccount(data: ConnectBankAccountDto!): ConnectBankAccount
+  connectDebitCard: ConnectDebitCard
+  createLinkToken: PlaidCreateLinkToken
+  deleteBankAccount(data: DeleteBankAccountDto!): DeleteBankAccount
+  deposit(data: WithdrawDto!): Deposit
+  forgotPasswordChange(data: ForgotPasswordChangeDto!): SendForgotPassword
+  generateLightningInvoice(data: GenerateLightningInvoiceDto!): GenerateLightningInvoice
+  generateOnChainInvoice: GenerateChainInvoice
+  login(data: LoginDto!): Login
+  logout: Logout
+  register(data: RegisterDto!): Register
+  respondPaymentRequest(data: RespondPaymentRequestDto!): RespondPaymentRequest
+  sendForgotPasswordEmail(data: SendForgotPasswordDto!): ForgotPassword
+  sendInAppLightningPayment(data: SendInAppLightningPaymentDto!): SendInAppLightningPayment
+  sendInAppPayment(data: SendInAppPaymentDto!): SendInAppPayment
+  sendOutAppLightningPayment(data: SendOutAppLightningPaymentDto!): SendOutAppLightningPayment
+  sendPaymentRequest(data: SendRequestPaymentDto!): SendPaymentRequest
+}
+
+input PaginationInputType {
+  limit: Int
+  skip: Int
+}
+
+type PlaidCreateLinkToken {
+  data: LinkTokenCreateResponseImpl
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+type PlaidExchangePublicToken {
+  data: String
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+type Query {
+  exchangePublicToken(data: ExchangeTokenDto!): PlaidExchangePublicToken
+  getBankAccount(data: GetBankAccountDto!): GetBankAccount
+  getBankAccounts: GetBankAccounts
+  getBankTransfer(data: GetBankTransferDto!): GetBankTransfer
+  getBankTransfers(data: GetBankTransfersDto!): GetBankTransfers
+  getBtcAddress: getBtcAddress
+  getBtcAddresses: getBtcAddresses
+  getCurrentUser: Me
+  getMyBankAccounts: GetMyBankAccounts
+  getMyContacts(Pagination: PaginationInputType): GetMyContacts
+  getMyPaymentRequests(Pagination: PaginationInputType): GetMyPaymentRequests
+  getMyWallet: GetMeWallet
+  getMyWalletTransactions(Pagination: PaginationInputType): GetMyWalletTransactions
+  getPaymentRequest(data: GetPaymentRequestDto!): GetPaymentRequest
+  getPaymentRequests(Pagination: PaginationInputType): GetPaymentRequests
+  getTransaction(data: GetTransactionDto!): GetTransaction
+  getTransactions(Pagination: PaginationInputType): GetTransactions
+  getUser(data: GetUserDto!): GetUser
+  getUsers(Pagination: PaginationInputType): GetUsers
+  getWallet(data: GetWalletDto!): GetWallet
+  getWallets(Pagination: PaginationInputType): GetWallets
+  lightningGetTransactions(Pagination: PaginationInputType): LndGetTransactions
+}
+
+type Register {
+  data: UserSchema
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input RegisterDto {
+  avatar: String!
+  email: String!
+  firstName: String!
+  lastName: String!
+  password: String!
+  phoneNumber: String!
+}
+
+type RespondPaymentRequest {
+  data: Boolean
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input RespondPaymentRequestDto {
+  confirmed: Boolean!
+  paymentRequestId: String!
+}
+
+type SendForgotPassword {
+  data: String
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input SendForgotPasswordDto {
+  email: String!
+}
+
+type SendInAppLightningPayment {
+  data: TransactionSchema
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input SendInAppLightningPaymentDto {
+  description: String!
+  paymentRequest: String!
+  walletId: String!
+}
+
+type SendInAppPayment {
+  data: TransactionSchema
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input SendInAppPaymentDto {
+  amount: Float!
+  currency: String!
+  description: String!
+  method: String!
+  walletId: String
+}
+
+type SendOutAppLightningPayment {
+  data: TransactionSchema
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input SendOutAppLightningPaymentDto {
+  description: String!
+  paymentRequest: String!
+}
+
+type SendPaymentRequest {
+  data: TransactionRequestSchema
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input SendRequestPaymentDto {
+  amount: Float!
+  currency: String!
+  description: String!
+  method: String!
+  walletId: String!
+}
+
+type TokenResponse {
+  accessToken: String!
+  refreshToken: String!
+}
+
+"""Transaction method"""
+enum TransactionMethod {
+  LIGHTNING
+  ON_CHAIN
+}
+
+type TransactionRequestSchema {
+  createdAt: String!
+  expiredAt: String!
+  id: ID!
+  requestFrom: String!
+  requestTo: String!
+  status: TransactionRequestStatus!
+  transaction: TransactionSchema!
+}
+
+"""Transaction request status"""
+enum TransactionRequestStatus {
+  CANCELED
+  CONFIRMED
+  PENDING
+  REJECTED
+  UNKNOWN
+}
+
+type TransactionSchema {
+  amount: Float!
+  btcAmount: Float!
+  btcExchangeRate: Float!
+  createdAt: String!
+  currency: FiatCurrency!
+  description: String!
+  fromWalletId: String!
+  id: ID!
+  method: TransactionMethod!
+  networkFee: Float!
+  status: TransactionStatus!
+  toWalletId: String!
+  transactionFee: Float!
+}
+
+"""Transaction status"""
+enum TransactionStatus {
+  DONE
+  EXPIRED
+  PENDING
+  UNKNOWN
+}
+
+type UserSchema {
+  avatar: String!
+  contacts: [UserSchema!]!
+  createdAt: String!
+  email: String!
+  emailVerified: Boolean!
+  firstName: String!
+  forgotPasswordLock: Boolean!
+  id: ID!
+  lastName: String!
+  name: String!
+  phoneNumber: String!
+  phoneNumberVerified: Boolean!
+  twoFactorVerified: Boolean!
+}
+
+type WalletSchema {
+  balance: Float!
+  createdAt: String!
+  defaultCurrency: FiatCurrency!
+  id: ID!
+  transactions: [TransactionSchema!]!
+  userId: ID!
+}
+
+input WithdrawDto {
+  accountName: String!
+
+  """The user's account number."""
+  accountNumber: String!
+
+  """The type of the bank account (checking or savings)."""
+  accountType: String!
+  amount: Float!
+  currency: String!
+
+  """The user's routing number."""
+  routingNumber: String!
+}
+

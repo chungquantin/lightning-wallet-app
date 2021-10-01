@@ -1,0 +1,10 @@
+query exchangePublicToken($data: ExchangeTokenDto!){
+    exchangePublicToken(data: $data){
+        data
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

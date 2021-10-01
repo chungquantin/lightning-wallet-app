@@ -12,6 +12,7 @@ module.exports = {
         legacy: true,
       },
     ],
+    "macros",
     ["@babel/plugin-proposal-optional-catch-binding"],
     ["@babel/plugin-transform-async-to-generator"],
   ],

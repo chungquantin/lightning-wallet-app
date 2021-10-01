@@ -1,0 +1,10 @@
+mutation connectDebitCard{
+    connectDebitCard{
+        data
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

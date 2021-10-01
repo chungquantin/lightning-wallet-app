@@ -71,6 +71,38 @@ export enum BankAccountType {
   Other = 'Other'
 }
 
+export type BankTransfer = {
+  __typename?: 'BankTransfer';
+  account_id: Scalars['String'];
+  ach_class: Scalars['String'];
+  amount: Scalars['String'];
+  cancellable: Scalars['Boolean'];
+  created: Scalars['String'];
+  currency: Scalars['String'];
+  customTag: Scalars['String'];
+  description: Scalars['String'];
+  direction: Scalars['String'];
+  failure_reason: Scalars['String'];
+  id: Scalars['String'];
+  legalName: Scalars['String'];
+  network: Scalars['String'];
+  originationAccountId: Scalars['String'];
+  status: Scalars['String'];
+  type: Scalars['String'];
+};
+
+export type BtcAddress = {
+  __typename?: 'BtcAddress';
+  chainInvoice: ChainInvoiceSchema;
+  lightningInvoice: LightningInvoiceSchema;
+};
+
+export type BtcAddresses = {
+  __typename?: 'BtcAddresses';
+  chainInvoices: Array<ChainInvoiceSchema>;
+  lightningInvoices: Array<LightningInvoiceSchema>;
+};
+
 export type CancelPaymentRequest = {
   __typename?: 'CancelPaymentRequest';
   data?: Maybe<Scalars['String']>;
@@ -80,6 +112,14 @@ export type CancelPaymentRequest = {
 
 export type CancelPaymentRequestDto = {
   paymentRequestId: Scalars['String'];
+};
+
+export type ChainInvoiceSchema = {
+  __typename?: 'ChainInvoiceSchema';
+  address: Scalars['String'];
+  createdAt: Scalars['String'];
+  id: Scalars['ID'];
+  userId: Scalars['String'];
 };
 
 export type ConnectBankAccount = {
@@ -114,6 +154,13 @@ export type DeleteBankAccountDto = {
   bankAccountId: Scalars['String'];
 };
 
+export type Deposit = {
+  __typename?: 'Deposit';
+  data?: Maybe<Scalars['String']>;
+  errors?: Maybe<Array<ApiError>>;
+  success: Scalars['Boolean'];
+};
+
 export type ExchangeTokenDto = {
   publicToken: Scalars['String'];
 };
@@ -137,6 +184,26 @@ export type ForgotPasswordChangeDto = {
   newPassword: Scalars['String'];
 };
 
+export type GenerateChainInvoice = {
+  __typename?: 'GenerateChainInvoice';
+  data?: Maybe<ChainInvoiceSchema>;
+  errors?: Maybe<Array<ApiError>>;
+  success: Scalars['Boolean'];
+};
+
+export type GenerateLightningInvoice = {
+  __typename?: 'GenerateLightningInvoice';
+  data?: Maybe<LightningInvoiceSchema>;
+  errors?: Maybe<Array<ApiError>>;
+  success: Scalars['Boolean'];
+};
+
+export type GenerateLightningInvoiceDto = {
+  amount: Scalars['Float'];
+  currency: Scalars['String'];
+  description: Scalars['String'];
+};
+
 export type GetBankAccount = {
   __typename?: 'GetBankAccount';
   data?: Maybe<BankAccountSchema>;
@@ -153,6 +220,33 @@ export type GetBankAccounts = {
   data: Array<BankAccountSchema>;
   errors?: Maybe<Array<ApiError>>;
   success: Scalars['Boolean'];
+};
+
+export type GetBankTransfer = {
+  __typename?: 'GetBankTransfer';
+  data?: Maybe<BankTransfer>;
+  errors?: Maybe<Array<ApiError>>;
+  success: Scalars['Boolean'];
+};
+
+export type GetBankTransferDto = {
+  bankTransferId: Scalars['String'];
+};
+
+export type GetBankTransfers = {
+  __typename?: 'GetBankTransfers';
+  data: Array<BankTransfer>;
+  errors?: Maybe<Array<ApiError>>;
+  success: Scalars['Boolean'];
+};
+
+export type GetBankTransfersDto = {
+  count: Scalars['Float'];
+  direction: Scalars['String'];
+  endDate: Scalars['String'];
+  offset: Scalars['Float'];
+  originationAccountId: Scalars['String'];
+  startDate: Scalars['String'];
 };
 
 export type GetMeWallet = {
@@ -272,6 +366,17 @@ export type InstitutionSchema = {
   websiteUrl?: Maybe<Scalars['String']>;
 };
 
+export type LightningInvoiceSchema = {
+  __typename?: 'LightningInvoiceSchema';
+  addIndex: Scalars['Float'];
+  createdAt: Scalars['String'];
+  expiresAt: Scalars['String'];
+  id: Scalars['ID'];
+  payReq: Scalars['String'];
+  rHash: Scalars['String'];
+  userId: Scalars['String'];
+};
+
 export type LightningTransaction = {
   __typename?: 'LightningTransaction';
   amount: Scalars['Float'];
@@ -329,14 +434,18 @@ export type Mutation = {
   connectDebitCard?: Maybe<ConnectDebitCard>;
   createLinkToken?: Maybe<PlaidCreateLinkToken>;
   deleteBankAccount?: Maybe<DeleteBankAccount>;
+  deposit?: Maybe<Deposit>;
   forgotPasswordChange?: Maybe<SendForgotPassword>;
+  generateLightningInvoice?: Maybe<GenerateLightningInvoice>;
+  generateOnChainInvoice?: Maybe<GenerateChainInvoice>;
   login?: Maybe<Login>;
   logout?: Maybe<Logout>;
   register?: Maybe<Register>;
   respondPaymentRequest?: Maybe<RespondPaymentRequest>;
   sendForgotPasswordEmail?: Maybe<ForgotPassword>;
-  sendLightningPayment?: Maybe<SendLightningPayment>;
-  sendPayment?: Maybe<SendTransaction>;
+  sendInAppLightningPayment?: Maybe<SendInAppLightningPayment>;
+  sendInAppPayment?: Maybe<SendInAppPayment>;
+  sendOutAppLightningPayment?: Maybe<SendOutAppLightningPayment>;
   sendPaymentRequest?: Maybe<SendPaymentRequest>;
 };
 
@@ -361,8 +470,18 @@ export type MutationDeleteBankAccountArgs = {
 };
 
 
+export type MutationDepositArgs = {
+  data: WithdrawDto;
+};
+
+
 export type MutationForgotPasswordChangeArgs = {
   data: ForgotPasswordChangeDto;
+};
+
+
+export type MutationGenerateLightningInvoiceArgs = {
+  data: GenerateLightningInvoiceDto;
 };
 
 
@@ -386,13 +505,18 @@ export type MutationSendForgotPasswordEmailArgs = {
 };
 
 
-export type MutationSendLightningPaymentArgs = {
-  data: SendLightningPaymentDto;
+export type MutationSendInAppLightningPaymentArgs = {
+  data: SendInAppLightningPaymentDto;
 };
 
 
-export type MutationSendPaymentArgs = {
-  data: SendPaymentDto;
+export type MutationSendInAppPaymentArgs = {
+  data: SendInAppPaymentDto;
+};
+
+
+export type MutationSendOutAppLightningPaymentArgs = {
+  data: SendOutAppLightningPaymentDto;
 };
 
 
@@ -403,11 +527,6 @@ export type MutationSendPaymentRequestArgs = {
 export type PaginationInputType = {
   limit?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
-};
-
-export type PaymentResponse = {
-  __typename?: 'PaymentResponse';
-  transaction: TransactionSchema;
 };
 
 export type PlaidCreateLinkToken = {
@@ -429,6 +548,10 @@ export type Query = {
   exchangePublicToken?: Maybe<PlaidExchangePublicToken>;
   getBankAccount?: Maybe<GetBankAccount>;
   getBankAccounts?: Maybe<GetBankAccounts>;
+  getBankTransfer?: Maybe<GetBankTransfer>;
+  getBankTransfers?: Maybe<GetBankTransfers>;
+  getBtcAddress?: Maybe<GetBtcAddress>;
+  getBtcAddresses?: Maybe<GetBtcAddresses>;
   getCurrentUser?: Maybe<Me>;
   getMyBankAccounts?: Maybe<GetMyBankAccounts>;
   getMyContacts?: Maybe<GetMyContacts>;
@@ -454,6 +577,16 @@ export type QueryExchangePublicTokenArgs = {
 
 export type QueryGetBankAccountArgs = {
   data: GetBankAccountDto;
+};
+
+
+export type QueryGetBankTransferArgs = {
+  data: GetBankTransferDto;
+};
+
+
+export type QueryGetBankTransfersArgs = {
+  data: GetBankTransfersDto;
 };
 
 
@@ -555,23 +688,44 @@ export type SendForgotPasswordDto = {
   email: Scalars['String'];
 };
 
-export type SendLightningPayment = {
-  __typename?: 'SendLightningPayment';
-  data?: Maybe<Scalars['String']>;
+export type SendInAppLightningPayment = {
+  __typename?: 'SendInAppLightningPayment';
+  data?: Maybe<TransactionSchema>;
   errors?: Maybe<Array<ApiError>>;
   success: Scalars['Boolean'];
 };
 
-export type SendLightningPaymentDto = {
+export type SendInAppLightningPaymentDto = {
+  description: Scalars['String'];
   paymentRequest: Scalars['String'];
+  walletId: Scalars['String'];
 };
 
-export type SendPaymentDto = {
+export type SendInAppPayment = {
+  __typename?: 'SendInAppPayment';
+  data?: Maybe<TransactionSchema>;
+  errors?: Maybe<Array<ApiError>>;
+  success: Scalars['Boolean'];
+};
+
+export type SendInAppPaymentDto = {
   amount: Scalars['Float'];
   currency: Scalars['String'];
   description: Scalars['String'];
   method: Scalars['String'];
-  walletId: Scalars['String'];
+  walletId?: Maybe<Scalars['String']>;
+};
+
+export type SendOutAppLightningPayment = {
+  __typename?: 'SendOutAppLightningPayment';
+  data?: Maybe<TransactionSchema>;
+  errors?: Maybe<Array<ApiError>>;
+  success: Scalars['Boolean'];
+};
+
+export type SendOutAppLightningPaymentDto = {
+  description: Scalars['String'];
+  paymentRequest: Scalars['String'];
 };
 
 export type SendPaymentRequest = {
@@ -587,13 +741,6 @@ export type SendRequestPaymentDto = {
   description: Scalars['String'];
   method: Scalars['String'];
   walletId: Scalars['String'];
-};
-
-export type SendTransaction = {
-  __typename?: 'SendTransaction';
-  data?: Maybe<PaymentResponse>;
-  errors?: Maybe<Array<ApiError>>;
-  success: Scalars['Boolean'];
 };
 
 export type TokenResponse = {
@@ -678,4 +825,30 @@ export type WalletSchema = {
   id: Scalars['ID'];
   transactions: Array<TransactionSchema>;
   userId: Scalars['ID'];
+};
+
+export type WithdrawDto = {
+  accountName: Scalars['String'];
+  /** The user's account number. */
+  accountNumber: Scalars['String'];
+  /** The type of the bank account (checking or savings). */
+  accountType: Scalars['String'];
+  amount: Scalars['Float'];
+  currency: Scalars['String'];
+  /** The user's routing number. */
+  routingNumber: Scalars['String'];
+};
+
+export type GetBtcAddress = {
+  __typename?: 'getBtcAddress';
+  data?: Maybe<BtcAddress>;
+  errors?: Maybe<Array<ApiError>>;
+  success: Scalars['Boolean'];
+};
+
+export type GetBtcAddresses = {
+  __typename?: 'getBtcAddresses';
+  data?: Maybe<BtcAddresses>;
+  errors?: Maybe<Array<ApiError>>;
+  success: Scalars['Boolean'];
 };

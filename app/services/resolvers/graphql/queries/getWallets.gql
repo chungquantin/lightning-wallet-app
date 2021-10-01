@@ -1,0 +1,31 @@
+query getWallets($Pagination: PaginationInputType){
+    getWallets(Pagination: $Pagination){
+        data{
+            balance
+            createdAt
+            defaultCurrency
+            id
+            transactions{
+                amount
+                btcAmount
+                btcExchangeRate
+                createdAt
+                currency
+                description
+                fromWalletId
+                id
+                method
+                networkFee
+                status
+                toWalletId
+                transactionFee
+            }
+            userId
+        }
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

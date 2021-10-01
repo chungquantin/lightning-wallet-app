@@ -20,6 +20,8 @@ const os = require("os")
   { command: 'pkill -f "cli.js start" || set exit 0', onlyPlatforms: ["darwin", "linux"] },
   // Help wanted: Add the windows version here. { command: "????", onlyPlatforms: ["win32"] },
 
+  //{ command: "rn-nodeify --install fs,path --hack" },
+
   // Make sure our native modules are androidX-happy
   { command: "jetify" },
 

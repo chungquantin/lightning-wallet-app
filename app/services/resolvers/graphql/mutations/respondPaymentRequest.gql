@@ -1,0 +1,10 @@
+mutation respondPaymentRequest($data: RespondPaymentRequestDto!){
+    respondPaymentRequest(data: $data){
+        data
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

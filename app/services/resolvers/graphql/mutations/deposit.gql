@@ -1,0 +1,10 @@
+mutation deposit($data: WithdrawDto!){
+    deposit(data: $data){
+        data
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

@@ -13,7 +13,6 @@ import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons"
 import { formatByUnit } from "../../utils/currency"
 import { SectionList } from "react-native"
 import { Transaction } from "../../models/transaction/transaction"
-import SkeletonPlaceholder from "react-native-skeleton-placeholder"
 
 interface ButtonProps {
   onPressHandler: (event: GestureResponderEvent) => void
@@ -117,9 +116,6 @@ export const WalletScreen = observer(function WalletScreen() {
         <Text style={Style.BottomSubheader} tx="wallet.total-transactions" />
         <Text style={Style.BottomSubheader}>: {transaction.length}</Text>
       </Text>
-      <SkeletonPlaceholder>
-        <View style={{ width: 50, height: 60 }}></View>
-      </SkeletonPlaceholder>
       {transactionList.length === 0 ? (
         <RenderTransactionEmptyContainer />
       ) : (
