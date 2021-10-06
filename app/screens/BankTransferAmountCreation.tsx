@@ -42,27 +42,6 @@ export const BankTransferAmountCreationScreen = observer(
     }
     const navigator = useNavigation()
 
-    const handler = {
-      ConnectPaymentMethod: () =>
-        navigator.navigate("PaymentMethod", {
-          action,
-        }),
-      Next: () => {
-        const payload = {
-          amount: formValues.amount,
-          currency: formValues.currency,
-          bankAccount,
-        }
-        switch (action) {
-          case "WITHDRAW":
-            break
-          case "DEPOSIT":
-            navigator.navigate("BankTransferConfirm", payload)
-          default:
-            break
-        }
-      },
-    }
     const fee = formValues.amount * BUSINESS_CONSTANT.transactionFee
     const disableCondition =
       action === "DEPOSIT"
@@ -76,6 +55,30 @@ export const BankTransferAmountCreationScreen = observer(
       ? bankAccount.availableBalance -
         bankAccount.availableBalance * BUSINESS_CONSTANT.transactionFee
       : 0
+
+    const handler = {
+      ConnectPaymentMethod: () =>
+        navigator.navigate("PaymentMethod", {
+          action,
+        }),
+      Next: () => {
+        const payload = {
+          amount: formValues.amount,
+          currency: formValues.currency,
+          fee,
+          bankAccount,
+        }
+        switch (action) {
+          case "WITHDRAW":
+            navigator.navigate("BankTransferConfirm", { ...payload, action: "WITHDRAW" })
+            break
+          case "DEPOSIT":
+            navigator.navigate("BankTransferConfirm", { ...payload, action: "DEPOSIT" })
+          default:
+            break
+        }
+      },
+    }
 
     const RenderBankContainer = () => (
       <View style={Style.ConnectPaymentMethodContainer}>
