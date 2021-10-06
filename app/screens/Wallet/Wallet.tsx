@@ -53,8 +53,14 @@ export const WalletScreen = observer(function WalletScreen() {
   const handler = {
     Send: async () => navigator.navigate("Send"),
     Receive: () => navigator.navigate("Receive"),
-    Withdraw: () => navigator.navigate("Withdraw"),
-    Deposit: () => navigator.navigate("Deposit"),
+    Withdraw: () =>
+      navigator.navigate("BankTransferAmountCreation", {
+        action: "WITHDRAW",
+      }),
+    Deposit: () =>
+      navigator.navigate("BankTransferAmountCreation", {
+        action: "DEPOSIT",
+      }),
     OpenTransactionDetail: (transaction: Transaction) =>
       navigator.navigate("TransactionDetail", {
         transaction,

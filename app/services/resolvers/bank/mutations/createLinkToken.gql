@@ -1,14 +1,14 @@
-mutation createLinkToken{
-    createLinkToken{
-        data{
-            expiration
-            link_token
-            request_id
-        }
-        errors{
-            message
-            path
-        }
-        success
+mutation createLinkToken {
+  createLinkToken {
+    data {
+      expiration
+      link_token
+      request_id
     }
+    errors {
+      message
+      path
+    }
+    success
+  }
 }

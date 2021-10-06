@@ -31,6 +31,9 @@ import {
   SettingScreen,
   ContactCreationScreen,
   BankAccountDetailScreen,
+  BankTransferAmountCreationScreen,
+  BankTransferConfirmScreen,
+  BankTransferCompleteScreen,
 } from "../screens"
 import i18n from "i18n-js"
 import { useStores } from "../models"
@@ -54,6 +57,9 @@ export type NavigatorParamList = {
   TransactionAmountCreation: undefined
   ContactCreation: undefined
   BankAccountDetail: undefined
+  BankTransferAmountCreation: undefined
+  BankTransferConfirm: undefined
+  BankTransferComplete: undefined
   SignIn: undefined
   SignUp: undefined
   Plaid: undefined
@@ -176,7 +182,8 @@ const AppStack = observer(() => {
           <Stack.Screen
             name="BankAccountDetail"
             options={{
-              headerBackTitle: i18n.t("navigation.contact"),
+              headerBackTitle: i18n.t("common.back"),
+              headerTitle: "Bank Account",
             }}
             component={BankAccountDetailScreen}
           />
@@ -188,6 +195,31 @@ const AppStack = observer(() => {
               headerTitle: "",
             }}
             component={TransactionAmountCreationScreen}
+          />
+          <Stack.Screen
+            name="BankTransferAmountCreation"
+            options={{
+              headerShown: true,
+              headerTitle: "",
+            }}
+            component={BankTransferAmountCreationScreen}
+          />
+          <Stack.Screen
+            name="BankTransferConfirm"
+            options={{
+              headerTitle: i18n.t("navigation.confirm"),
+              headerBackTitle: i18n.t("navigation.back"),
+            }}
+            component={BankTransferConfirmScreen}
+          />
+          <Stack.Screen
+            name="BankTransferComplete"
+            options={{
+              headerTitle: i18n.t("navigation.paymentComplete"),
+              headerLeft: () => <></>,
+              gestureEnabled: false,
+            }}
+            component={BankTransferCompleteScreen}
           />
           <Stack.Screen
             name="TransactionDetail"

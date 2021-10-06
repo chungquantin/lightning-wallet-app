@@ -23,6 +23,7 @@ export const BankStoreModel = types
     return {
       connectBankAccount: async function ({ publicToken, metadata }) {
         try {
+          console.log(publicToken, metadata)
           const result = await new BankResolverApi().connectBankAccount({
             accountId: metadata.accounts[0]._id,
             institutionId: metadata.institution.id,

@@ -4,13 +4,13 @@ import { observer } from "mobx-react-lite"
 import { Button, Text } from "../components"
 import Style from "./Calculator.style"
 import { color } from "../theme/color"
-import { useStores } from "../models"
 
 export const Calculator = observer(function Calculator({
   onChangeEvent,
   onSubmitEvent,
   formValues,
   submitButtonDisabled,
+  maxBalance,
 }: {
   onChangeEvent: (name: string, value: number) => void
   onSubmitEvent: () => void
@@ -19,10 +19,10 @@ export const Calculator = observer(function Calculator({
     currency: string
   }
   submitButtonDisabled: boolean
+  maxBalance: number
 }) {
   const [isDecimal, setIsDecimal] = React.useState(false)
   const [decimal, setDecimal] = React.useState("")
-  const { walletStore } = useStores()
   const calculatorButtons = [
     [1, 2, 3],
     [4, 5, 6],
@@ -90,8 +90,7 @@ export const Calculator = observer(function Calculator({
       {calculatorButtons.map((row, index) => (
         <View key={index} testID="Calculator" style={Style.ButtonContainer}>
           {row.map((button) => {
-            const buttonDisabledCondition =
-              button.key !== "<" && formValues.amount > walletStore.wallet.balance
+            const buttonDisabledCondition = button.key !== "<" && formValues.amount > maxBalance
             return (
               <Button
                 disabled={buttonDisabledCondition}
@@ -125,11 +124,11 @@ export const Calculator = observer(function Calculator({
       ))}
       <Button
         textStyle={{ fontSize: 15 }}
-        disabled={submitButtonDisabled || formValues.amount > walletStore.wallet.balance}
+        disabled={submitButtonDisabled || formValues.amount > maxBalance}
         onPress={onSubmitEvent}
         style={Object.assign(
           { ...Style.SubmitButton },
-          submitButtonDisabled || formValues.amount > walletStore.wallet.balance
+          submitButtonDisabled || formValues.amount > maxBalance
             ? { backgroundColor: color.palette.darkPurple }
             : {},
         )}

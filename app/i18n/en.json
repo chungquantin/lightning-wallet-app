@@ -124,6 +124,18 @@
   "time": {
     "date": "Date"
   },
+  "bankAccount": {
+    "bank": "Bank",
+    "name": "Name",
+    "officialName": "Official name",
+    "availableBalance": "Available balance",
+    "currentBalance": "Current balance",
+    "limitBalance": "Limit balance",
+    "routingNumber": "Routing number",
+    "accountNumber": "Account number",
+    "addedAt": "Added at",
+    "website": "Website"
+  },
   "navigation": {
     "wallet": "Wallet",
     "contact": "Contact",
@@ -135,6 +147,8 @@
     "scanQrCode": "Scan QR Code",
     "confirmSend": "Confirm Send",
     "paymentComplete": "Payment Complete",
+    "confirm": "Confirm",
+    "complete": "Complete",
     "back": "Back"
   },
   "wallet": {

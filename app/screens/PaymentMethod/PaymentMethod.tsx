@@ -5,35 +5,68 @@ import { Screen, Text, Button } from "../../components"
 import Style from "./PaymentMethod.style"
 import { color } from "../../theme"
 import { useStores } from "../../models"
-import { useIsFocused, useNavigation } from "@react-navigation/core"
+import { RouteProp, useIsFocused, useNavigation, useRoute } from "@react-navigation/core"
 import { Avatar } from "react-native-paper"
 import { TouchableOpacity } from "react-native-gesture-handler"
+import { ParamListBase } from "@react-navigation/routers"
+import { BankAccount } from "../../models/bank-account/bank-account"
+
+interface PaymentMethodRouteProps extends ParamListBase {
+  RoutingDetail: {
+    action: "DEPOSIT" | "WITHDRAW" | "PASSIVE"
+  }
+}
 
 export const PaymentMethodScreen = observer(function PaymentMethodScreen() {
   const { bankStore } = useStores()
   const navigator = useNavigation()
   const isFocused = useIsFocused()
+  const route = useRoute<RouteProp<PaymentMethodRouteProps, "RoutingDetail">>()
 
   const handler = {
-    SwitchPaymentMethod: () => navigator.navigate("Plaid"),
-    OpenBankAccountDetail: () => navigator.navigate("BankAccountDetail"),
+    AddNewBankAccount: () => navigator.navigate("Plaid"),
+    OpenBankAccountDetail: (bankAccount: BankAccount) => {
+      switch (route.params?.action || "") {
+        case "DEPOSIT":
+        case "WITHDRAW":
+          navigator.navigate("BankTransferAmountCreation", {
+            bankAccount,
+          })
+          break
+        default:
+          navigator.navigate("BankAccountDetail", {
+            bankAccount,
+          })
+          break
+      }
+    },
   }
 
   React.useEffect(() => {
     bankStore.fetchMyBankAccounts()
   }, [isFocused])
 
-  const RenderBankAccountItem = ({ name, type, logo, primaryColor }) => (
-    <TouchableOpacity onPress={handler.OpenBankAccountDetail}>
+  const RenderBankAccountItem = ({ name, type, logo, primaryColor, onPressHandler }) => (
+    <TouchableOpacity onPress={onPressHandler}>
       <View style={Style.BankAccountContainer}>
         <View style={Style.BankAccountTopContainer}>
           <View style={Style.BankAccountImage}>
-            <Avatar.Image
-              source={{
-                uri: logo,
-              }}
-              size={30}
-            />
+            {logo ? (
+              <Avatar.Image
+                source={{
+                  uri: logo,
+                }}
+                size={35}
+              />
+            ) : (
+              <Avatar.Text
+                label={name.charAt(0).toString()}
+                style={{
+                  backgroundColor: primaryColor || color.primary,
+                }}
+                size={35}
+              />
+            )}
           </View>
           <View>
             <Text style={{ fontWeight: "bold" }}>{name}</Text>
@@ -49,6 +82,7 @@ export const PaymentMethodScreen = observer(function PaymentMethodScreen() {
         <Text style={Style.Header} tx="common.bankAccounts" />
         {bankStore.bankAccounts.map((bankAccount) => (
           <RenderBankAccountItem
+            onPressHandler={() => handler.OpenBankAccountDetail(bankAccount)}
             key={bankAccount.id}
             logo={bankAccount.institutionLogo}
             primaryColor={bankAccount.institutionPrimaryColor}
@@ -56,7 +90,7 @@ export const PaymentMethodScreen = observer(function PaymentMethodScreen() {
             type={bankAccount.name}
           />
         ))}
-        <Button style={Style.Button} onPress={handler.SwitchPaymentMethod}>
+        <Button style={Style.Button} onPress={handler.AddNewBankAccount}>
           <Text
             style={{
               color: color.palette.offGray,

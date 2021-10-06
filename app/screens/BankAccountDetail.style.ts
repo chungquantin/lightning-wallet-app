@@ -9,6 +9,16 @@ const Style = StyleSheet.create({
     paddingHorizontal: width / 12,
     flex: 1,
   },
+  ItemRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginVertical: 10,
+  },
+  ItemRowLeftText: {
+    fontWeight: "bold",
+    fontSize: 14,
+  },
+  ItemRowRightText: {},
 })
 
 export default Style

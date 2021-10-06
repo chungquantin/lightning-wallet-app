@@ -192,6 +192,7 @@ export const TransactionAmountCreationScreen = observer(function TransactionAmou
         onChangeEvent={handleSetFieldValue}
         submitButtonDisabled={formValues.amount <= 0}
         onSubmitEvent={handler.Next}
+        maxBalance={walletStore.wallet.balance}
       />
       <RenderCurrencyModal />
     </View>
