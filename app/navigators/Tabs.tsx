@@ -50,7 +50,6 @@ export const Tabs = observer(function Tabs() {
     GoToWallet: () => navigator.navigate("Send"),
     GoToSettings: () => navigator.navigate("Setting"),
     GoToNotification: () => navigator.navigate("Notification"),
-    GoToDashboardMenu: () => {},
   }
   const TabItems = (
     props?: Props,
@@ -80,7 +79,7 @@ export const Tabs = observer(function Tabs() {
       ),
       headerLeft: () => (
         <View style={{ marginLeft: 25 }}>
-          <TouchableOpacity onPress={handler.GoToDashboardMenu}>
+          <TouchableOpacity onPress={handler.GoToSettings}>
             <Ionicons
               style={Style.CustomHeaderRightButton}
               name={"menu"}

@@ -6,7 +6,7 @@
  */
 import React from "react"
 import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native"
-import { createStackNavigator } from "@react-navigation/stack"
+import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/stack"
 import { Tabs } from "./Tabs"
 import Style from "./Tabs.style"
 import { color, textStyle } from "../theme"
@@ -88,6 +88,7 @@ const screenOptions = {
     backgroundColor: color.background,
   },
   headerTintColor: color.primary,
+  headerMode: "none",
 }
 
 const AppStack = observer(() => {
@@ -107,6 +108,7 @@ const AppStack = observer(() => {
 
   return (
     <Stack.Navigator
+      headerMode="screen"
       screenOptions={{
         ...screenOptions,
       }}
@@ -156,7 +158,14 @@ const AppStack = observer(() => {
             component={PaymentMethodScreen}
           />
           <Stack.Screen name="Notification" component={NotificationScreen} />
-          <Stack.Screen name="Setting" component={SettingScreen} />
+          <Stack.Screen
+            name="Setting"
+            options={{
+              gestureDirection: "horizontal-inverted",
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            }}
+            component={SettingScreen}
+          />
           <Stack.Screen name="Withdraw" component={WithdrawScreen} />
           <Stack.Screen name="Deposit" component={DepositScreen} />
           <Stack.Screen

@@ -1,14 +1,12 @@
 import React from "react"
 import { FlatList, Pressable, View } from "react-native"
 import { observer } from "mobx-react-lite"
-import { Button, Screen, Text } from "../../components"
+import { Screen, Text } from "../../components"
 import Style from "./Profile.style"
 import { Avatar } from "react-native-paper"
 import { useStores } from "../../models"
 import { color } from "../../theme"
 import moment from "moment"
-import { formatByUnit } from "../../utils/currency"
-import { useNavigation } from "@react-navigation/core"
 
 const ListItem = ({ children, text }) => (
   <View
@@ -35,7 +33,6 @@ export const ProfileScreen = observer(function ProfileScreen() {
   const { userStore } = useStores()
   const currentUser = userStore.currentUser
   const handler = {
-    Logout: () => userStore.logout(),
     ChangeAvatar: () => {},
   }
 
@@ -100,12 +97,6 @@ export const ProfileScreen = observer(function ProfileScreen() {
             )}
           />
         </View>
-        <Button
-          onPress={handler.Logout}
-          style={{ backgroundColor: color.primary, marginTop: 20, marginBottom: 150 }}
-          textStyle={{ fontSize: 13 }}
-          tx="common.auth.logout"
-        />
       </Screen>
     </View>
   )
