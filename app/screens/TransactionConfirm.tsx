@@ -101,7 +101,7 @@ export const TransactionConfirmScreen = observer(function TransactionConfirmScre
 
   const handler = {
     Confirm: () => navigator.navigate("TransactionComplete", route.params),
-    Cancel: () => {},
+    Cancel: () => navigator.goBack(),
     CopyText: () => {
       Clipboard.setString(address)
       setSnackBar(

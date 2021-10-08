@@ -42,19 +42,23 @@ export const BankTransferAmountCreationScreen = observer(
     }
     const navigator = useNavigation()
 
+    // TODO Location specification CA & VN [CA - 5$, VN - free]
     const fee = formValues.amount * BUSINESS_CONSTANT.transactionFee
     const disableCondition =
       action === "DEPOSIT"
         ? formValues.amount + fee > (bankAccount ? bankAccount.availableBalance : 0)
           ? color.error
           : color.palette.white
-        : formValues.amount + fee > walletStore.wallet.balance
+        : formValues.amount > walletStore.wallet.balance
         ? color.error
         : color.palette.white
-    const max = bankAccount
-      ? bankAccount.availableBalance -
-        bankAccount.availableBalance * BUSINESS_CONSTANT.transactionFee
-      : 0
+    const max =
+      action === "DEPOSIT"
+        ? bankAccount
+          ? bankAccount.availableBalance -
+            bankAccount.availableBalance * BUSINESS_CONSTANT.transactionFee
+          : 0
+        : walletStore.wallet.balance
 
     const handler = {
       ConnectPaymentMethod: () =>
@@ -182,15 +186,17 @@ export const BankTransferAmountCreationScreen = observer(
               : formatByUnit(walletStore.wallet.balance, walletStore.wallet.defaultCurrency)}
           </Text>
         </View>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={{ ...Style.MaxAmountText, marginTop: 3 }}>1% Fee: </Text>
-          <Text style={{ ...Style.MaxAmountText, marginTop: 3 }}>
-            {formatByUnit(
-              fee,
-              bankAccount ? bankAccount.currencyCode : walletStore.wallet.defaultCurrency,
-            )}
-          </Text>
-        </View>
+        {action === "DEPOSIT" && (
+          <View style={{ flexDirection: "row" }}>
+            <Text style={{ ...Style.MaxAmountText, marginTop: 3 }}>1% Fee: </Text>
+            <Text style={{ ...Style.MaxAmountText, marginTop: 3 }}>
+              {formatByUnit(
+                fee,
+                bankAccount ? bankAccount.currencyCode : walletStore.wallet.defaultCurrency,
+              )}
+            </Text>
+          </View>
+        )}
       </View>
     )
     return (

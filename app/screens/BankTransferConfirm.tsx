@@ -13,6 +13,7 @@ import { color } from "../theme"
 import { stringUtil } from "../utils"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { useStores } from "../models"
+import { useNavigation } from "@react-navigation/core"
 import getSymbolFromCurrency from "currency-symbol-map"
 
 interface BankTransferConfirmRouteProps extends ParamListBase {
@@ -29,137 +30,134 @@ export const BankTransferConfirmScreen = observer(function BankTransferConfirmSc
   const { walletStore } = useStores()
   const route = useRoute<RouteProp<BankTransferConfirmRouteProps, "InvoiceDetail">>()
   const { action, amount, currency, bankAccount, fee } = route.params
+  const navigator = useNavigation()
+
+  const RenderUpperContainer = React.memo(() => (
+    <View style={Style.UpperContainer}>
+      <View style={Style.ImageContainer}>
+        {bankAccount.institutionLogo ? (
+          <Avatar.Image
+            style={{
+              marginRight: 10,
+            }}
+            source={{
+              uri: bankAccount.institutionLogo,
+            }}
+            size={60}
+          />
+        ) : (
+          <Avatar.Text
+            label={bankAccount.institutionName.charAt(0)}
+            style={{
+              marginRight: 10,
+              backgroundColor: bankAccount.institutionPrimaryColor || color.primary,
+            }}
+            size={60}
+          />
+        )}
+        <MaterialCommunityIcons name="bank-transfer-out" color={color.palette.offWhite} size={65} />
+      </View>
+      {action === "DEPOSIT" ? (
+        <Text style={Style.SubHeaderText}>{stringUtil.capitalize(action)} + 1% fee</Text>
+      ) : (
+        <Text style={Style.SubHeaderText}>{stringUtil.capitalize(action)}</Text>
+      )}
+      <View style={{ flexDirection: "row" }}>
+        <Text style={Style.CurrencySymbol}>{getSymbolFromCurrency(currency)}</Text>
+        <Text style={Style.Amount}>
+          {formatByUnit(action === "DEPOSIT" ? amount + fee : amount, currency, false, false)}
+        </Text>
+      </View>
+    </View>
+  ))
+
+  const RenderInvoiceDetailContainer = React.memo(() => (
+    <View
+      style={{
+        backgroundColor: color.secondaryBackground,
+        borderRadius: 20,
+        paddingVertical: 20,
+        marginHorizontal: 25,
+      }}
+    >
+      <View style={Style.ItemRow}>
+        <Text style={Style.ItemLeftText} tx="bankTransferDetail.paymentMethod" />
+        <Text tx="bankTransferDetail.bankAccount" />
+      </View>
+      <View style={Style.ItemRow}>
+        <Text style={Style.ItemLeftText} tx="bankTransferDetail.accountType" />
+        <Text>{bankAccount.name}</Text>
+      </View>
+      <View style={Style.ItemRow}>
+        <Text style={Style.ItemLeftText} tx="bankTransferDetail.description" />
+        <Text style={{ width: 100, textAlign: "right" }}>
+          {stringUtil.capitalize(action)} from {bankAccount.institutionName}
+        </Text>
+      </View>
+      <View style={{ justifyContent: "center", alignItems: "center", paddingHorizontal: 20 }}>
+        <Divider style={Style.Separator} />
+      </View>
+      <View style={Style.ItemRow}>
+        <Text style={Style.ItemLeftText} tx="bankTransferDetail.remaining" />
+        <Text>
+          {formatByUnit(
+            action === "DEPOSIT"
+              ? bankAccount.availableBalance - amount - fee
+              : bankAccount.availableBalance + amount,
+            currency,
+          )}
+        </Text>
+      </View>
+      <View style={Style.ItemRow}>
+        <Text style={Style.ItemLeftText} tx="bankTransferDetail.amount" />
+        <Text>{formatByUnit(amount, currency)}</Text>
+      </View>
+      {action === "DEPOSIT" && (
+        <View style={Style.ItemRow}>
+          <Text style={Style.ItemLeftText} tx="bankTransferDetail.fee" />
+          <Text>{formatByUnit(fee, currency)}</Text>
+        </View>
+      )}
+
+      <View style={{ justifyContent: "center", alignItems: "center", paddingHorizontal: 20 }}>
+        <Divider style={Style.Separator} />
+      </View>
+      <View style={Style.ItemRow}>
+        <Text style={Style.ItemLeftText} tx="bankTransferDetail.balance" />
+        <Text style={Style.BalanceText}>
+          {formatByUnit(
+            action === "DEPOSIT"
+              ? walletStore.wallet.balance + amount
+              : walletStore.wallet.balance - amount,
+            currency,
+          )}
+        </Text>
+      </View>
+      <RenderButtonContainer />
+    </View>
+  ))
+
+  const RenderButtonContainer = React.memo(() => (
+    <View style={Style.ButtonContainer}>
+      <Button style={Style.CancelButton} onPress={handler.Cancel}>
+        <Text tx="common.cancel" />
+      </Button>
+      <View style={{ width: 10 }} />
+      <Button style={Style.SubmitButton} onPress={handler.Confirm}>
+        <Text tx="common.confirm" />
+      </Button>
+    </View>
+  ))
+
+  const handler = {
+    Confirm: () => navigator.navigate("BankTransferComplete", route.params),
+    Cancel: () => navigator.goBack(),
+  }
   return (
     <View testID="BankTransferConfirmScreen" style={Style.Container}>
       <Screen preset="scroll">
-        <View style={{ marginBottom: 40, justifyContent: "center", alignItems: "center" }}>
-          <View style={{ flexDirection: "row", justifyContent: "center", marginBottom: 30 }}>
-            {bankAccount.institutionLogo ? (
-              <Avatar.Image
-                style={{
-                  marginRight: 10,
-                }}
-                source={{
-                  uri: bankAccount.institutionLogo,
-                }}
-                size={70}
-              />
-            ) : (
-              <Avatar.Text
-                label={bankAccount.institutionName.charAt(0)}
-                style={{
-                  marginRight: 10,
-                  backgroundColor: bankAccount.institutionPrimaryColor || color.primary,
-                }}
-                size={70}
-              />
-            )}
-            <MaterialCommunityIcons
-              name="bank-transfer-out"
-              color={color.palette.offWhite}
-              size={65}
-            />
-          </View>
-          <Text style={{ color: color.palette.offGray, marginBottom: 10 }}>Deposit</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Text
-              style={{
-                fontSize: 30,
-                marginTop: 5,
-                fontWeight: "bold",
-              }}
-            >
-              {getSymbolFromCurrency(currency)}
-            </Text>
-            <Text
-              style={{
-                fontSize: 45,
-                fontWeight: "bold",
-              }}
-            >
-              {fee + amount}
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            backgroundColor: color.secondaryBackground,
-            borderRadius: 20,
-            paddingVertical: 20,
-            marginHorizontal: 25,
-          }}
-        >
-          <View style={Style.ItemRow}>
-            <Text style={Style.ItemLeftText}>Payment method</Text>
-            <Text>Bank account</Text>
-          </View>
-          <View style={Style.ItemRow}>
-            <Text style={Style.ItemLeftText}>Account type</Text>
-            <Text>{bankAccount.name}</Text>
-          </View>
-          <View style={Style.ItemRow}>
-            <Text style={Style.ItemLeftText}>Description</Text>
-            <Text style={{ width: 100, textAlign: "right" }}>
-              {stringUtil.capitalize(action)} from {bankAccount.institutionName}
-            </Text>
-          </View>
-          <View style={{ justifyContent: "center", alignItems: "center", paddingHorizontal: 20 }}>
-            <Divider
-              style={{
-                marginVertical: 10,
-                backgroundColor: color.palette.offGray,
-                width: "100%",
-                height: 1,
-              }}
-            />
-          </View>
-          <View style={Style.ItemRow}>
-            <Text style={Style.ItemLeftText}>Remaining</Text>
-            <Text>{formatByUnit(bankAccount.availableBalance - amount - fee, currency)}</Text>
-          </View>
-          <View style={Style.ItemRow}>
-            <Text style={Style.ItemLeftText}>Amount</Text>
-            <Text>{formatByUnit(amount, currency)}</Text>
-          </View>
-          <View style={Style.ItemRow}>
-            <Text style={Style.ItemLeftText}>1% Fee</Text>
-            <Text>{formatByUnit(fee, currency)}</Text>
-          </View>
-          <View style={{ justifyContent: "center", alignItems: "center", paddingHorizontal: 20 }}>
-            <Divider
-              style={{
-                marginVertical: 10,
-                backgroundColor: color.palette.offGray,
-                width: "100%",
-                height: 1,
-              }}
-            />
-          </View>
-          <View style={Style.ItemRow}>
-            <Text style={Style.ItemLeftText}>Balance</Text>
-            <Text style={{ fontWeight: "bold", color: color.palette.green }}>
-              {formatByUnit(walletStore.wallet.balance + fee + amount, currency)}
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              marginTop: 15,
-              justifyContent: "center",
-              marginHorizontal: 15,
-            }}
-          >
-            <Button
-              style={{ width: "100%", flex: 1, backgroundColor: color.primaryDarker, height: 40 }}
-            >
-              <Text>Cancel</Text>
-            </Button>
-            <View style={{ width: 10 }} />
-            <Button style={{ width: "100%", flex: 1, backgroundColor: color.primary, height: 40 }}>
-              <Text>Confirm</Text>
-            </Button>
-          </View>
-        </View>
+        <RenderUpperContainer />
+        <RenderInvoiceDetailContainer />
       </Screen>
     </View>
   )

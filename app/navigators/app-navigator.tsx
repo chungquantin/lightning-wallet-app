@@ -209,6 +209,8 @@ const AppStack = observer(() => {
             options={{
               headerTitle: i18n.t("navigation.confirm"),
               headerBackTitle: i18n.t("navigation.back"),
+              headerLeft: () => <></>,
+              gestureEnabled: false,
             }}
             component={BankTransferConfirmScreen}
           />
@@ -233,6 +235,8 @@ const AppStack = observer(() => {
             options={{
               headerTitle: i18n.t("navigation.confirmSend"),
               headerBackTitle: i18n.t("navigation.back"),
+              headerLeft: () => <></>,
+              gestureEnabled: false,
             }}
             component={TransactionConfirmScreen}
           />

@@ -136,6 +136,16 @@
     "addedAt": "Added at",
     "website": "Website"
   },
+  "bankTransferDetail": {
+    "paymentMethod": "Payment method",
+    "accountType": "Account type",
+    "description": "Description",
+    "remaining": "Remaining",
+    "amount": "Amount",
+    "fee": "Fee",
+    "balance": "Balance",
+    "bankAccount": "Bank account"
+  },
   "navigation": {
     "wallet": "Wallet",
     "contact": "Contact",
