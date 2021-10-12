@@ -35,10 +35,10 @@ export const SignInScreen = observer(function SignInScreen() {
       password: "",
     },
     signInValidate as any,
-  )
+    )
   const handler = {
     SignIn: () =>
-      handleSubmit(async (formValues) => {
+      handleSubmit(async (formValues: any) => {
         try {
           setLoading(true)
           const result = await userStore.login({
@@ -134,8 +134,8 @@ export const SignInScreen = observer(function SignInScreen() {
                 style={Style.Indicator}
               />
             ) : (
-              <Text>{I18n.t("common.auth.signIn")}</Text>
-            )}
+                <Text>{I18n.t("common.auth.signIn")}</Text>
+              )}
           </Button>
           <View style={{ flexDirection: "row", marginTop: 20, alignItems: "center" }}>
             <Text

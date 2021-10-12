@@ -11,16 +11,18 @@ export const Calculator = observer(function Calculator({
   formValues,
   submitButtonDisabled,
   maxBalance,
+  isDisabled,
 }: {
-  onChangeEvent: (name: string, value: number) => void
-  onSubmitEvent: () => void
-  formValues: {
-    amount: number
-    currency: string
-  }
-  submitButtonDisabled: boolean
-  maxBalance: number
-}) {
+    onChangeEvent: (name: string, value: number) => void
+    onSubmitEvent: () => void
+    formValues: {
+      amount: number
+      currency: string
+    }
+    submitButtonDisabled: boolean
+    maxBalance: number
+    isDisabled: boolean
+  }) {
   const [isDecimal, setIsDecimal] = React.useState(false)
   const [decimal, setDecimal] = React.useState("")
   const calculatorButtons = [
@@ -99,8 +101,8 @@ export const Calculator = observer(function Calculator({
                   { ...Style.CalculatorButton },
                   buttonDisabledCondition
                     ? {
-                        backgroundColor: color.palette.offBlackShade,
-                      }
+                      backgroundColor: color.palette.offBlackShade,
+                    }
                     : {},
                 )}
                 key={button.key}
@@ -110,8 +112,8 @@ export const Calculator = observer(function Calculator({
                     { ...Style.CalculatorButtonText },
                     buttonDisabledCondition
                       ? {
-                          color: color.palette.offGray,
-                        }
+                        color: color.palette.offGray,
+                      }
                       : {},
                   )}
                 >
@@ -124,11 +126,11 @@ export const Calculator = observer(function Calculator({
       ))}
       <Button
         textStyle={{ fontSize: 15 }}
-        disabled={submitButtonDisabled || formValues.amount > maxBalance}
+        disabled={isDisabled || submitButtonDisabled || formValues.amount > maxBalance}
         onPress={onSubmitEvent}
         style={Object.assign(
           { ...Style.SubmitButton },
-          submitButtonDisabled || formValues.amount > maxBalance
+          isDisabled || submitButtonDisabled || formValues.amount > maxBalance
             ? { backgroundColor: color.palette.darkPurple }
             : {},
         )}

@@ -50,13 +50,13 @@ export const BankTransferAmountCreationScreen = observer(
           ? color.error
           : color.palette.white
         : formValues.amount > walletStore.wallet.balance
-        ? color.error
-        : color.palette.white
+          ? color.error
+          : color.palette.white
     const max =
       action === "DEPOSIT"
         ? bankAccount
           ? bankAccount.availableBalance -
-            bankAccount.availableBalance * BUSINESS_CONSTANT.transactionFee
+          bankAccount.availableBalance * BUSINESS_CONSTANT.transactionFee
           : 0
         : walletStore.wallet.balance
 
@@ -101,15 +101,15 @@ export const BankTransferAmountCreationScreen = observer(
                     size={35}
                   />
                 ) : (
-                  <Avatar.Text
-                    label={bankAccount.institutionName.charAt(0)}
-                    style={{
-                      marginRight: 10,
-                      backgroundColor: bankAccount.institutionPrimaryColor || color.primary,
-                    }}
-                    size={35}
-                  />
-                ))}
+                    <Avatar.Text
+                      label={bankAccount.institutionName.charAt(0)}
+                      style={{
+                        marginRight: 10,
+                        backgroundColor: bankAccount.institutionPrimaryColor || color.primary,
+                      }}
+                      size={35}
+                    />
+                  ))}
               <View>
                 <Text style={Style.ConnectPaymentMethodHeader}>
                   {bankAccount ? bankAccount.institutionName : I18n.t("common.paymentMethod")}
@@ -153,8 +153,8 @@ export const BankTransferAmountCreationScreen = observer(
                 formValues.amount < 1000
                   ? Style.CurrencySymbol.fontSize
                   : formValues.amount < 100000
-                  ? 35
-                  : 25,
+                    ? 35
+                    : 25,
               color: disableCondition,
             }}
           >
@@ -167,8 +167,8 @@ export const BankTransferAmountCreationScreen = observer(
                 formValues.amount < 1000
                   ? Style.AmountText.fontSize
                   : formValues.amount < 100000
-                  ? 50
-                  : 40,
+                    ? 50
+                    : 40,
               color: disableCondition,
             }}
           >
@@ -180,9 +180,9 @@ export const BankTransferAmountCreationScreen = observer(
           <Text style={Style.MaxAmountText}>
             {action === "DEPOSIT"
               ? formatByUnit(
-                  bankAccount ? bankAccount.availableBalance : 0,
-                  bankAccount ? bankAccount.currencyCode : walletStore.wallet.defaultCurrency,
-                )
+                bankAccount ? bankAccount.availableBalance : 0,
+                bankAccount ? bankAccount.currencyCode : walletStore.wallet.defaultCurrency,
+              )
               : formatByUnit(walletStore.wallet.balance, walletStore.wallet.defaultCurrency)}
           </Text>
         </View>
@@ -204,6 +204,7 @@ export const BankTransferAmountCreationScreen = observer(
         <RenderBankContainer />
         <RenderAmountContainer />
         <Calculator
+          isDisabled={!bankAccount ?.id}
           formValues={formValues}
           onChangeEvent={handleSetFieldValue}
           submitButtonDisabled={formValues.amount <= 0}

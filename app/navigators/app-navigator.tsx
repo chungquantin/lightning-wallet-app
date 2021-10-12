@@ -93,6 +93,7 @@ const screenOptions = {
 
 const AppStack = observer(() => {
   const { userStore, walletStore } = useStores()
+  console.log(userStore.currentUser, walletStore.wallet)
   React.useEffect(() => {
     userStore.fetchCurrentUser()
   }, [])
@@ -260,30 +261,30 @@ const AppStack = observer(() => {
           />
         </>
       ) : (
-        <>
-          <Stack.Screen
-            options={{
-              headerShown: false,
-              headerLeft: () => <></>,
-              gestureEnabled: false,
-            }}
-            name="SignIn"
-            component={SignInScreen}
-          />
-          <Stack.Screen
-            options={{
-              headerShown: true,
-              headerTitle: "",
-              headerLeft: () => <></>,
-              gestureEnabled: false,
-              animationEnabled: false,
-              headerBackTitle: i18n.t("common.auth.signIn"),
-            }}
-            name="SignUp"
-            component={SignUpScreen}
-          />
-        </>
-      )}
+          <>
+            <Stack.Screen
+              options={{
+                headerShown: false,
+                headerLeft: () => <></>,
+                gestureEnabled: false,
+              }}
+              name="SignIn"
+              component={SignInScreen}
+            />
+            <Stack.Screen
+              options={{
+                headerShown: true,
+                headerTitle: "",
+                headerLeft: () => <></>,
+                gestureEnabled: false,
+                animationEnabled: false,
+                headerBackTitle: i18n.t("common.auth.signIn"),
+              }}
+              name="SignUp"
+              component={SignUpScreen}
+            />
+          </>
+        )}
     </Stack.Navigator>
   )
 })
@@ -291,13 +292,13 @@ const AppStack = observer(() => {
 export const AppNavigator = React.forwardRef<
   NavigationContainerRef,
   Partial<React.ComponentProps<typeof NavigationContainer>>
->((props, ref) => {
-  return (
-    <NavigationContainer {...props} ref={ref}>
-      <AppStack />
-    </NavigationContainer>
-  )
-})
+  >((props, ref) => {
+    return (
+      <NavigationContainer {...props} ref={ref}>
+        <AppStack />
+      </NavigationContainer>
+    )
+  })
 
 AppNavigator.displayName = "AppNavigator"
 

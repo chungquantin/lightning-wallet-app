@@ -76,8 +76,9 @@ export const SettingScreen = observer(function SettingScreen() {
     GoBack: () => navigator.goBack(),
     Logout: () => userStore.logout(),
   }
-  const SettingItem = ({ label, rightElement, logo }) => (
+  const SettingItem = ({ key, label, rightElement, logo }) => (
     <View
+      key={key}
       style={{
         backgroundColor: color.secondaryBackground,
         flexDirection: "row",
@@ -114,7 +115,11 @@ export const SettingScreen = observer(function SettingScreen() {
     <View testID="SettingScreen" style={Style.Container}>
       <Screen preset="scroll">
         {itemList.map((item) => (
-          <SettingItem logo={item.logo} label={item.label} rightElement={item.element} />
+          <SettingItem
+            key={item.label}
+            logo={item.logo}
+            label={item.label}
+            rightElement={item.element} />
         ))}
         <Button
           onPress={handler.Logout}

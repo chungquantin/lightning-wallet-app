@@ -26,7 +26,7 @@ const scriptNameUrl = NativeModules.SourceCode?.scriptURL.split("://")[1].split(
 export const DEFAULT_REACTOTRON_CONFIG: ReactotronConfig = {
   clearOnLoad: true,
   host: scriptNameUrl || "192.168.1.110",
-  port: 8080,
+  port: 9090,
   useAsyncStorage: true,
   state: {
     initial: true,
