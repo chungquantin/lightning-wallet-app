@@ -78,7 +78,7 @@ export const ProfileScreen = observer(function ProfileScreen() {
           style={{
             backgroundColor: color.secondaryBackground,
             padding: 20,
-            borderRadius: 20,
+            borderRadius: 10,
             marginTop: 20,
           }}
         >

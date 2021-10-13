@@ -1,5 +1,5 @@
 import React from "react"
-import { View } from "react-native"
+import { Switch, View } from "react-native"
 import { observer } from "mobx-react-lite"
 import { Button, Screen, Text } from "../../components"
 import Style from "./Setting.style"
@@ -10,8 +10,17 @@ import { TouchableOpacity } from "react-native-gesture-handler"
 import { useStores } from "../../models"
 
 export const SettingScreen = observer(function SettingScreen() {
+  const [biometricsEnabled, setBiometricsEnabled] = React.useState(false)
+  const [notificationEnabled, setNotificationEnabled] = React.useState(false)
   const { userStore } = useStores()
   const navigator = useNavigation()
+  const handler = {
+    GoBack: () => navigator.goBack(),
+    Logout: () => userStore.logout(),
+    ToggleBiometrics: () => setBiometricsEnabled((enabled) => !enabled),
+    ToggleNotification: () => setNotificationEnabled((enabled) => !enabled),
+  }
+
   React.useEffect(() => {
     navigator.setOptions({
       headerLeft: () => <></>,
@@ -58,12 +67,28 @@ export const SettingScreen = observer(function SettingScreen() {
     {
       logo: "finger-print-outline",
       label: "Touch ID/Face ID",
-      element: <ArrowRight />,
+      element: (
+        <Switch
+          trackColor={{ false: color.secondaryBackgroundShade, true: color.primaryDarker }}
+          thumbColor={biometricsEnabled ? color.primary : color.palette.white}
+          ios_backgroundColor={color.secondaryBackgroundShade}
+          onValueChange={handler.ToggleBiometrics}
+          value={biometricsEnabled}
+        />
+      ),
     },
     {
       logo: "notifications-outline",
       label: "Notifications",
-      element: <ArrowRight />,
+      element: (
+        <Switch
+          trackColor={{ false: color.secondaryBackgroundShade, true: color.primaryDarker }}
+          thumbColor={notificationEnabled ? color.primary : color.palette.white}
+          ios_backgroundColor={color.secondaryBackgroundShade}
+          onValueChange={handler.ToggleNotification}
+          value={notificationEnabled}
+        />
+      ),
     },
     {
       logo: "document-text-outline",
@@ -72,13 +97,8 @@ export const SettingScreen = observer(function SettingScreen() {
     },
   ]
 
-  const handler = {
-    GoBack: () => navigator.goBack(),
-    Logout: () => userStore.logout(),
-  }
-  const SettingItem = ({ key, label, rightElement, logo }) => (
+  const SettingItem = ({ label, rightElement, logo }) => (
     <View
-      key={key}
       style={{
         backgroundColor: color.secondaryBackground,
         flexDirection: "row",
@@ -119,7 +139,8 @@ export const SettingScreen = observer(function SettingScreen() {
             key={item.label}
             logo={item.logo}
             label={item.label}
-            rightElement={item.element} />
+            rightElement={item.element}
+          />
         ))}
         <Button
           onPress={handler.Logout}

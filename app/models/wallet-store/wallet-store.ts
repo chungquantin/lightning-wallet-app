@@ -1,7 +1,7 @@
 import { flow, Instance, isAlive, SnapshotOut, types } from "mobx-state-tree"
 import { withEnvironment } from "../extensions/with-environment"
 import _ from "underscore"
-import { GetMeWallet } from "../../generated/graphql"
+import { GetMeWallet, GetTransactions } from "../../generated/graphql"
 import { WalletModel, WalletSnapshot } from "../wallet/wallet"
 import { UserResolverAPI, WalletResolverApi } from "../../services/resolvers"
 import { Transaction, TransactionModel, TransactionSnapshot } from "../transaction/transaction"
@@ -124,13 +124,13 @@ export const WalletStoreModel = types
         skip: 0,
       })
 
-      console.log(result)
-
       if (result.success) {
         self.saveTransactions(result.data)
       } else {
         __DEV__ && console.tron.log(result.errors)
       }
+
+      return result as GetTransactions
     }),
     fetchWalletOwner: async function (walletId: string): Promise<User> {
       console.log("WalletStore - FetchWalletOwner")

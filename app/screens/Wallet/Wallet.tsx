@@ -13,6 +13,7 @@ import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons"
 import { formatByUnit } from "../../utils/currency"
 import { SectionList } from "react-native"
 import { Transaction } from "../../models/transaction/transaction"
+import NeutronpaySpinner from "../NeutronpaySpinner"
 
 interface ButtonProps {
   onPressHandler: (event: GestureResponderEvent) => void
@@ -32,6 +33,7 @@ const CustomButton = ({ onPressHandler, tx, children }: ButtonProps) => {
 }
 
 export const WalletScreen = observer(function WalletScreen() {
+  const [loading, setLoading] = React.useState(false)
   const { walletStore, bankStore } = useStores()
   const isFocused = useIsFocused()
   const transaction = walletStore.transactions
@@ -45,9 +47,20 @@ export const WalletScreen = observer(function WalletScreen() {
   })
 
   React.useEffect(() => {
-    bankStore.fetchMyBankAccounts()
-    walletStore.fetchCurrentUserWallet()
-    walletStore.fetchTransactions()
+    const fetchData = async () => {
+      setLoading(true)
+      const fetchMyBankAccountsResponse = await bankStore.fetchMyBankAccounts()
+      const fetchCurrentUserWalletResponse = await walletStore.fetchCurrentUserWallet()
+      const fetchTransactionsResponse = await walletStore.fetchTransactions()
+      if (
+        fetchCurrentUserWalletResponse.success &&
+        fetchMyBankAccountsResponse.success &&
+        fetchTransactionsResponse
+      ) {
+        setLoading(false)
+      }
+    }
+    fetchData()
   }, [isFocused])
 
   const handler = {
@@ -164,9 +177,15 @@ export const WalletScreen = observer(function WalletScreen() {
 
   return (
     <View testID="WalletScreen" style={Style.Container}>
-      <Screen unsafe={true} preset="scroll">
-        <RenderTopContainer />
-        <RenderTransactionsContainer />
+      <Screen unsafe={loading} preset={loading ? "fixed" : "scroll"}>
+        {loading ? (
+          <NeutronpaySpinner style={{ marginTop: -115 }} />
+        ) : (
+          <>
+            <RenderTopContainer />
+            <RenderTransactionsContainer />
+          </>
+        )}
       </Screen>
     </View>
   )

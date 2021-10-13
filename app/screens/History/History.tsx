@@ -18,6 +18,7 @@ import useFormValidation from "../../hooks/useFormValidation"
 import { TouchableRipple } from "react-native-paper"
 import { useIsFocused } from "@react-navigation/core"
 import getSymbolFromCurrency from "currency-symbol-map"
+import NeutronpaySpinner from "../NeutronpaySpinner"
 
 const NoTransactionIcon = require("../../../assets/images/icons/No-Transaction-Icon.png")
 
@@ -39,6 +40,7 @@ const chartConfig: ChartConfig = {
 }
 
 export const HistoryScreen = observer(function HistoryScreen() {
+  const [loading, setLoading] = React.useState(false)
   const { walletStore } = useStores()
   const [selectedTab, setSelectedTab] = React.useState(1)
   const isFocused = useIsFocused()
@@ -100,7 +102,14 @@ export const HistoryScreen = observer(function HistoryScreen() {
   }
 
   React.useEffect(() => {
-    walletStore.fetchTransactions()
+    const fetchData = async () => {
+      setLoading(true)
+      const fetchTransactionsResponse = await walletStore.fetchTransactions()
+      if (fetchTransactionsResponse.success) {
+        setLoading(false)
+      }
+    }
+    fetchData()
   }, [isFocused])
 
   const RenderEmptySection = () => (
@@ -300,15 +309,19 @@ export const HistoryScreen = observer(function HistoryScreen() {
   return (
     <View testID="HistoryScreen" style={Style.Container}>
       <RenderTabButtonContainer />
-      <Screen preset="scroll">
-        {selectedTab == 1 ? (
-          transactionList.length !== 0 && <RenderPieChart />
-        ) : (
-          <RenderLineChart />
-        )}
-        <RenderSearchInputContainer />
-        <RenderTransactionContainer />
-      </Screen>
+      {loading ? (
+        <NeutronpaySpinner style={{ marginTop: -110 }} />
+      ) : (
+        <Screen preset="scroll">
+          {selectedTab == 1 ? (
+            transactionList.length !== 0 && <RenderPieChart />
+          ) : (
+            <RenderLineChart />
+          )}
+          <RenderSearchInputContainer />
+          <RenderTransactionContainer />
+        </Screen>
+      )}
     </View>
   )
 })

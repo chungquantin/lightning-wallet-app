@@ -1,7 +1,7 @@
 import React from "react"
 import { View, Dimensions } from "react-native"
 import { observer } from "mobx-react-lite"
-import { Text, AutoImage, Button } from "../../components"
+import { Text, AutoImage, Button, Screen } from "../../components"
 import Style from "./Contact.style"
 import { useIsFocused, useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
@@ -13,10 +13,12 @@ import { color, textStyle } from "../../theme"
 import useFormValidation from "../../hooks/useFormValidation"
 import { Ionicons } from "@expo/vector-icons"
 import { User } from "../../models/user/user"
+import NeutronpaySpinner from "../NeutronpaySpinner"
 
 const NoContactIcon = require("../../../assets/images/icons/No-Contact-Icon.png")
 
 export const ContactScreen = observer(function ContactScreen() {
+  const [loading, setLoading] = React.useState(false)
   const { userStore } = useStores()
   const isFocused = useIsFocused()
   const navigator = useNavigation()
@@ -31,7 +33,14 @@ export const ContactScreen = observer(function ContactScreen() {
   )
 
   React.useEffect(() => {
-    userStore.fetchUserContacts()
+    const fetchData = async () => {
+      setLoading(true)
+      const fetchUserContactsResponse = await userStore.fetchUserContacts()
+      if (fetchUserContactsResponse.success) {
+        setLoading(false)
+      }
+    }
+    fetchData()
   }, [isFocused])
 
   React.useEffect(() => {
@@ -96,24 +105,27 @@ export const ContactScreen = observer(function ContactScreen() {
     </View>
   )
 
+  const RenderSearchContainer = React.memo(() => (
+    <View style={Style.SearchContainer}>
+      <Ionicons style={Style.SearchIcon} name="search" size={15} color={color.palette.lightGray} />
+      <TextInput
+        style={Style.InputField}
+        placeholderTextColor={color.palette.offGray}
+        placeholder={I18n.t("common.form.from.placeholder")}
+        onChangeText={(text) => handleSetFieldValue("user", text)}
+        value={formValues.user}
+      />
+    </View>
+  ))
+
   return (
     <View testID="ContactScreen" style={Style.Container}>
-      <View style={Style.SearchContainer}>
-        <Ionicons
-          style={Style.SearchIcon}
-          name="search"
-          size={15}
-          color={color.palette.lightGray}
-        />
-        <TextInput
-          style={Style.InputField}
-          placeholderTextColor={color.palette.offGray}
-          placeholder={I18n.t("common.form.from.placeholder")}
-          onChangeText={(text) => handleSetFieldValue("user", text)}
-          value={formValues.user}
-        />
-      </View>
-      {userStore.contacts.length === 0 ? <RenderEmptySection /> : <RenderContactList />}
+      <RenderSearchContainer />
+      {loading ? (
+        <NeutronpaySpinner />
+      ) : (
+        <>{userStore.contacts.length === 0 ? <RenderEmptySection /> : <RenderContactList />}</>
+      )}
     </View>
   )
 })
