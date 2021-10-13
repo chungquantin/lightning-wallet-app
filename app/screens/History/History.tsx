@@ -8,7 +8,7 @@ import { Dimensions } from "react-native"
 import { color, textStyle } from "../../theme"
 import { ChartConfig } from "react-native-chart-kit/dist/HelperTypes"
 import { useStores } from "../../models"
-import { TransactionItem } from "../TransactionItem"
+import { TransactionItem } from "../Transaction/TransactionItem"
 import { useNavigation } from "@react-navigation/native"
 import { Transaction } from "../../models/transaction/transaction"
 import { Ionicons } from "@expo/vector-icons"
@@ -18,7 +18,7 @@ import useFormValidation from "../../hooks/useFormValidation"
 import { TouchableRipple } from "react-native-paper"
 import { useIsFocused } from "@react-navigation/core"
 import getSymbolFromCurrency from "currency-symbol-map"
-import NeutronpaySpinner from "../NeutronpaySpinner"
+import NeutronpaySpinner from "../Reusable/NeutronpaySpinner"
 
 const NoTransactionIcon = require("../../../assets/images/icons/No-Transaction-Icon.png")
 

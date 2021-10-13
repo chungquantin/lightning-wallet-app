@@ -12,9 +12,11 @@ import { formatByUnit } from "../../utils/currency"
 import { Portal, Modal } from "react-native-paper"
 import { SnackBarContext } from "../../constants/Context"
 import I18n from "i18n-js"
+import { useStores } from "../../models"
+import NeutronpaySpinner from "../Reusable/NeutronpaySpinner"
 
-//const NeutronpayLogo = require("../../../assets/images/logos/neutronpay-logo.png")
-
+const BitcoinIcon = require("../../../assets/images/icons/Bitcoin-Icon.png")
+const LightningIcon = require("../../../assets/images/icons/Lightning-Network-Icon.png")
 interface ReceiveOutAppUserRouteProps extends ParamListBase {
   InvoiceDetail: {
     description: string
@@ -26,6 +28,7 @@ interface ReceiveOutAppUserRouteProps extends ParamListBase {
 export const ReceiveOutAppRequestScreen = observer(function ReceiveOutAppRequestScreen() {
   const route = useRoute<RouteProp<ReceiveOutAppUserRouteProps, "InvoiceDetail">>()
   const { onToggleSnackBar, setSnackBar } = React.useContext(SnackBarContext)
+  const { btcStore } = useStores()
   const { description, amount, currency } = route.params
   const [tab, switchTab] = React.useState<number>(0)
   const [toggleModal, setToggleModal] = React.useState(false)
@@ -33,15 +36,22 @@ export const ReceiveOutAppRequestScreen = observer(function ReceiveOutAppRequest
     minute: 1,
     second: 0,
   })
+  const [loading, setLoading] = React.useState({
+    onchain: false,
+    lightning: false,
+  })
 
   const [qrCodeData, setQrCodeData] = React.useState("")
-  const invoice = {
-    btcAddress: "bc1qdy55lyl66ueupcsf7ltfgmxw4pevlthw2hs5zfn9n9zp60nl5p4s5mel0k",
-    lightningAddress:
-      "lnbc1ps546rmpp523g50ajfk8r75s8l560exgjncny6dhm20cr5m9k6fepxf5ttmnmsdqqcqzzgxqrrssrzjqw8c7yfutqqy3kz8662fxutjvef7q2ujsxtt45csu0k688lkzu3ldmssuf6vz4wymcqqqqryqqqqthqqpysp50r0e04v3m9x5zrt5pwvw9w5j8uca3sldvtqmme0h5lrkyjx27ffs9qypqsqlacawfp8zc5zacxfnhll9lsrn58237q7426qmkzafc6w67dmgl2y5wjn0nu7djnv45gwg48uu6xa2ry35uwz002kkvfj8n8edkwedncq70mpf0",
-    description: description,
-    amount: 100000,
-  }
+  const invoice = React.useMemo(
+    () => ({
+      btcAddress: btcStore.onchainAddress,
+      lightningAddress: btcStore.lightningAddress,
+      description: description,
+      amount: amount,
+    }),
+    [btcStore.onchainAddress, btcStore.lightningAddress],
+  )
+
   const tabLists: {
     label: string
   }[] = [
@@ -53,30 +63,81 @@ export const ReceiveOutAppRequestScreen = observer(function ReceiveOutAppRequest
     },
   ]
   React.useEffect(() => {
-    const timer = setInterval(() => {
-      if (expirationTime.minute === 0 && expirationTime.second === 0) {
-        // Re-create a new invoice
-        return
-      }
-      if (expirationTime.second > 0) {
-        setExpirationTime({
-          ...expirationTime,
-          second: expirationTime.second - 1,
+    const fetchData = async () => {
+      if (tab === 0) {
+        // Onchain
+        setLoading(
+          (loading) =>
+            (loading = {
+              ...loading,
+              onchain: true,
+            }),
+        )
+        const generateOnchainAddress = await btcStore.generateOnchainAddress()
+        if (generateOnchainAddress.success) {
+          setLoading(
+            (loading) =>
+              (loading = {
+                ...loading,
+                onchain: false,
+              }),
+          )
+        }
+      } else if (tab === 1) {
+        // Lightning
+        setLoading(
+          (loading) =>
+            (loading = {
+              ...loading,
+              lightning: true,
+            }),
+        )
+        const generateOnchainAddress = await btcStore.generateLightningAddress({
+          amount,
+          currency,
+          description,
         })
-      } else {
-        setExpirationTime({
-          minute: expirationTime.minute - 1,
-          second: 59,
-        })
+        if (generateOnchainAddress.success) {
+          setLoading(
+            (loading) =>
+              (loading = {
+                ...loading,
+                lightning: false,
+              }),
+          )
+        }
       }
-    }, 1000)
-    return () => clearInterval(timer)
+    }
+    fetchData()
+  }, [tab])
+  React.useEffect(() => {
+    if (!loading.lightning) {
+      const timer = setInterval(() => {
+        if (expirationTime.minute === 0 && expirationTime.second === 0) {
+          // Re-create a new invoice
+          return
+        }
+        if (expirationTime.second > 0) {
+          setExpirationTime({
+            ...expirationTime,
+            second: expirationTime.second - 1,
+          })
+        } else {
+          setExpirationTime({
+            minute: expirationTime.minute - 1,
+            second: 59,
+          })
+        }
+      }, 1000)
+      return () => clearInterval(timer)
+    }
+    return () => {}
   }, [expirationTime])
   React.useEffect(() => {
-    if (tab === 0) {
+    if (tab === 0 && invoice.btcAddress) {
       // On-chain
       handler.GenerateQRCode(`${invoice.btcAddress}`)
-    } else {
+    } else if (tab === 1 && invoice.lightningAddress) {
       // Lightning
       handler.GenerateQRCode(`${invoice.lightningAddress}`)
     }
@@ -100,40 +161,47 @@ export const ReceiveOutAppRequestScreen = observer(function ReceiveOutAppRequest
   ))
   const RenderQRContainer = React.memo(() => (
     <>
-      {qrCodeData !== "" ? (
-        <View
-          style={{
-            alignItems: "center",
-          }}
-        >
+      {qrCodeData !== "" || (!loading.lightning && tab === 1) || (!loading.onchain && tab === 0) ? (
+        <>
           <View
             style={{
-              marginVertical: 30,
-              borderRadius: 20,
+              alignItems: "center",
             }}
           >
-            <QRCode
-              size={Dimensions.get("screen").width - 70}
-              //logo={NeutronpayLogo}
-              logoSize={60}
-              //logoBackgroundColor={color.palette.white}
-              logoBorderRadius={15}
-              logoMargin={5}
-              value={qrCodeData}
-            />
+            <View
+              style={{
+                marginVertical: 30,
+                borderRadius: 20,
+              }}
+            >
+              <QRCode
+                size={Dimensions.get("screen").width - 70}
+                //logo={NeutronpayLogo}
+                logoSize={60}
+                //logoBackgroundColor={color.palette.white}
+                logoBorderRadius={15}
+                logoMargin={5}
+                value={qrCodeData || "1"}
+              />
+            </View>
           </View>
-        </View>
+          <Button onPress={handler.SeeFullText} style={Style.AddressContainer}>
+            <Text style={Style.AddressText}>
+              {`${qrCodeData.slice(0, 14).trim()}...${qrCodeData
+                .slice(qrCodeData.length - 14, qrCodeData.length)
+                .trim()}`}
+            </Text>
+            <Ionicons name="eye" color={color.palette.offGray} size={20} />
+          </Button>
+        </>
       ) : (
-        <></>
+        <View style={{ height: 500 }}>
+          <NeutronpaySpinner
+            image={tab === 0 ? BitcoinIcon : LightningIcon}
+            style={{ marginTop: 0 }}
+          />
+        </View>
       )}
-      <Button onPress={handler.SeeFullText} style={Style.AddressContainer}>
-        <Text style={Style.AddressText}>
-          {`${qrCodeData.slice(0, 14).trim()}...${qrCodeData
-            .slice(qrCodeData.length - 14, qrCodeData.length)
-            .trim()}`}
-        </Text>
-        <Ionicons name="eye" color={color.palette.offGray} size={20} />
-      </Button>
     </>
   ))
   const RenderMetaListContainer = React.memo(() => (
@@ -259,7 +327,9 @@ export const ReceiveOutAppRequestScreen = observer(function ReceiveOutAppRequest
       <Screen unsafe={true} preset="scroll">
         <RenderTabContainer />
         <RenderQRContainer />
-        <RenderMetaListContainer />
+        {qrCodeData !== "" ||
+          (!loading.lightning && tab === 1) ||
+          (!loading.onchain && tab === 0 && <RenderMetaListContainer />)}
         <RenderAddressModal />
       </Screen>
     </View>

@@ -5,7 +5,7 @@ import { Text, AutoImage, Button } from "../../components"
 import Style from "./Contact.style"
 import { useIsFocused, useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
-import { UserItem } from "../UserItem"
+import { UserItem } from "../User/UserItem"
 import { SectionList } from "react-native"
 import { TextInput } from "react-native-gesture-handler"
 import I18n from "i18n-js"
@@ -13,7 +13,7 @@ import { color, textStyle } from "../../theme"
 import useFormValidation from "../../hooks/useFormValidation"
 import { Ionicons } from "@expo/vector-icons"
 import { User } from "../../models/user/user"
-import NeutronpaySpinner from "../NeutronpaySpinner"
+import NeutronpaySpinner from "../Reusable/NeutronpaySpinner"
 
 const NoContactIcon = require("../../../assets/images/icons/No-Contact-Icon.png")
 

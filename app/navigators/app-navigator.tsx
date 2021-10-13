@@ -11,7 +11,6 @@ import { Tabs } from "./Tabs"
 import Style from "./Tabs.style"
 import { color, textStyle } from "../theme"
 import {
-  DepositScreen,
   ReceiveInAppRequestScreen,
   ReceiveOutAppRequestScreen,
   ReceiveScreen,
@@ -24,7 +23,6 @@ import {
   TransactionConfirmScreen,
   TransactionDetailScreen,
   UserDetailScreen,
-  WithdrawScreen,
   PlaidScreen,
   PaymentMethodScreen,
   NotificationScreen,
@@ -38,7 +36,7 @@ import {
 import i18n from "i18n-js"
 import { useStores } from "../models"
 import { observer } from "mobx-react-lite"
-import { TransactionAmountCreationScreen } from "../screens/TransactionAmountCreation"
+import { TransactionAmountCreationScreen } from "../screens/Transaction/TransactionAmountCreation"
 import { View } from "react-native"
 
 export type NavigatorParamList = {
@@ -173,8 +171,6 @@ const AppStack = observer(() => {
               }}
               component={SettingScreen}
             />
-            <Stack.Screen name="Withdraw" component={WithdrawScreen} />
-            <Stack.Screen name="Deposit" component={DepositScreen} />
             <Stack.Screen
               options={{
                 headerStyle: {
@@ -203,7 +199,14 @@ const AppStack = observer(() => {
               }}
               component={BankAccountDetailScreen}
             />
-            <Stack.Screen name="ContactCreation" component={ContactCreationScreen} />
+            <Stack.Screen
+              options={{
+                headerShown: true,
+                headerTitle: "Add Contact",
+              }}
+              name="ContactCreation"
+              component={ContactCreationScreen}
+            />
             <Stack.Screen
               name="TransactionAmountCreation"
               options={{

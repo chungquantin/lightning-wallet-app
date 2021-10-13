@@ -6,14 +6,14 @@ import Style from "./Wallet.style"
 import { useStores } from "../../models"
 import { onSnapshot } from "mobx-state-tree"
 import { useIsFocused, useNavigation } from "@react-navigation/native"
-import { TransactionItem } from "../TransactionItem"
+import { TransactionItem } from "../Transaction/TransactionItem"
 import { color } from "../../theme"
 import { TxKeyPath } from "../../i18n"
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons"
 import { formatByUnit } from "../../utils/currency"
 import { SectionList } from "react-native"
 import { Transaction } from "../../models/transaction/transaction"
-import NeutronpaySpinner from "../NeutronpaySpinner"
+import NeutronpaySpinner from "../Reusable/NeutronpaySpinner"
 
 interface ButtonProps {
   onPressHandler: (event: GestureResponderEvent) => void

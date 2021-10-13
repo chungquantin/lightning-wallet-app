@@ -14,7 +14,7 @@ export class BtcResolverApi extends ResolverApi {
     this.url = PRODUCTION_API_URL
       ? PRODUCTION_API_URL
       : !useGateway
-      ? `${API_URL}:3004`
+      ? `${API_URL}:3003`
       : `${API_URL}:3000/graphql`
   }
 
@@ -51,6 +51,6 @@ export class BtcResolverApi extends ResolverApi {
         refreshToken,
       },
     )
-    return res.generateOnChainInvoice
+    return res.generateLightningInvoice
   }
 }

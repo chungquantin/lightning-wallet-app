@@ -10,7 +10,7 @@ import { Avatar } from "react-native-paper"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { ParamListBase } from "@react-navigation/routers"
 import { BankAccount } from "../../models/bank-account/bank-account"
-import NeutronpaySpinner from "../NeutronpaySpinner"
+import NeutronpaySpinner from "../Reusable/NeutronpaySpinner"
 
 interface PaymentMethodRouteProps extends ParamListBase {
   RoutingDetail: {
