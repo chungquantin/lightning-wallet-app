@@ -60,7 +60,7 @@ export const ProfileScreen = observer(function ProfileScreen() {
   ]
   return (
     <View testID="ProfileScreen" style={Style.Container}>
-      <Screen unsafe={true} preset="scroll">
+      <Screen unsafe={true} preset="fixed">
         <View style={{ alignItems: "center", justifyContent: "center", marginTop: 20 }}>
           <Avatar.Image
             source={{
@@ -85,7 +85,7 @@ export const ProfileScreen = observer(function ProfileScreen() {
           <FlatList
             data={settingList}
             renderItem={({ item }) => (
-              <ListItem text={item.label}>
+              <ListItem text={item.label} key={item.label}>
                 <Text
                   style={{
                     fontSize: 13,

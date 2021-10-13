@@ -39,6 +39,7 @@ import i18n from "i18n-js"
 import { useStores } from "../models"
 import { observer } from "mobx-react-lite"
 import { TransactionAmountCreationScreen } from "../screens/TransactionAmountCreation"
+import { View } from "react-native"
 
 export type NavigatorParamList = {
   Wallet: undefined
@@ -108,159 +109,164 @@ const AppStack = observer(() => {
     userStore.currentUser.id === walletStore.wallet.userId
 
   return (
-    <Stack.Navigator
-      headerMode="screen"
-      screenOptions={{
-        ...screenOptions,
-      }}
-      initialRouteName={isSignedIn ? "Wallet" : "SignIn"}
-    >
-      {isSignedIn ? (
-        <>
-          <Stack.Screen options={{ headerShown: false }} name="Wallet" component={Tabs} />
-          {/* Send screen stack */}
-          <Stack.Screen name="Send" component={SendScreen} />
-          <Stack.Screen
-            name="SendOutAppRequest"
-            options={{
-              headerTitle: i18n.t("navigation.scanQrCode"),
-            }}
-            component={SendOutAppRequestScreen}
-          />
-          <Stack.Screen
-            name="SendInAppRequest"
-            options={{
-              headerTitle: i18n.t("navigation.sendToFriend"),
-            }}
-            component={SendInAppRequestScreen}
-          />
-          {/* Receive screen stack */}
-          <Stack.Screen name="Receive" component={ReceiveScreen} />
-          <Stack.Screen
-            name="ReceiveOutAppRequest"
-            options={{
-              headerTitle: i18n.t("navigation.request"),
-            }}
-            component={ReceiveOutAppRequestScreen}
-          />
-          <Stack.Screen
-            name="ReceiveInAppRequest"
-            options={{
-              headerTitle: i18n.t("navigation.request"),
-            }}
-            component={ReceiveInAppRequestScreen}
-          />
-          {/* Reusable screens */}
-          <Stack.Screen
-            options={{
-              headerTitle: "Payment Method",
-            }}
-            name="PaymentMethod"
-            component={PaymentMethodScreen}
-          />
-          <Stack.Screen name="Notification" component={NotificationScreen} />
-          <Stack.Screen
-            name="Setting"
-            options={{
-              gestureDirection: "horizontal-inverted",
-              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-            }}
-            component={SettingScreen}
-          />
-          <Stack.Screen name="Withdraw" component={WithdrawScreen} />
-          <Stack.Screen name="Deposit" component={DepositScreen} />
-          <Stack.Screen
-            options={{
-              headerStyle: {
-                backgroundColor: color.palette.white,
-                elevation: 0,
-              },
-              headerTitleStyle: {
-                color: color.background,
-              },
-            }}
-            name="Plaid"
-            component={PlaidScreen}
-          />
-          <Stack.Screen
-            name="UserDetail"
-            options={{
-              headerBackTitle: i18n.t("navigation.contact"),
-            }}
-            component={UserDetailScreen}
-          />
-          <Stack.Screen
-            name="BankAccountDetail"
-            options={{
-              headerBackTitle: i18n.t("common.back"),
-              headerTitle: "Bank Account",
-            }}
-            component={BankAccountDetailScreen}
-          />
-          <Stack.Screen name="ContactCreation" component={ContactCreationScreen} />
-          <Stack.Screen
-            name="TransactionAmountCreation"
-            options={{
-              headerShown: true,
-              headerTitle: "",
-            }}
-            component={TransactionAmountCreationScreen}
-          />
-          <Stack.Screen
-            name="BankTransferAmountCreation"
-            options={{
-              headerShown: true,
-              headerTitle: "",
-            }}
-            component={BankTransferAmountCreationScreen}
-          />
-          <Stack.Screen
-            name="BankTransferConfirm"
-            options={{
-              headerTitle: i18n.t("navigation.confirm"),
-              headerBackTitle: i18n.t("navigation.back"),
-              headerLeft: () => <></>,
-              gestureEnabled: false,
-            }}
-            component={BankTransferConfirmScreen}
-          />
-          <Stack.Screen
-            name="BankTransferComplete"
-            options={{
-              headerTitle: i18n.t("navigation.paymentComplete"),
-              headerLeft: () => <></>,
-              gestureEnabled: false,
-            }}
-            component={BankTransferCompleteScreen}
-          />
-          <Stack.Screen
-            name="TransactionDetail"
-            options={{
-              headerTitle: i18n.t("navigation.transaction"),
-            }}
-            component={TransactionDetailScreen}
-          />
-          <Stack.Screen
-            name="TransactionConfirm"
-            options={{
-              headerTitle: i18n.t("navigation.confirmSend"),
-              headerBackTitle: i18n.t("navigation.back"),
-              headerLeft: () => <></>,
-              gestureEnabled: false,
-            }}
-            component={TransactionConfirmScreen}
-          />
-          <Stack.Screen
-            name="TransactionComplete"
-            options={{
-              headerTitle: i18n.t("navigation.paymentComplete"),
-              headerLeft: () => <></>,
-              gestureEnabled: false,
-            }}
-            component={TransactionCompleteScreen}
-          />
-        </>
-      ) : (
+    <View style={{ flex: 1, backgroundColor: color.background }}>
+      <Stack.Navigator
+        headerMode="screen"
+        mode="modal"
+        screenOptions={{
+          ...screenOptions,
+          cardStyle: {
+            opacity: 1,
+          },
+        }}
+        initialRouteName={isSignedIn ? "Wallet" : "SignIn"}
+      >
+        {isSignedIn ? (
+          <>
+            <Stack.Screen options={{ headerShown: false }} name="Wallet" component={Tabs} />
+            {/* Send screen stack */}
+            <Stack.Screen name="Send" component={SendScreen} />
+            <Stack.Screen
+              name="SendOutAppRequest"
+              options={{
+                headerTitle: i18n.t("navigation.scanQrCode"),
+              }}
+              component={SendOutAppRequestScreen}
+            />
+            <Stack.Screen
+              name="SendInAppRequest"
+              options={{
+                headerTitle: i18n.t("navigation.sendToFriend"),
+              }}
+              component={SendInAppRequestScreen}
+            />
+            {/* Receive screen stack */}
+            <Stack.Screen name="Receive" component={ReceiveScreen} />
+            <Stack.Screen
+              name="ReceiveOutAppRequest"
+              options={{
+                headerTitle: i18n.t("navigation.request"),
+              }}
+              component={ReceiveOutAppRequestScreen}
+            />
+            <Stack.Screen
+              name="ReceiveInAppRequest"
+              options={{
+                headerTitle: i18n.t("navigation.request"),
+              }}
+              component={ReceiveInAppRequestScreen}
+            />
+            {/* Reusable screens */}
+            <Stack.Screen
+              options={{
+                headerTitle: "Payment Method",
+              }}
+              name="PaymentMethod"
+              component={PaymentMethodScreen}
+            />
+            <Stack.Screen name="Notification" component={NotificationScreen} />
+            <Stack.Screen
+              name="Setting"
+              options={{
+                gestureDirection: "horizontal-inverted",
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+              component={SettingScreen}
+            />
+            <Stack.Screen name="Withdraw" component={WithdrawScreen} />
+            <Stack.Screen name="Deposit" component={DepositScreen} />
+            <Stack.Screen
+              options={{
+                headerStyle: {
+                  backgroundColor: color.palette.white,
+                  elevation: 0,
+                },
+                headerTitleStyle: {
+                  color: color.background,
+                },
+              }}
+              name="Plaid"
+              component={PlaidScreen}
+            />
+            <Stack.Screen
+              name="UserDetail"
+              options={{
+                headerBackTitle: i18n.t("navigation.contact"),
+              }}
+              component={UserDetailScreen}
+            />
+            <Stack.Screen
+              name="BankAccountDetail"
+              options={{
+                headerBackTitle: i18n.t("common.back"),
+                headerTitle: "Bank Account",
+              }}
+              component={BankAccountDetailScreen}
+            />
+            <Stack.Screen name="ContactCreation" component={ContactCreationScreen} />
+            <Stack.Screen
+              name="TransactionAmountCreation"
+              options={{
+                headerShown: true,
+                headerTitle: "",
+              }}
+              component={TransactionAmountCreationScreen}
+            />
+            <Stack.Screen
+              name="BankTransferAmountCreation"
+              options={{
+                headerShown: true,
+                headerTitle: "",
+              }}
+              component={BankTransferAmountCreationScreen}
+            />
+            <Stack.Screen
+              name="BankTransferConfirm"
+              options={{
+                headerTitle: i18n.t("navigation.confirm"),
+                headerBackTitle: i18n.t("navigation.back"),
+                headerLeft: () => <></>,
+                gestureEnabled: false,
+              }}
+              component={BankTransferConfirmScreen}
+            />
+            <Stack.Screen
+              name="BankTransferComplete"
+              options={{
+                headerTitle: i18n.t("navigation.paymentComplete"),
+                headerLeft: () => <></>,
+                gestureEnabled: false,
+              }}
+              component={BankTransferCompleteScreen}
+            />
+            <Stack.Screen
+              name="TransactionDetail"
+              options={{
+                headerTitle: i18n.t("navigation.transaction"),
+              }}
+              component={TransactionDetailScreen}
+            />
+            <Stack.Screen
+              name="TransactionConfirm"
+              options={{
+                headerTitle: i18n.t("navigation.confirmSend"),
+                headerBackTitle: i18n.t("navigation.back"),
+                headerLeft: () => <></>,
+                gestureEnabled: false,
+              }}
+              component={TransactionConfirmScreen}
+            />
+            <Stack.Screen
+              name="TransactionComplete"
+              options={{
+                headerTitle: i18n.t("navigation.paymentComplete"),
+                headerLeft: () => <></>,
+                gestureEnabled: false,
+              }}
+              component={TransactionCompleteScreen}
+            />
+          </>
+        ) : (
           <>
             <Stack.Screen
               options={{
@@ -285,20 +291,21 @@ const AppStack = observer(() => {
             />
           </>
         )}
-    </Stack.Navigator>
+      </Stack.Navigator>
+    </View>
   )
 })
 
 export const AppNavigator = React.forwardRef<
   NavigationContainerRef,
   Partial<React.ComponentProps<typeof NavigationContainer>>
-  >((props, ref) => {
-    return (
-      <NavigationContainer {...props} ref={ref}>
-        <AppStack />
-      </NavigationContainer>
-    )
-  })
+>((props, ref) => {
+  return (
+    <NavigationContainer {...props} ref={ref}>
+      <AppStack />
+    </NavigationContainer>
+  )
+})
 
 AppNavigator.displayName = "AppNavigator"
 

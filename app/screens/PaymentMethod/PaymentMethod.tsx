@@ -10,6 +10,7 @@ import { Avatar } from "react-native-paper"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { ParamListBase } from "@react-navigation/routers"
 import { BankAccount } from "../../models/bank-account/bank-account"
+import NeutronpaySpinner from "../NeutronpaySpinner"
 
 interface PaymentMethodRouteProps extends ParamListBase {
   RoutingDetail: {
@@ -18,6 +19,7 @@ interface PaymentMethodRouteProps extends ParamListBase {
 }
 
 export const PaymentMethodScreen = observer(function PaymentMethodScreen() {
+  const [loading, setLoading] = React.useState(false)
   const { bankStore } = useStores()
   const navigator = useNavigation()
   const isFocused = useIsFocused()
@@ -43,7 +45,15 @@ export const PaymentMethodScreen = observer(function PaymentMethodScreen() {
   }
 
   React.useEffect(() => {
-    bankStore.fetchMyBankAccounts()
+    const fetchData = async () => {
+      setLoading(true)
+      const fetchMyBankAccountsResponse = await bankStore.fetchMyBankAccounts()
+      if (fetchMyBankAccountsResponse.success) {
+        setLoading(false)
+      }
+    }
+    fetchData()
+    return () => {}
   }, [isFocused])
 
   const RenderBankAccountItem = ({ name, type, logo, primaryColor, onPressHandler }) => (
@@ -76,28 +86,34 @@ export const PaymentMethodScreen = observer(function PaymentMethodScreen() {
       </View>
     </TouchableOpacity>
   )
+
+  const RenderBankAccountContainer = React.memo(() => (
+    <>
+      <Text style={Style.Header} tx="common.bankAccounts" />
+      {bankStore.bankAccounts.map((bankAccount) => (
+        <RenderBankAccountItem
+          onPressHandler={() => handler.OpenBankAccountDetail(bankAccount)}
+          key={bankAccount.id}
+          logo={bankAccount.institutionLogo}
+          primaryColor={bankAccount.institutionPrimaryColor}
+          name={bankAccount.institutionName}
+          type={bankAccount.name}
+        />
+      ))}
+      <Button style={Style.Button} onPress={handler.AddNewBankAccount}>
+        <Text
+          style={{
+            color: color.palette.offGray,
+          }}
+          tx="common.addNewBankAccount"
+        />
+      </Button>
+    </>
+  ))
   return (
     <View testID="PaymentMethodScreen" style={Style.Container}>
       <Screen preset="fixed">
-        <Text style={Style.Header} tx="common.bankAccounts" />
-        {bankStore.bankAccounts.map((bankAccount) => (
-          <RenderBankAccountItem
-            onPressHandler={() => handler.OpenBankAccountDetail(bankAccount)}
-            key={bankAccount.id}
-            logo={bankAccount.institutionLogo}
-            primaryColor={bankAccount.institutionPrimaryColor}
-            name={bankAccount.institutionName}
-            type={bankAccount.name}
-          />
-        ))}
-        <Button style={Style.Button} onPress={handler.AddNewBankAccount}>
-          <Text
-            style={{
-              color: color.palette.offGray,
-            }}
-            tx="common.addNewBankAccount"
-          />
-        </Button>
+        {loading ? <NeutronpaySpinner /> : <RenderBankAccountContainer />}
       </Screen>
     </View>
   )

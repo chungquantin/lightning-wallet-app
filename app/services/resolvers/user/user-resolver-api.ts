@@ -1,5 +1,6 @@
 import {
   AddNewContact,
+  AddNewContactDto,
   GetMyContacts,
   GetUser,
   GetUserDto,
@@ -80,14 +81,18 @@ export class UserResolverAPI extends ResolverApi {
     return res.getUser
   }
 
-  public async addNewContact(): Promise<AddNewContact> {
+  public async addNewContact(userId: string): Promise<AddNewContact> {
     const [accessToken, refreshToken] = await Promise.all([
       loadString(STORAGE_KEY.ACCESS_TOKEN),
       loadString(STORAGE_KEY.REFRESH_TOKEN),
     ])
-    const res = await this.mutation<AddNewContact, {}>(
+    const res = await this.mutation<AddNewContact, AddNewContactDto>(
       "addNewContact",
-      {},
+      {
+        data: {
+          userId,
+        },
+      },
       {
         accessToken,
         refreshToken,

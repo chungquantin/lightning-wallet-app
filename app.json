@@ -1,14 +1,15 @@
 {
   "expo": {
+    "backgroundColor": "#1a202c",
     "name": "neutronpay_LNwallet",
     "slug": "neutronpay_LNwallet",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/logos/neutronpay-logo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#171826"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

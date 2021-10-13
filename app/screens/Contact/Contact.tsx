@@ -1,7 +1,7 @@
 import React from "react"
 import { View, Dimensions } from "react-native"
 import { observer } from "mobx-react-lite"
-import { Text, AutoImage, Button, Screen } from "../../components"
+import { Text, AutoImage, Button } from "../../components"
 import Style from "./Contact.style"
 import { useIsFocused, useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"

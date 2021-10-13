@@ -61,6 +61,7 @@ export const WalletScreen = observer(function WalletScreen() {
       }
     }
     fetchData()
+    return () => {}
   }, [isFocused])
 
   const handler = {

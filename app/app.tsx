@@ -18,6 +18,9 @@ import { ToggleStorybook } from "../storybook/toggle-storybook"
 import { enableScreens } from "react-native-screens"
 import { Tron } from "./services/reactotron/tron"
 import { SnackBarContext } from "./constants/Context"
+import { AnimatedAppLoader } from "./screens/Splash/AnimatedAppLoader"
+import Constants from "expo-constants"
+import { color } from "./theme"
 enableScreens()
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
@@ -70,7 +73,7 @@ function App() {
   const onDismissSnackBar = () => setVisible(false)
 
   // otherwise, we're ready to render the app
-  return (
+  const MainScreen = () => (
     <ToggleStorybook>
       <Provider>
         <RootStoreProvider value={rootStore}>
@@ -79,6 +82,17 @@ function App() {
               value={{ ...snackBar, onDismissSnackBar, onToggleSnackBar, setSnackBar }}
             >
               <AppNavigator
+                theme={{
+                  dark: true,
+                  colors: {
+                    border: color.borderLight,
+                    background: color.background,
+                    primary: color.primary,
+                    card: color.secondaryBackground,
+                    text: color.text,
+                    notification: color.background,
+                  },
+                }}
                 ref={navigationRef}
                 initialState={initialNavigationState}
                 onStateChange={onNavigationStateChange}
@@ -99,6 +113,11 @@ function App() {
         </RootStoreProvider>
       </Provider>
     </ToggleStorybook>
+  )
+  return (
+    <AnimatedAppLoader image={{ uri: Constants.manifest.splash.image }}>
+      <MainScreen />
+    </AnimatedAppLoader>
   )
 }
 
