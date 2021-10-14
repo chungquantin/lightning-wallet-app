@@ -13,8 +13,10 @@ import { useIsFocused, useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
 import { LinearGradient } from "expo-linear-gradient"
 import { Ionicons } from "@expo/vector-icons"
+import { NormalSpinner } from "../Reusable/NormalSpinner"
 
 export const SendScreen = observer(function SendScreen() {
+  const [loading, setLoading] = React.useState(false)
   const [tab, switchTab] = React.useState<number>(0)
   const { userStore } = useStores()
   const isFocused = useIsFocused()
@@ -49,7 +51,14 @@ export const SendScreen = observer(function SendScreen() {
   }
 
   React.useEffect(() => {
-    userStore.fetchUserContacts()
+    const fetchData = async () => {
+      setLoading(true)
+      const fetchUserContactsResponse = await userStore.fetchUserContacts()
+      if (fetchUserContactsResponse.success) {
+        setLoading(false)
+      }
+    }
+    fetchData()
   }, [isFocused])
 
   React.useEffect(() => {
@@ -61,23 +70,26 @@ export const SendScreen = observer(function SendScreen() {
     }
   }, [formValues.user])
 
-  const RenderTabComponent = ({ listData }: { listData: User[] }) => (
-    <FlatList
-      data={listData}
-      renderItem={({ item }) => (
-        <UserItem user={item} onPressHandler={() => handler.InAppRequest(item)} />
-      )}
-      keyExtractor={(item) => item.id}
-      ListEmptyComponent={() => (
-        <View style={Style.RequestEmptyContainer}>
-          <Text style={{ color: color.palette.offGray, fontSize: 25, marginBottom: 15 }}>
-            ¯\_(ツ)_/¯
-          </Text>
-          <Text style={{ color: color.palette.offGray }} tx="common.empty.contact" />
-        </View>
-      )}
-    />
-  )
+  const RenderTabComponent = ({ listData }: { listData: User[] }) =>
+    loading ? (
+      <NormalSpinner />
+    ) : (
+      <FlatList
+        data={listData}
+        renderItem={({ item }) => (
+          <UserItem user={item} onPressHandler={() => handler.InAppRequest(item)} />
+        )}
+        keyExtractor={(item) => item.id}
+        ListEmptyComponent={() => (
+          <View style={Style.RequestEmptyContainer}>
+            <Text style={{ color: color.palette.offGray, fontSize: 25, marginBottom: 15 }}>
+              ¯\_(ツ)_/¯
+            </Text>
+            <Text style={{ color: color.palette.offGray }} tx="common.empty.contact" />
+          </View>
+        )}
+      />
+    )
 
   const tabLists: {
     label: string
