@@ -1,3 +1,5 @@
 export * from "./wallet/wallet-resolver-api"
 export * from "./user/user-resolver-api"
 export * from "./bank/bank-resolver-api"
+export * from "./btc/btc-resolver-api"
+export * from "./dummy/dummy.resolver"

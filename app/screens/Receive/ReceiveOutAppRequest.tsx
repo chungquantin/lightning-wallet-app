@@ -10,8 +10,6 @@ import { ParamListBase } from "@react-navigation/routers"
 import { RouteProp, useRoute } from "@react-navigation/core"
 import { formatByUnit } from "../../utils/currency"
 import { Portal, Modal } from "react-native-paper"
-import { SnackBarContext } from "../../constants/Context"
-import I18n from "i18n-js"
 import { useStores } from "../../models"
 import NeutronpaySpinner from "../Reusable/NeutronpaySpinner"
 
@@ -27,21 +25,19 @@ interface ReceiveOutAppUserRouteProps extends ParamListBase {
 
 export const ReceiveOutAppRequestScreen = observer(function ReceiveOutAppRequestScreen() {
   const route = useRoute<RouteProp<ReceiveOutAppUserRouteProps, "InvoiceDetail">>()
-  const { onToggleSnackBar, setSnackBar } = React.useContext(SnackBarContext)
+  // const { onToggleSnackBar, setSnackBar } = React.useContext(SnackBarContext)
   const { btcStore } = useStores()
   const { description, amount, currency } = route.params
   const [tab, switchTab] = React.useState<number>(0)
   const [toggleModal, setToggleModal] = React.useState(false)
   const [expirationTime, setExpirationTime] = React.useState({
-    minute: 1,
+    minute: 15,
     second: 0,
   })
   const [loading, setLoading] = React.useState({
     onchain: false,
     lightning: false,
   })
-
-  const [qrCodeData, setQrCodeData] = React.useState("")
   const invoice = React.useMemo(
     () => ({
       btcAddress: btcStore.onchainAddress,
@@ -63,58 +59,32 @@ export const ReceiveOutAppRequestScreen = observer(function ReceiveOutAppRequest
     },
   ]
   React.useEffect(() => {
+    btcStore.reset()
+  }, [])
+  React.useEffect(() => {
     const fetchData = async () => {
+      if (btcStore.lightningAddress && btcStore.onchainAddress) {
+        return
+      }
       if (tab === 0) {
-        // Onchain
-        setLoading(
-          (loading) =>
-            (loading = {
-              ...loading,
-              onchain: true,
-            }),
-        )
-        const generateOnchainAddress = await btcStore.generateOnchainAddress()
-        if (generateOnchainAddress.success) {
-          setLoading(
-            (loading) =>
-              (loading = {
-                ...loading,
-                onchain: false,
-              }),
-          )
-        }
+        handler.OnchainGenerate()
       } else if (tab === 1) {
-        // Lightning
-        setLoading(
-          (loading) =>
-            (loading = {
-              ...loading,
-              lightning: true,
-            }),
-        )
-        const generateOnchainAddress = await btcStore.generateLightningAddress({
-          amount,
-          currency,
-          description,
-        })
-        if (generateOnchainAddress.success) {
-          setLoading(
-            (loading) =>
-              (loading = {
-                ...loading,
-                lightning: false,
-              }),
-          )
-        }
+        handler.LightningGenerate()
       }
     }
     fetchData()
   }, [tab])
   React.useEffect(() => {
-    if (!loading.lightning) {
+    if (!loading.lightning && invoice.lightningAddress) {
       const timer = setInterval(() => {
         if (expirationTime.minute === 0 && expirationTime.second === 0) {
           // Re-create a new invoice
+          setExpirationTime({
+            minute: 15,
+            second: 0,
+          })
+          btcStore.clearLightningAddress()
+          handler.LightningGenerate()
           return
         }
         if (expirationTime.second > 0) {
@@ -132,16 +102,11 @@ export const ReceiveOutAppRequestScreen = observer(function ReceiveOutAppRequest
       return () => clearInterval(timer)
     }
     return () => {}
-  }, [expirationTime])
-  React.useEffect(() => {
-    if (tab === 0 && invoice.btcAddress) {
-      // On-chain
-      handler.GenerateQRCode(`${invoice.btcAddress}`)
-    } else if (tab === 1 && invoice.lightningAddress) {
-      // Lightning
-      handler.GenerateQRCode(`${invoice.lightningAddress}`)
-    }
-  }, [tab])
+  }, [expirationTime, loading.lightning, invoice.lightningAddress])
+
+  const lightningCondition = !loading.lightning && invoice.lightningAddress && tab === 1
+  const onchainCondition = !loading.onchain && invoice.btcAddress && tab === 0
+  const qrCodeData = tab === 0 ? invoice.btcAddress : invoice.lightningAddress
 
   const RenderTabContainer = React.memo(() => (
     <View style={Style.RequestTabContainer}>
@@ -161,7 +126,7 @@ export const ReceiveOutAppRequestScreen = observer(function ReceiveOutAppRequest
   ))
   const RenderQRContainer = React.memo(() => (
     <>
-      {qrCodeData !== "" || (!loading.lightning && tab === 1) || (!loading.onchain && tab === 0) ? (
+      {lightningCondition || onchainCondition ? (
         <>
           <View
             style={{
@@ -181,7 +146,7 @@ export const ReceiveOutAppRequestScreen = observer(function ReceiveOutAppRequest
                 //logoBackgroundColor={color.palette.white}
                 logoBorderRadius={15}
                 logoMargin={5}
-                value={qrCodeData || "1"}
+                value={qrCodeData}
               />
             </View>
           </View>
@@ -274,31 +239,57 @@ export const ReceiveOutAppRequestScreen = observer(function ReceiveOutAppRequest
   ))
 
   const handler = {
+    OnchainGenerate: async () => {
+      // Onchain
+      setLoading(
+        (loading) =>
+          (loading = {
+            ...loading,
+            onchain: true,
+          }),
+      )
+      const generateOnchainAddress = await btcStore.generateOnchainAddress()
+      if (generateOnchainAddress.success) {
+        setLoading(
+          (loading) =>
+            (loading = {
+              ...loading,
+              onchain: false,
+            }),
+        )
+      }
+    },
+    LightningGenerate: async () => {
+      // Lightning
+      setLoading(
+        (loading) =>
+          (loading = {
+            ...loading,
+            lightning: true,
+          }),
+      )
+      const generateOnchainAddress = await btcStore.generateLightningAddress({
+        amount,
+        currency,
+        description,
+      })
+      if (generateOnchainAddress.success) {
+        setLoading(
+          (loading) =>
+            (loading = {
+              ...loading,
+              lightning: false,
+            }),
+        )
+      }
+    },
     SwitchTab: (index) => {
       if (tab !== index) {
         switchTab(index)
       }
     },
-    GenerateQRCode: async (data: string) => {
-      let qrData = data
-
-      if (data.startsWith("bitcoin:")) {
-        const label = encodeURI(`${invoice.description} for ${invoice.amount} VND`)
-        qrData += `?label=${label}`
-      }
-      setQrCodeData(qrData)
-    },
     CopyText: () => {
       Clipboard.setString(tab === 1 ? invoice.lightningAddress : invoice.btcAddress)
-      setSnackBar(
-        (content) =>
-          (content = {
-            ...content,
-            duration: 1500,
-            text: I18n.t("SNACKBAR_TEXT_COPY_TO_CLIPBOARD"),
-          }),
-      )
-      onToggleSnackBar()
     },
     Share: async () => {
       try {
@@ -327,9 +318,7 @@ export const ReceiveOutAppRequestScreen = observer(function ReceiveOutAppRequest
       <Screen unsafe={true} preset="scroll">
         <RenderTabContainer />
         <RenderQRContainer />
-        {qrCodeData !== "" ||
-          (!loading.lightning && tab === 1) ||
-          (!loading.onchain && tab === 0 && <RenderMetaListContainer />)}
+        {lightningCondition || onchainCondition ? <RenderMetaListContainer /> : <></>}
         <RenderAddressModal />
       </Screen>
     </View>

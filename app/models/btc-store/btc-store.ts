@@ -22,11 +22,17 @@ export const BtcStoreModel = types
   })
   .actions((self) => {
     return {
+      clearLightningAddress: function () {
+        self.lightningAddress = ""
+      },
+      clearOnchainAddress: function () {
+        self.onchainAddress = ""
+      },
       reset: function () {
         try {
           console.log("UserStore - Logout")
-          self.lightningAddress = ""
-          self.onchainAddress = ""
+          this.clearLightningAddress()
+          this.clearOnchainAddress()
         } catch (error) {
           console.tron.log(error.message)
         }
@@ -61,7 +67,7 @@ export const BtcStoreModel = types
             description,
           })
           if (response.success) {
-            self.saveOnchainAddress(response.data.payReq)
+            self.saveLightningAddress(response.data.payReq)
           } else {
             __DEV__ && console.tron.log(response.errors)
           }

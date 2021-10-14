@@ -67,11 +67,4 @@ export abstract class ResolverApi {
       throw error
     }
   }
-
-  //user = {
-  //  getCurrentUser: async (
-  //    headers?: RequestHeader,
-  //  ): Promise<{ getCurrentUser: ApiGetCurrentUserResponseType }> =>
-  //    await this.query("getCurrentUser", headers),
-  //}
 }
