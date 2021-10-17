@@ -1,0 +1,17 @@
+query getInstitutions() {
+    getInstitutions{
+        data{
+            id
+            institutionId
+            institutionLogo
+            institutionName
+            primaryColor
+            websiteUrl
+        }
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

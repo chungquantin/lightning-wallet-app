@@ -1,5 +1,5 @@
-query lightningGetTransactions($Pagination: PaginationInputType){
-    lightningGetTransactions(Pagination: $Pagination){
+query getNodeTransactions($Pagination: PaginationInputType) {
+    getNodeTransactions(Pagination: $Pagination){
         data{
             amount
             blockHash

@@ -1,0 +1,15 @@
+mutation checkTransactionStatus($data: CheckTransactionStatusDto!) {
+    checkTransactionStatus(data: $data){
+        data{
+            method
+            paidAmount
+            status
+            transactionId
+        }
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

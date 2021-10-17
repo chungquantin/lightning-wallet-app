@@ -1,0 +1,10 @@
+mutation cancelPaymentRequest($data: CancelPaymentRequestDto!) {
+    cancelPaymentRequest(data: $data){
+        data
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

@@ -1,0 +1,36 @@
+query getMyPaymentRequests($Pagination: PaginationInputType) {
+    getMyPaymentRequests(Pagination: $Pagination){
+        data{
+            createdAt
+            expiredAt
+            id
+            requestFrom
+            requestTo
+            settledAt
+            status
+            transaction{
+                amount
+                amountLessFee
+                btcAmount
+                btcExchangeRate
+                createdAt
+                currency
+                description
+                fromWalletId
+                id
+                method
+                networkFee
+                paidAmount
+                settledAt
+                status
+                toWalletId
+                transactionFee
+            }
+        }
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

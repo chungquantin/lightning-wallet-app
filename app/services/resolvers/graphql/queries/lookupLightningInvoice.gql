@@ -1,0 +1,22 @@
+query lookupLightningInvoice($data: LookupLightningInvoiceDto!) {
+    lookupLightningInvoice(data: $data){
+        data{
+            amtPaid
+            amtPaidMsat
+            amtPaidSat
+            cltvExpiry
+            creationDate
+            memo
+            paymentRequest
+            rHash
+            settleDate
+            settled
+            value
+        }
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

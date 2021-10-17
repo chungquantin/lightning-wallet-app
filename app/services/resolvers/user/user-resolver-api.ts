@@ -9,6 +9,8 @@ import {
   Me,
   Register,
   RegisterDto,
+  SearchUser,
+  SearchUserDto,
 } from "../../../generated/graphql"
 import { STORAGE_KEY } from "../../../constants/AsyncStorageKey"
 import { loadString } from "../../../utils/storage"
@@ -99,5 +101,14 @@ export class UserResolverAPI extends ResolverApi {
       },
     )
     return res.addNewContact
+  }
+
+  public async searchUser(searchInput: string): Promise<SearchUser> {
+    const res = await this.query<SearchUser, SearchUserDto>("searchUser", {
+      data: {
+        searchInput,
+      },
+    })
+    return res.searchUser
   }
 }

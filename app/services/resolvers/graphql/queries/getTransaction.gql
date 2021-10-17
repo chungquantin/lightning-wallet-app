@@ -1,7 +1,8 @@
-query getTransaction($data: GetTransactionDto!){
+query getTransaction($data: GetTransactionDto!) {
     getTransaction(data: $data){
         data{
             amount
+            amountLessFee
             btcAmount
             btcExchangeRate
             createdAt
@@ -11,6 +12,8 @@ query getTransaction($data: GetTransactionDto!){
             id
             method
             networkFee
+            paidAmount
+            settledAt
             status
             toWalletId
             transactionFee

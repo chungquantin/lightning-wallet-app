@@ -1,4 +1,4 @@
-query getPaymentRequests($Pagination: PaginationInputType){
+query getPaymentRequests($Pagination: PaginationInputType) {
     getPaymentRequests(Pagination: $Pagination){
         data{
             createdAt
@@ -6,9 +6,11 @@ query getPaymentRequests($Pagination: PaginationInputType){
             id
             requestFrom
             requestTo
+            settledAt
             status
             transaction{
                 amount
+                amountLessFee
                 btcAmount
                 btcExchangeRate
                 createdAt
@@ -18,6 +20,8 @@ query getPaymentRequests($Pagination: PaginationInputType){
                 id
                 method
                 networkFee
+                paidAmount
+                settledAt
                 status
                 toWalletId
                 transactionFee

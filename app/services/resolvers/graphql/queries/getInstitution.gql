@@ -1,0 +1,17 @@
+query getInstitution($data: GetInstitutionDto!) {
+    getInstitution(data: $data){
+        data{
+            id
+            institutionId
+            institutionLogo
+            institutionName
+            primaryColor
+            websiteUrl
+        }
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

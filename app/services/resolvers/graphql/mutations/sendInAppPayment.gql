@@ -1,0 +1,27 @@
+mutation sendInAppPayment($data: SendInAppPaymentDto!) {
+    sendInAppPayment(data: $data){
+        data{
+            amount
+            amountLessFee
+            btcAmount
+            btcExchangeRate
+            createdAt
+            currency
+            description
+            fromWalletId
+            id
+            method
+            networkFee
+            paidAmount
+            settledAt
+            status
+            toWalletId
+            transactionFee
+        }
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

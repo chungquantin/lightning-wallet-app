@@ -1,4 +1,4 @@
-query getBtcAddresses{
+query getBtcAddresses() {
     getBtcAddresses{
         data{
             chainInvoices{

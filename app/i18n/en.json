@@ -1,5 +1,6 @@
 {
   "FORM_VALIDATION_REQUIRED": "This field is required",
+  "FORM_VALIDATION_USERNAME": "Username is not valid",
   "FORM_VALIDATION_EMAIL_INVALID": "Invalid email",
   "FORM_VALIDATION_PASSWORD_MIN_LENGTH": "Password must have at least 6 characters",
   "FORM_VALIDATION_CONFIRM_PASSWORD_NOT_MATCH": "Confirm password does not match",
@@ -13,7 +14,8 @@
   "common": {
     "empty": {
       "transaction": "You have no transaction",
-      "contact": "You have no contact"
+      "contact": "You have no contact",
+      "searchContact": "There is no matched contact"
     },
     "copy": "Copy",
     "share": "Share",
@@ -118,6 +120,10 @@
       "description": {
         "label": "Description",
         "placeholder": "Enter your description"
+      },
+      "username": {
+        "label": "Username",
+        "placeholder": "Enter account username"
       }
     }
   },

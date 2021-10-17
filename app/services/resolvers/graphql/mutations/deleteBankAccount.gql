@@ -1,4 +1,4 @@
-mutation deleteBankAccount($data: DeleteBankAccountDto!){
+mutation deleteBankAccount($data: DeleteBankAccountDto!) {
     deleteBankAccount(data: $data){
         data
         errors{

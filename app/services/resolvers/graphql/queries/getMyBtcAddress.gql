@@ -1,5 +1,5 @@
-query getBtcAddress{
-    getBtcAddress{
+query getMyBtcAddress() {
+    getMyBtcAddress{
         data{
             chainInvoice{
                 address

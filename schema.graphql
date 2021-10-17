@@ -30,9 +30,9 @@ type BankAccountBalanceSchema {
   availableBalance: Float
   currentBalance: Float
   id: ID!
-  isoCurrencyCode: String!
-  limitBalance: Float!
-  unofficialCurrencyCode: String!
+  isoCurrencyCode: String
+  limitBalance: Float
+  unofficialCurrencyCode: String
 }
 
 type BankAccountSchema {
@@ -103,6 +103,46 @@ type ChainInvoiceSchema {
   createdAt: String!
   id: ID!
   userId: String!
+}
+
+type CheckLightningStatus {
+  data: LightningStatusResponse
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input CheckLightningStatusDto {
+  userId: String!
+}
+
+type CheckOnChainStatus {
+  data: OnChainStatusResponse
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input CheckOnChainStatusDto {
+  amount: Float!
+  createdAt: Float!
+  txFee: Float!
+  userId: String!
+}
+
+type CheckTransactionStatus {
+  data: CheckTransactionStatusResponse
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input CheckTransactionStatusDto {
+  transactionId: String!
+}
+
+type CheckTransactionStatusResponse {
+  method: String!
+  paidAmount: Float!
+  status: TransactionStatus!
+  transactionId: String!
 }
 
 type ConnectBankAccount {
@@ -221,16 +261,52 @@ input GetBankTransfersDto {
   startDate: String!
 }
 
-type getBtcAddress {
+type GetBtcAddress {
   data: BtcAddress
   errors: [ApiError!]
   success: Boolean!
 }
 
-type getBtcAddresses {
+type GetBtcAddresses {
   data: BtcAddresses
   errors: [ApiError!]
   success: Boolean!
+}
+
+type GetChainInvoice {
+  data: ChainInvoiceSchema
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input GetChainInvoiceDto {
+  address: String!
+}
+
+type GetInstitutionById {
+  data: InstitutionSchema
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input GetInstitutionDto {
+  institutionId: String!
+}
+
+type GetInstitutions {
+  data: [InstitutionSchema!]!
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+type GetLightningInvoice {
+  data: LightningInvoiceSchema
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input GetLightningInvoiceDto {
+  paymentRequest: String!
 }
 
 type GetMeWallet {
@@ -259,6 +335,12 @@ type GetMyPaymentRequests {
 
 type GetMyWalletTransactions {
   data: [TransactionSchema!]!
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+type GetNodeTransactions {
+  data: [LightningTransaction!]!
   errors: [ApiError!]
   success: Boolean!
 }
@@ -318,8 +400,8 @@ type GetWallet {
 }
 
 input GetWalletDto {
-  userId: String
-  walletId: String
+  userId: String = ""
+  walletId: String = ""
 }
 
 type GetWallets {
@@ -329,6 +411,7 @@ type GetWallets {
 }
 
 type InstitutionSchema {
+  id: ID!
   institutionId: String!
   institutionLogo: String
   institutionName: String!
@@ -346,6 +429,20 @@ type LightningInvoiceSchema {
   userId: String!
 }
 
+type LightningStatusResponse {
+  amtPaid: Float!
+  amtPaidMsat: Float!
+  amtPaidSat: Float!
+  cltvExpiry: Float!
+  creationDate: Float!
+  memo: String!
+  paymentRequest: String!
+  rHash: String!
+  settleDate: Float!
+  settled: Boolean!
+  value: Float!
+}
+
 type LightningTransaction {
   amount: Float!
   blockHash: String!
@@ -358,12 +455,6 @@ type LinkTokenCreateResponseImpl {
   expiration: String!
   link_token: String!
   request_id: String!
-}
-
-type LndGetTransactions {
-  data: [LightningTransaction!]!
-  errors: [ApiError!]
-  success: Boolean!
 }
 
 type Login {
@@ -383,6 +474,26 @@ type Logout {
   success: Boolean!
 }
 
+type LookupLightningInvoice {
+  data: LightningStatusResponse
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input LookupLightningInvoiceDto {
+  rHash: String!
+}
+
+type LookupOnchainTransaction {
+  data: [OnchainTransaction!]!
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input LookupOnChainTransactionDto {
+  address: String!
+}
+
 type Me {
   data: UserSchema
   errors: [ApiError!]
@@ -392,6 +503,7 @@ type Me {
 type Mutation {
   addNewContact(data: AddNewContactDto!): AddNewContact
   cancelPaymentRequest(data: CancelPaymentRequestDto!): CancelPaymentRequest
+  checkTransactionStatus(data: CheckTransactionStatusDto!): CheckTransactionStatus
   connectBankAccount(data: ConnectBankAccountDto!): ConnectBankAccount
   connectDebitCard: ConnectDebitCard
   createLinkToken: PlaidCreateLinkToken
@@ -405,15 +517,35 @@ type Mutation {
   register(data: RegisterDto!): Register
   respondPaymentRequest(data: RespondPaymentRequestDto!): RespondPaymentRequest
   sendForgotPasswordEmail(data: SendForgotPasswordDto!): ForgotPassword
-  sendInAppLightningPayment(data: SendInAppLightningPaymentDto!): SendInAppLightningPayment
   sendInAppPayment(data: SendInAppPaymentDto!): SendInAppPayment
-  sendOutAppLightningPayment(data: SendOutAppLightningPaymentDto!): SendOutAppLightningPayment
+  sendLightningPayment(data: SendLightningPaymentDto!): SendLightningPayment
+  sendOnchainPayment(data: SendOnchainPaymentDto!): SendOnchainPayment
   sendPaymentRequest(data: SendRequestPaymentDto!): SendPaymentRequest
 }
 
+type OnChainStatusResponse {
+  amount: Float!
+  status: TransactionStatus!
+  timeStamp: Float!
+  txHash: String!
+}
+
+type OnchainTransaction {
+  amount: Float!
+  blockHash: String!
+  blockHeight: Float!
+  destAddresses: [String!]!
+  label: String!
+  numConfirmations: Float!
+  rawTxHex: String!
+  timeStamp: Float!
+  totalFees: Float!
+  txHash: String!
+}
+
 input PaginationInputType {
-  limit: Int
-  skip: Int
+  limit: Int = 0
+  skip: Int = 0
 }
 
 type PlaidCreateLinkToken {
@@ -429,19 +561,26 @@ type PlaidExchangePublicToken {
 }
 
 type Query {
+  checkLightningStatus(data: CheckLightningStatusDto!): CheckLightningStatus
+  checkOnChainStatus(data: CheckOnChainStatusDto!): CheckOnChainStatus
   exchangePublicToken(data: ExchangeTokenDto!): PlaidExchangePublicToken
   getBankAccount(data: GetBankAccountDto!): GetBankAccount
   getBankAccounts: GetBankAccounts
   getBankTransfer(data: GetBankTransferDto!): GetBankTransfer
   getBankTransfers(data: GetBankTransfersDto!): GetBankTransfers
-  getBtcAddress: getBtcAddress
-  getBtcAddresses: getBtcAddresses
+  getBtcAddresses: GetBtcAddresses
+  getChainInvoice(data: GetChainInvoiceDto!): GetChainInvoice
   getCurrentUser: Me
+  getInstitution(data: GetInstitutionDto!): GetInstitutionById
+  getInstitutions: GetInstitutions
+  getLightningInvoice(data: GetLightningInvoiceDto!): GetLightningInvoice
   getMyBankAccounts: GetMyBankAccounts
+  getMyBtcAddress: GetBtcAddress
   getMyContacts(Pagination: PaginationInputType): GetMyContacts
   getMyPaymentRequests(Pagination: PaginationInputType): GetMyPaymentRequests
   getMyWallet: GetMeWallet
   getMyWalletTransactions(Pagination: PaginationInputType): GetMyWalletTransactions
+  getNodeTransactions(Pagination: PaginationInputType): GetNodeTransactions
   getPaymentRequest(data: GetPaymentRequestDto!): GetPaymentRequest
   getPaymentRequests(Pagination: PaginationInputType): GetPaymentRequests
   getTransaction(data: GetTransactionDto!): GetTransaction
@@ -450,7 +589,9 @@ type Query {
   getUsers(Pagination: PaginationInputType): GetUsers
   getWallet(data: GetWalletDto!): GetWallet
   getWallets(Pagination: PaginationInputType): GetWallets
-  lightningGetTransactions(Pagination: PaginationInputType): LndGetTransactions
+  lookupLightningInvoice(data: LookupLightningInvoiceDto!): LookupLightningInvoice
+  lookupOnchainTransaction(data: LookupOnChainTransactionDto!): LookupOnchainTransaction
+  searchUser(data: SearchUserDto!): SearchUser
 }
 
 type Register {
@@ -466,6 +607,7 @@ input RegisterDto {
   lastName: String!
   password: String!
   phoneNumber: String!
+  username: String!
 }
 
 type RespondPaymentRequest {
@@ -479,6 +621,16 @@ input RespondPaymentRequestDto {
   paymentRequestId: String!
 }
 
+type SearchUser {
+  data: UserSchema
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input SearchUserDto {
+  searchInput: String!
+}
+
 type SendForgotPassword {
   data: String
   errors: [ApiError!]
@@ -487,18 +639,6 @@ type SendForgotPassword {
 
 input SendForgotPasswordDto {
   email: String!
-}
-
-type SendInAppLightningPayment {
-  data: TransactionSchema
-  errors: [ApiError!]
-  success: Boolean!
-}
-
-input SendInAppLightningPaymentDto {
-  description: String!
-  paymentRequest: String!
-  walletId: String!
 }
 
 type SendInAppPayment {
@@ -515,15 +655,29 @@ input SendInAppPaymentDto {
   walletId: String
 }
 
-type SendOutAppLightningPayment {
+type SendLightningPayment {
   data: TransactionSchema
   errors: [ApiError!]
   success: Boolean!
 }
 
-input SendOutAppLightningPaymentDto {
-  description: String!
+input SendLightningPaymentDto {
   paymentRequest: String!
+}
+
+type SendOnchainPayment {
+  data: TransactionSchema
+  errors: [ApiError!]
+  success: Boolean!
+}
+
+input SendOnchainPaymentDto {
+  """Bitcoin Address"""
+  address: String!
+
+  """Bitcoin Amount"""
+  amount: Float!
+  description: String!
 }
 
 type SendPaymentRequest {
@@ -547,6 +701,7 @@ type TokenResponse {
 
 """Transaction method"""
 enum TransactionMethod {
+  IN_APP
   LIGHTNING
   ON_CHAIN
 }
@@ -557,6 +712,7 @@ type TransactionRequestSchema {
   id: ID!
   requestFrom: String!
   requestTo: String!
+  settledAt: String
   status: TransactionRequestStatus!
   transaction: TransactionSchema!
 }
@@ -572,6 +728,7 @@ enum TransactionRequestStatus {
 
 type TransactionSchema {
   amount: Float!
+  amountLessFee: Float!
   btcAmount: Float!
   btcExchangeRate: Float!
   createdAt: String!
@@ -581,6 +738,8 @@ type TransactionSchema {
   id: ID!
   method: TransactionMethod!
   networkFee: Float!
+  paidAmount: Float!
+  settledAt: String
   status: TransactionStatus!
   toWalletId: String!
   transactionFee: Float!
@@ -588,10 +747,11 @@ type TransactionSchema {
 
 """Transaction status"""
 enum TransactionStatus {
-  DONE
   EXPIRED
+  PAID
+  PARTIALLY_PAID
   PENDING
-  UNKNOWN
+  UNPAID
 }
 
 type UserSchema {
@@ -608,6 +768,7 @@ type UserSchema {
   phoneNumber: String!
   phoneNumberVerified: Boolean!
   twoFactorVerified: Boolean!
+  username: String!
 }
 
 type WalletSchema {

@@ -38,6 +38,10 @@ export const ProfileScreen = observer(function ProfileScreen() {
 
   const settingList = [
     {
+      label: "Username",
+      content: currentUser.username || "Unknown",
+    },
+    {
       label: "Name",
       content: currentUser.name,
     },
@@ -49,10 +53,10 @@ export const ProfileScreen = observer(function ProfileScreen() {
       label: "Email address",
       content: currentUser.email,
     },
-    {
-      label: "Phone number",
-      content: currentUser.phoneNumber,
-    },
+    // {
+    //   label: "Phone number",
+    //   content: currentUser.phoneNumber,
+    // },
     {
       label: "Created date",
       content: moment.unix(parseInt(currentUser.createdAt)).format("DD-MM-YYYY"),

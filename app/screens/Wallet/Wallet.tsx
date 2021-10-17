@@ -178,7 +178,7 @@ export const WalletScreen = observer(function WalletScreen() {
 
   return (
     <View testID="WalletScreen" style={Style.Container}>
-      <Screen unsafe={loading} preset={loading ? "fixed" : "scroll"}>
+      <Screen unsafe={true} preset={loading ? "fixed" : "scroll"}>
         {loading ? (
           <NeutronpaySpinner style={{ marginTop: -115 }} />
         ) : (

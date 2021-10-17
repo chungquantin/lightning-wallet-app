@@ -1,4 +1,4 @@
-query getBankAccounts{
+query getBankAccounts() {
     getBankAccounts{
         data{
             accountId
@@ -19,6 +19,7 @@ query getBankAccounts{
             }
             id
             institution{
+                id
                 institutionId
                 institutionLogo
                 institutionName

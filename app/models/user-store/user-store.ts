@@ -17,10 +17,12 @@ export const UserStoreModel = types
   .extend(withEnvironment)
   .actions((self) => ({
     saveUserContacts: (userContactsSnapshot: UserSnapshot[]) => {
-      self.contacts.replace(userContactsSnapshot)
+      if (isAlive(self.contacts)) {
+        self.contacts.replace(userContactsSnapshot)
+      }
     },
     saveCurrentUser: (userSnapshot: UserSnapshot) => {
-      if (isAlive(self.contacts)) {
+      if (isAlive(self.currentUser)) {
         self.currentUser = userSnapshot
       }
     },

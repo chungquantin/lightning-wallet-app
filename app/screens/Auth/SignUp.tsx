@@ -22,6 +22,7 @@ export const SignUpScreen = observer(function SignUpScreen() {
     confirmPassword: string
     firstName: string
     lastName: string
+    username: string
   }
   const {
     formValues,
@@ -35,6 +36,7 @@ export const SignUpScreen = observer(function SignUpScreen() {
       email: "",
       password: "",
       confirmPassword: "",
+      username: "",
       firstName: "",
       lastName: "",
     },
@@ -49,6 +51,7 @@ export const SignUpScreen = observer(function SignUpScreen() {
             email: formValues.email,
             firstName: formValues.firstName,
             lastName: formValues.lastName,
+            username: formValues.username,
             avatar: "",
             password: formValues.password,
             phoneNumber: Math.floor(Math.random() * (10000000 - 99999999 + 1)) + 10000000 + "",
@@ -87,6 +90,16 @@ export const SignUpScreen = observer(function SignUpScreen() {
           <InputField
             isPassword={false}
             style={{ marginTop: 30 }}
+            value={formValues.username}
+            icon="person"
+            txLabel="common.form.username.label"
+            txPlaceholder="common.form.username.placeholder"
+            onFocusHandler={() => handleResetFieldError("username")}
+            onChangeHandler={(text) => handleSetFieldValue("username", text)}
+            error={translateError(errors !== {} ? (errors as FormProps).username : "")}
+          />
+          <InputField
+            isPassword={false}
             value={formValues.firstName}
             icon="person"
             txLabel="common.form.firstName.label"

@@ -1,4 +1,4 @@
-query getBankTransfer($data: GetBankTransferDto!){
+query getBankTransfer($data: GetBankTransferDto!) {
     getBankTransfer(data: $data){
         data{
             account_id

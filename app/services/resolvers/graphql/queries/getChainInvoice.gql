@@ -1,0 +1,15 @@
+query getChainInvoice($data: GetChainInvoiceDto!) {
+    getChainInvoice(data: $data){
+        data{
+            address
+            createdAt
+            id
+            userId
+        }
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

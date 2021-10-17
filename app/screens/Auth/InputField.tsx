@@ -46,6 +46,7 @@ export const InputField = observer(function InputField(props: Props) {
             tx={props.txLabel}
           />
           <TextInput
+            autoCapitalize="none"
             onFocus={props.onFocusHandler}
             secureTextEntry={props.isPassword}
             style={props.error ? { color: color.error } : { color: color.text }}

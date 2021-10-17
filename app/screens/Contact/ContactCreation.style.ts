@@ -24,6 +24,42 @@ const Style = StyleSheet.create({
     marginTop: 20,
     flexDirection: "row",
   },
+  EmptyContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
+  },
+  EmptyContainerHeader: {
+    color: color.palette.offGray,
+    fontSize: 40,
+    marginBottom: 10,
+  },
+  EmptyContainerSubHeader: {
+    color: color.palette.offGray,
+    fontSize: 16,
+    marginBottom: 100,
+  },
+  RowItemContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    paddingHorizontal: 30,
+    marginTop: 15,
+  },
+  ContactInfoInner: {
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 20,
+    backgroundColor: color.secondaryBackground,
+    width: "100%",
+    borderRadius: 15,
+  },
+  ContactInfoContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    marginTop: 100,
+  },
 })
 
 export default Style

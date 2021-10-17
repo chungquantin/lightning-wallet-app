@@ -1,19 +1,27 @@
+
 const fs = require('fs');
 const path = require('path');
 
+module.exports.checkLightningStatus = fs.readFileSync(path.join(__dirname, 'checkLightningStatus.gql'), 'utf8');
+module.exports.checkOnChainStatus = fs.readFileSync(path.join(__dirname, 'checkOnChainStatus.gql'), 'utf8');
 module.exports.exchangePublicToken = fs.readFileSync(path.join(__dirname, 'exchangePublicToken.gql'), 'utf8');
 module.exports.getBankAccount = fs.readFileSync(path.join(__dirname, 'getBankAccount.gql'), 'utf8');
 module.exports.getBankAccounts = fs.readFileSync(path.join(__dirname, 'getBankAccounts.gql'), 'utf8');
 module.exports.getBankTransfer = fs.readFileSync(path.join(__dirname, 'getBankTransfer.gql'), 'utf8');
 module.exports.getBankTransfers = fs.readFileSync(path.join(__dirname, 'getBankTransfers.gql'), 'utf8');
-module.exports.getBtcAddress = fs.readFileSync(path.join(__dirname, 'getBtcAddress.gql'), 'utf8');
 module.exports.getBtcAddresses = fs.readFileSync(path.join(__dirname, 'getBtcAddresses.gql'), 'utf8');
+module.exports.getChainInvoice = fs.readFileSync(path.join(__dirname, 'getChainInvoice.gql'), 'utf8');
 module.exports.getCurrentUser = fs.readFileSync(path.join(__dirname, 'getCurrentUser.gql'), 'utf8');
+module.exports.getInstitution = fs.readFileSync(path.join(__dirname, 'getInstitution.gql'), 'utf8');
+module.exports.getInstitutions = fs.readFileSync(path.join(__dirname, 'getInstitutions.gql'), 'utf8');
+module.exports.getLightningInvoice = fs.readFileSync(path.join(__dirname, 'getLightningInvoice.gql'), 'utf8');
 module.exports.getMyBankAccounts = fs.readFileSync(path.join(__dirname, 'getMyBankAccounts.gql'), 'utf8');
+module.exports.getMyBtcAddress = fs.readFileSync(path.join(__dirname, 'getMyBtcAddress.gql'), 'utf8');
 module.exports.getMyContacts = fs.readFileSync(path.join(__dirname, 'getMyContacts.gql'), 'utf8');
 module.exports.getMyPaymentRequests = fs.readFileSync(path.join(__dirname, 'getMyPaymentRequests.gql'), 'utf8');
 module.exports.getMyWallet = fs.readFileSync(path.join(__dirname, 'getMyWallet.gql'), 'utf8');
 module.exports.getMyWalletTransactions = fs.readFileSync(path.join(__dirname, 'getMyWalletTransactions.gql'), 'utf8');
+module.exports.getNodeTransactions = fs.readFileSync(path.join(__dirname, 'getNodeTransactions.gql'), 'utf8');
 module.exports.getPaymentRequest = fs.readFileSync(path.join(__dirname, 'getPaymentRequest.gql'), 'utf8');
 module.exports.getPaymentRequests = fs.readFileSync(path.join(__dirname, 'getPaymentRequests.gql'), 'utf8');
 module.exports.getTransaction = fs.readFileSync(path.join(__dirname, 'getTransaction.gql'), 'utf8');
@@ -22,4 +30,6 @@ module.exports.getUser = fs.readFileSync(path.join(__dirname, 'getUser.gql'), 'u
 module.exports.getUsers = fs.readFileSync(path.join(__dirname, 'getUsers.gql'), 'utf8');
 module.exports.getWallet = fs.readFileSync(path.join(__dirname, 'getWallet.gql'), 'utf8');
 module.exports.getWallets = fs.readFileSync(path.join(__dirname, 'getWallets.gql'), 'utf8');
-module.exports.lightningGetTransactions = fs.readFileSync(path.join(__dirname, 'lightningGetTransactions.gql'), 'utf8');
+module.exports.lookupLightningInvoice = fs.readFileSync(path.join(__dirname, 'lookupLightningInvoice.gql'), 'utf8');
+module.exports.lookupOnchainTransaction = fs.readFileSync(path.join(__dirname, 'lookupOnchainTransaction.gql'), 'utf8');
+module.exports.searchUser = fs.readFileSync(path.join(__dirname, 'searchUser.gql'), 'utf8');

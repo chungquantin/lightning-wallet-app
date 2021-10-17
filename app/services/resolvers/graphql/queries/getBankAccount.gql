@@ -1,4 +1,4 @@
-query getBankAccount($data: GetBankAccountDto!){
+query getBankAccount($data: GetBankAccountDto!) {
     getBankAccount(data: $data){
         data{
             accountId
@@ -19,6 +19,7 @@ query getBankAccount($data: GetBankAccountDto!){
             }
             id
             institution{
+                id
                 institutionId
                 institutionLogo
                 institutionName

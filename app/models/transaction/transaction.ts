@@ -3,7 +3,9 @@ import { Instance, SnapshotOut, types } from "mobx-state-tree"
 export const TransactionModel = types.model("Transaction").props({
   id: types.maybe(types.string),
   description: types.maybe(types.string),
-  status: types.maybe(types.enumeration(["PENDING", "DONE", "EXPIRED", "UNKNOWN"])),
+  status: types.maybe(
+    types.enumeration(["PENDING", "PAID", "EXPIRED", "UNPAID", "PARTIALLY_PAID"]),
+  ),
   currency: types.maybe(types.enumeration(["USD", "VND", "CAD"])),
   method: types.maybe(types.enumeration(["LIGHTNING", "ON_CHAIN"])),
   networkFee: types.maybe(types.number),

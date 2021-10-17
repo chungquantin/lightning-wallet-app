@@ -1,0 +1,34 @@
+query getWallet($data: GetWalletDto!) {
+    getWallet(data: $data){
+        data{
+            balance
+            createdAt
+            defaultCurrency
+            id
+            transactions{
+                amount
+                amountLessFee
+                btcAmount
+                btcExchangeRate
+                createdAt
+                currency
+                description
+                fromWalletId
+                id
+                method
+                networkFee
+                paidAmount
+                settledAt
+                status
+                toWalletId
+                transactionFee
+            }
+            userId
+        }
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

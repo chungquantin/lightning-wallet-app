@@ -1,6 +1,10 @@
 import { formValidateUtil, validationUtil } from "../../utils"
 
 const validations = {
+  username: [
+    { fn: validationUtil.require, error: "FORM_VALIDATION_REQUIRED" },
+    { fn: validationUtil.username, error: "FORM_VALIDATION_USERNAME" },
+  ],
   firstName: [
     { fn: validationUtil.require, error: "FORM_VALIDATION_REQUIRED" },
     {

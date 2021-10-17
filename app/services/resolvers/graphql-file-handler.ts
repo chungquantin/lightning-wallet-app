@@ -11,7 +11,7 @@ export type GQLModules = {
   }
 }
 
-const gqlModules: GQLModules = {
+const gqlModules = {
   mutations: {
     /** User */
     login: loader("./user/mutations/login.gql"),
@@ -26,8 +26,7 @@ const gqlModules: GQLModules = {
     /** Wallet */
     cancelPaymentRequest: loader("./wallet/mutations/cancelPaymentRequest.gql"),
     sendInAppPayment: loader("./wallet/mutations/sendInAppPayment.gql"),
-    sendInAppLightningPayment: loader("./wallet/mutations/sendInAppLightningPayment.gql"),
-    sendOutAppLightningPayment: loader("./wallet/mutations/sendOutAppLightningPayment.gql"),
+    sendLightningPayment: loader("./wallet/mutations/sendLightningPayment.gql"),
     respondPaymentRequest: loader("./wallet/mutations/respondPaymentRequest.gql"),
   },
   queries: {
@@ -35,8 +34,9 @@ const gqlModules: GQLModules = {
     getCurrentUser: loader("./user/queries/getCurrentUser.gql"),
     getMyContacts: loader("./user/queries/getMyContacts.gql"),
     getUser: loader("./user/queries/getUser.gql"),
-    getWallet: loader("./wallet/queries/getWallet.gql"),
+    searchUser: loader("./user/queries/searchUser.gql"),
     /** Wallet */
+    getWallet: loader("./wallet/queries/getWallet.gql"),
     getMyWallet: loader("./wallet/queries/getMyWallet.gql"),
     getMyWalletTransactions: loader("./wallet/queries/getMyWalletTransactions.gql"),
     getMyPaymentRequests: loader("./wallet/queries/getMyPaymentRequests.gql"),

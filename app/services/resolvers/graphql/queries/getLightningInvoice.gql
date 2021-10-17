@@ -1,0 +1,18 @@
+query getLightningInvoice($data: GetLightningInvoiceDto!) {
+    getLightningInvoice(data: $data){
+        data{
+            addIndex
+            createdAt
+            expiresAt
+            id
+            payReq
+            rHash
+            userId
+        }
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

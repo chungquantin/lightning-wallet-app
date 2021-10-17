@@ -3,7 +3,7 @@ import { color, textStyle } from "../../theme"
 
 export const Style = StyleSheet.create({
   Container: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 25,
     justifyContent: "flex-start",
     borderBottomColor: color.borderLight,
     borderWidth: 1,
@@ -13,11 +13,11 @@ export const Style = StyleSheet.create({
   },
   ItemTitle: {
     color: color.text,
-    fontSize: textStyle.normalSize,
+    fontSize: 16,
   },
   ItemDescription: {
     color: color.palette.offGray,
-    fontSize: textStyle.smallSize,
+    fontSize: 14,
     marginTop: 2,
   },
 })

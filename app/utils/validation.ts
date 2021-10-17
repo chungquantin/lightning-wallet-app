@@ -16,6 +16,8 @@ const password = (value) =>
     // eslint-disable-next-line max-len
     "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~])(?=.{8,})",
   ).test(value)
+const username = (value) =>
+  new RegExp("^(?=[a-zA-Z0-9._]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$").test(value)
 
 export default {
   require,
@@ -26,6 +28,7 @@ export default {
   maxLength,
   min,
   max,
+  username,
   notContainNumber,
   containNumber,
   containLowerCharacter,

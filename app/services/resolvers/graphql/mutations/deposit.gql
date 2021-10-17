@@ -1,4 +1,4 @@
-mutation deposit($data: WithdrawDto!){
+mutation deposit($data: WithdrawDto!) {
     deposit(data: $data){
         data
         errors{

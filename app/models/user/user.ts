@@ -14,6 +14,7 @@ export const UserModel = types.model("User").props({
   createdAt: types.maybe(types.string),
   forgotPasswordLock: types.maybe(types.boolean),
   name: types.maybe(types.string),
+  username: types.maybe(types.string),
 })
 
 type UserType = Instance<typeof UserModel>

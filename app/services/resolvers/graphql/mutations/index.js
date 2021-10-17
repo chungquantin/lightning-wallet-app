@@ -1,8 +1,10 @@
+
 const fs = require('fs');
 const path = require('path');
 
 module.exports.addNewContact = fs.readFileSync(path.join(__dirname, 'addNewContact.gql'), 'utf8');
 module.exports.cancelPaymentRequest = fs.readFileSync(path.join(__dirname, 'cancelPaymentRequest.gql'), 'utf8');
+module.exports.checkTransactionStatus = fs.readFileSync(path.join(__dirname, 'checkTransactionStatus.gql'), 'utf8');
 module.exports.connectBankAccount = fs.readFileSync(path.join(__dirname, 'connectBankAccount.gql'), 'utf8');
 module.exports.connectDebitCard = fs.readFileSync(path.join(__dirname, 'connectDebitCard.gql'), 'utf8');
 module.exports.createLinkToken = fs.readFileSync(path.join(__dirname, 'createLinkToken.gql'), 'utf8');
@@ -16,7 +18,7 @@ module.exports.logout = fs.readFileSync(path.join(__dirname, 'logout.gql'), 'utf
 module.exports.register = fs.readFileSync(path.join(__dirname, 'register.gql'), 'utf8');
 module.exports.respondPaymentRequest = fs.readFileSync(path.join(__dirname, 'respondPaymentRequest.gql'), 'utf8');
 module.exports.sendForgotPasswordEmail = fs.readFileSync(path.join(__dirname, 'sendForgotPasswordEmail.gql'), 'utf8');
-module.exports.sendInAppLightningPayment = fs.readFileSync(path.join(__dirname, 'sendInAppLightningPayment.gql'), 'utf8');
 module.exports.sendInAppPayment = fs.readFileSync(path.join(__dirname, 'sendInAppPayment.gql'), 'utf8');
-module.exports.sendOutAppLightningPayment = fs.readFileSync(path.join(__dirname, 'sendOutAppLightningPayment.gql'), 'utf8');
+module.exports.sendLightningPayment = fs.readFileSync(path.join(__dirname, 'sendLightningPayment.gql'), 'utf8');
+module.exports.sendOnchainPayment = fs.readFileSync(path.join(__dirname, 'sendOnchainPayment.gql'), 'utf8');
 module.exports.sendPaymentRequest = fs.readFileSync(path.join(__dirname, 'sendPaymentRequest.gql'), 'utf8');

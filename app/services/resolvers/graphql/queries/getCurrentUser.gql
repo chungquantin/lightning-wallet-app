@@ -1,35 +1,7 @@
-query getCurrentUser{
+query getCurrentUser() {
     getCurrentUser{
         data{
             avatar
-            contacts{
-                avatar
-                contacts{
-                    avatar
-                    createdAt
-                    email
-                    emailVerified
-                    firstName
-                    forgotPasswordLock
-                    id
-                    lastName
-                    name
-                    phoneNumber
-                    phoneNumberVerified
-                    twoFactorVerified
-                }
-                createdAt
-                email
-                emailVerified
-                firstName
-                forgotPasswordLock
-                id
-                lastName
-                name
-                phoneNumber
-                phoneNumberVerified
-                twoFactorVerified
-            }
             createdAt
             email
             emailVerified
@@ -41,6 +13,7 @@ query getCurrentUser{
             phoneNumber
             phoneNumberVerified
             twoFactorVerified
+            username
         }
         errors{
             message
