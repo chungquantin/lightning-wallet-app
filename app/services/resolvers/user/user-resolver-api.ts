@@ -75,7 +75,7 @@ export class UserResolverAPI extends ResolverApi {
   }
 
   public async getUser(userId: string): Promise<GetUser> {
-    const res = await this.query<GetUser, GetUserDto>("getMyContacts", {
+    const res = await this.query<GetUser, GetUserDto>("getUser", {
       data: {
         userId,
       },

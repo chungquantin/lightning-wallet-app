@@ -7,7 +7,6 @@ export * from "./Setting/Setting"
 export * from "./Plaid/Plaid"
 // Send
 export * from "./Send/Send"
-export * from "./Send/SendInAppRequest"
 export * from "./Send/SendOutAppRequest"
 // Receive
 export * from "./Receive/Receive"

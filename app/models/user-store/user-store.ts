@@ -3,7 +3,15 @@ import { withEnvironment } from "../extensions/with-environment"
 import { User, UserModel, UserSnapshot } from "../user/user"
 import _ from "underscore"
 import { UserResolverAPI } from "../../services/resolvers"
-import { GetMyContacts, Login, LoginDto, Me, Register, RegisterDto } from "../../generated/graphql"
+import {
+  GetMyContacts,
+  GetUser,
+  Login,
+  LoginDto,
+  Me,
+  Register,
+  RegisterDto,
+} from "../../generated/graphql"
 import { clear, saveString } from "../../utils/storage"
 import { STORAGE_KEY } from "../../constants/AsyncStorageKey"
 import { setUndefinedAl } from "../../utils/misc"
@@ -13,6 +21,7 @@ export const UserStoreModel = types
   .props({
     currentUser: types.optional(UserModel, {}),
     contacts: types.optional(types.array(UserModel), []),
+    contact: types.optional(UserModel, {}),
   })
   .extend(withEnvironment)
   .actions((self) => ({
@@ -24,6 +33,11 @@ export const UserStoreModel = types
     saveCurrentUser: (userSnapshot: UserSnapshot) => {
       if (isAlive(self.currentUser)) {
         self.currentUser = userSnapshot
+      }
+    },
+    saveContact: (userSnapshot: UserSnapshot) => {
+      if (isAlive(self.contact)) {
+        self.contact = userSnapshot
       }
     },
     saveTokens: ({ accessToken, refreshToken }: Record<"accessToken" | "refreshToken", string>) => {
@@ -154,6 +168,23 @@ export const UserStoreModel = types
           return result as Me
         } catch (error) {
           console.tron.error(error.message, "fetchCurrentUser")
+          throw error
+        }
+      }),
+      fetchContact: flow(function* (id: string) {
+        console.log("UserStore - FetchContact")
+        try {
+          const userApi = new UserResolverAPI()
+          const result = yield userApi.getUser(id)
+
+          if (result.success) {
+            self.saveContact(result.data)
+          } else {
+            __DEV__ && console.tron.log(result.errors)
+          }
+          return result as GetUser
+        } catch (error) {
+          console.tron.error(error.message, "fetchContact")
           throw error
         }
       }),

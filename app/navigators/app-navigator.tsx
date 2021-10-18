@@ -14,7 +14,6 @@ import {
   ReceiveInAppRequestScreen,
   ReceiveOutAppRequestScreen,
   ReceiveScreen,
-  SendInAppRequestScreen,
   SendOutAppRequestScreen,
   SendScreen,
   SignInScreen,
@@ -130,13 +129,6 @@ const AppStack = observer(() => {
                 headerTitle: i18n.t("navigation.scanQrCode"),
               }}
               component={SendOutAppRequestScreen}
-            />
-            <Stack.Screen
-              name="SendInAppRequest"
-              options={{
-                headerTitle: i18n.t("navigation.sendToFriend"),
-              }}
-              component={SendInAppRequestScreen}
             />
             {/* Receive screen stack */}
             <Stack.Screen name="Receive" component={ReceiveScreen} />

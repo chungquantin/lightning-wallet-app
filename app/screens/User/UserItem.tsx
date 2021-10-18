@@ -15,8 +15,6 @@ interface Props {
 }
 
 export const UserItem = observer(function UserItem({ user, onPressHandler, style }: Props) {
-  isAlive(user)
-
   return (
     <TouchableOpacity onPress={onPressHandler}>
       <List.Item

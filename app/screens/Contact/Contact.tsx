@@ -53,9 +53,9 @@ export const ContactScreen = observer(function ContactScreen() {
   }, [formValues.user])
 
   const handler = {
-    OpenUserDetail: (user: User) =>
+    OpenUserDetail: (userId: string) =>
       navigator.navigate("UserDetail", {
-        user,
+        id: userId,
       }),
     AddNewContact: () => navigator.navigate("ContactCreation"),
   }
@@ -109,7 +109,7 @@ export const ContactScreen = observer(function ContactScreen() {
             marginBottom: 5,
           }}
           user={contact}
-          onPressHandler={() => handler.OpenUserDetail(contact)}
+          onPressHandler={() => handler.OpenUserDetail(contact.id)}
         />
       ))}
     </View>

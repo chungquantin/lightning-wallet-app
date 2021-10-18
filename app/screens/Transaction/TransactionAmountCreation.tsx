@@ -16,8 +16,9 @@ import { color } from "../../theme"
 interface TransactionAmountCreationRouteProps extends ParamListBase {
   InvoiceDetail: {
     user: {
-      name: string
+      username: string
       avatar: string
+      id: string
     }
     description: string
     action: "RECEIVE" | "SEND"
@@ -50,11 +51,12 @@ export const TransactionAmountCreationScreen = observer(function TransactionAmou
         description: description,
         amount: formValues.amount,
         currency: formValues.currency,
+        action,
       }
       switch (action) {
         case "RECEIVE":
           return type === "IN_APP"
-            ? navigator.navigate("ReceiveInAppRequest", payload)
+            ? navigator.navigate("ReceiveInAppRequest", { ...payload, user })
             : navigator.navigate("ReceiveOutAppRequest", payload)
         case "SEND":
           return type === "IN_APP"

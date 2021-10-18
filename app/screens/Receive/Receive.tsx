@@ -13,6 +13,8 @@ import { useIsFocused, useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { NormalSpinner } from "../Reusable/NormalSpinner"
+import { validationUtil } from "../../utils"
+import { UserResolverAPI } from "../../services/resolvers"
 
 export const ReceiveScreen = observer(function ReceiveScreen() {
   const [loading, setLoading] = React.useState(false)
@@ -29,6 +31,7 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
   })
 
   const [contactList, setContactList] = React.useState<User[]>(userStore.contacts)
+  const [nonContact, setNonContact] = React.useState<User>(null)
 
   const handler = {
     OutAppRequest: () => {
@@ -41,12 +44,19 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
         type: "OUT_APP",
       })
     },
-    InAppRequest: ({ id }: Pick<User, "id">) => {
+    InAppRequest: (user: User) => {
       if (formValues.description === "") {
         return Alert.alert(I18n.t("FORM_VALIDATION_DESCRIPTION_INVALID"))
       }
-      return navigator.navigate("ReceiveInAppRequest", {
-        userId: id,
+      return navigator.navigate("TransactionAmountCreation", {
+        description: formValues.description,
+        user: {
+          id: user.id,
+          username: user.username,
+          avatar: user.avatar,
+        },
+        action: "RECEIVE",
+        type: "IN_APP",
       })
     },
   }
@@ -63,13 +73,38 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
   }, [isFocused])
 
   React.useEffect(() => {
-    if (formValues.user !== "") {
+    const fetchContact = async () => {
+      if (
+        tab === 1 &&
+        formValues.user !== nonContact?.username &&
+        formValues.user !== nonContact?.email &&
+        validationUtil.username(formValues.user)
+      ) {
+        setLoading(true)
+        const searchUserResponse = await new UserResolverAPI().searchUser(formValues.user)
+        if (searchUserResponse.success) {
+          if (searchUserResponse.data.id !== userStore.currentUser.id) {
+            setNonContact(searchUserResponse.data)
+          } else {
+            setNonContact(null)
+          }
+        } else {
+          setNonContact(null)
+        }
+        setLoading(false)
+      }
+    }
+    fetchContact()
+  }, [formValues.user, tab])
+
+  React.useEffect(() => {
+    if (formValues.user !== "" && tab === 1) {
       const filteredContactList = userStore.getContactsByNameAndEmail(formValues.user)
       setContactList((list) => (list = filteredContactList))
     } else {
       setContactList(userStore.contacts)
     }
-  }, [formValues.user])
+  }, [formValues.user, tab])
 
   const RenderMethodContainer = () => (
     <View style={Style.MethodContainer}>
@@ -107,14 +142,7 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
       <FlatList
         data={listData}
         renderItem={({ item }) => (
-          <UserItem
-            user={item}
-            onPressHandler={() =>
-              handler.InAppRequest({
-                id: item.id,
-              })
-            }
-          />
+          <UserItem user={item} onPressHandler={() => handler.InAppRequest(item)} />
         )}
         keyExtractor={(item) => item.id}
         ListEmptyComponent={() => (
@@ -138,7 +166,7 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
     },
     {
       label: I18n.t("common.request"),
-      component: <RenderTabComponent listData={[]} />,
+      component: <RenderTabComponent listData={nonContact ? [nonContact] : []} />,
     },
   ]
 
@@ -173,6 +201,7 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
         <View style={Style.Input}>
           <Text tx="common.form.from.label" style={Style.InputLabel} />
           <TextInput
+            autoCapitalize="none"
             style={Style.InputField}
             placeholderTextColor={color.palette.offGray}
             placeholder={I18n.t("common.form.from.placeholder")}
@@ -183,6 +212,7 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
         <View style={Style.Input}>
           <Text tx="common.form.description.label" style={Style.InputLabel} />
           <TextInput
+            autoCapitalize="none"
             style={Style.InputField}
             placeholderTextColor={color.palette.offGray}
             placeholder={I18n.t("common.form.description.placeholder")}

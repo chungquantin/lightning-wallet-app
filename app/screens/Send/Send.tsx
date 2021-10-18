@@ -14,6 +14,8 @@ import { useStores } from "../../models"
 import { LinearGradient } from "expo-linear-gradient"
 import { Ionicons } from "@expo/vector-icons"
 import { NormalSpinner } from "../Reusable/NormalSpinner"
+import { validationUtil } from "../../utils"
+import { UserResolverAPI } from "../../services/resolvers"
 
 export const SendScreen = observer(function SendScreen() {
   const [loading, setLoading] = React.useState(false)
@@ -30,6 +32,7 @@ export const SendScreen = observer(function SendScreen() {
   })
 
   const [contactList, setContactList] = React.useState<User[]>(userStore.contacts)
+  const [nonContact, setNonContact] = React.useState<User>(null)
 
   const handler = {
     OutAppRequest: () => {
@@ -44,31 +47,65 @@ export const SendScreen = observer(function SendScreen() {
       if (formValues.description === "") {
         return Alert.alert("You must enter the description first!")
       }
-      return navigator.navigate("SendInAppRequest", {
-        user,
+      return navigator.navigate("TransactionAmountCreation", {
+        description: formValues.description,
+        action: "SEND",
+        type: "IN_APP",
+        user: {
+          id: user.id,
+          name: `${user.firstName} ${user.lastName}`,
+          avatar: user.avatar,
+        },
       })
     },
   }
 
   React.useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      const fetchUserContactsResponse = await userStore.fetchUserContacts()
-      if (fetchUserContactsResponse.success) {
+    const fetchContact = async () => {
+      if (
+        tab === 1 &&
+        formValues.user !== nonContact?.username &&
+        formValues.user !== nonContact?.email &&
+        validationUtil.username(formValues.user)
+      ) {
+        setLoading(true)
+        const searchUserResponse = await new UserResolverAPI().searchUser(formValues.user)
+        if (searchUserResponse.success) {
+          if (searchUserResponse.data.id !== userStore.currentUser.id) {
+            setNonContact(searchUserResponse.data)
+          } else {
+            setNonContact(null)
+          }
+        } else {
+          setNonContact(null)
+        }
         setLoading(false)
+      }
+    }
+    fetchContact()
+  }, [formValues.user, tab])
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      if (tab === 0) {
+        setLoading(true)
+        const fetchUserContactsResponse = await userStore.fetchUserContacts()
+        if (fetchUserContactsResponse.success) {
+          setLoading(false)
+        }
       }
     }
     fetchData()
   }, [isFocused])
 
   React.useEffect(() => {
-    if (formValues.user !== "") {
+    if (formValues.user !== "" && tab === 0) {
       const filteredContactList = userStore.getContactsByNameAndEmail(formValues.user)
       setContactList((list) => (list = filteredContactList))
     } else {
       setContactList(userStore.contacts)
     }
-  }, [formValues.user])
+  }, [formValues.user, tab])
 
   const RenderTabComponent = ({ listData }: { listData: User[] }) =>
     loading ? (
@@ -101,7 +138,7 @@ export const SendScreen = observer(function SendScreen() {
     },
     {
       label: I18n.t("common.pay"),
-      component: <RenderTabComponent listData={[]} />,
+      component: <RenderTabComponent listData={nonContact ? [nonContact] : []} />,
     },
   ]
 
@@ -152,6 +189,7 @@ export const SendScreen = observer(function SendScreen() {
         <View style={Style.Input}>
           <Text tx="common.form.to.label" style={Style.InputLabel} />
           <TextInput
+            autoCapitalize="none"
             style={Style.InputField}
             placeholderTextColor={color.palette.offGray}
             placeholder={I18n.t("common.form.from.placeholder")}
@@ -165,6 +203,7 @@ export const SendScreen = observer(function SendScreen() {
             <Text style={{ color: color.error }}>*</Text>
           </View>
           <TextInput
+            autoCapitalize="none"
             style={Style.InputField}
             placeholderTextColor={color.palette.offGray}
             placeholder={I18n.t("common.form.description.placeholder")}

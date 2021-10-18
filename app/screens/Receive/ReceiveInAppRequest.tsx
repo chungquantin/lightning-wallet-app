@@ -1,24 +1,89 @@
 import React from "react"
 import { View } from "react-native"
 import { observer } from "mobx-react-lite"
-import { Screen, Text } from "../../components"
+import { Button, Screen, Text } from "../../components"
 import Style from "./ReceiveInAppRequest.style"
-import { ParamListBase, RouteProp, useRoute } from "@react-navigation/native"
-
+import { ParamListBase, RouteProp, useNavigation, useRoute } from "@react-navigation/native"
+import { formatByUnit } from "../../utils/currency"
+import { color } from "../../theme"
+import { Avatar } from "react-native-paper"
+import { FiatCurrency } from "../../generated/graphql"
 interface ReceiveInAppUserRouteProps extends ParamListBase {
   UserDetail: {
-    userId: string
+    user: {
+      id: string
+      username: string
+      avatar: string
+    }
+    description: string
+    amount: string
+    currency: FiatCurrency
   }
 }
 
 export const ReceiveInAppRequestScreen = observer(function ReceiveInAppRequestScreen() {
   const route = useRoute<RouteProp<ReceiveInAppUserRouteProps, "UserDetail">>()
-  const { userId } = route.params
+  const { user, description, amount, currency } = route.params
+  const navigator = useNavigation()
+
+  const RenderTopContainer = React.memo(() => (
+    <>
+      {user && (
+        <View
+          style={{
+            marginBottom: 50,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Avatar.Image
+            source={{
+              uri:
+                user.avatar ||
+                "https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/d07bca98931623.5ee79b6a8fa55.jpg",
+            }}
+            size={100}
+            style={{
+              marginBottom: 20,
+            }}
+          />
+          <Text style={{ fontSize: 18 }}>{user.username || "Unknown"}</Text>
+        </View>
+      )}
+      <Text style={Style.AmountText}>{`${formatByUnit(amount, currency, false)} ${currency}`}</Text>
+      <View style={Style.DescriptionText}>
+        <Text tx="common.form.description.label" />
+        <Text>: </Text>
+        <Text style={{ color: color.palette.green }}>{description}</Text>
+      </View>
+    </>
+  ))
+
+  const RenderBottomContainer = React.memo(() => (
+    <>
+      <View style={Style.ButtonContainer}>
+        <Button onPress={handler.Confirm} style={Style.ConfirmButton}>
+          <Text style={Style.ButtonText} tx="common.confirm" />
+        </Button>
+        <Button onPress={handler.Cancel} style={Style.CancelButton}>
+          <Text style={Style.ButtonText} tx="common.cancel" />
+        </Button>
+      </View>
+    </>
+  ))
+
+  const handler = {
+    Confirm: () => navigator.navigate("TransactionComplete", route.params),
+    Cancel: () => navigator.goBack(),
+  }
 
   return (
     <View testID="ReceiveInAppRequestScreen" style={Style.Container}>
-      <Screen>
-        <Text>User ID: {userId}</Text>
+      <Screen unsafe={true} style={Style.Container}>
+        <View style={Style.InnerContainer}>
+          <RenderTopContainer />
+          <RenderBottomContainer />
+        </View>
       </Screen>
     </View>
   )
