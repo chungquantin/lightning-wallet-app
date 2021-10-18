@@ -8,6 +8,8 @@ import { formatByUnit } from "../../utils/currency"
 import { color } from "../../theme"
 import { Avatar } from "react-native-paper"
 import { FiatCurrency } from "../../generated/graphql"
+import { useStores } from "../../models"
+import NeutronpaySpinner from "../Reusable/NeutronpaySpinner"
 interface ReceiveInAppUserRouteProps extends ParamListBase {
   UserDetail: {
     user: {
@@ -16,14 +18,16 @@ interface ReceiveInAppUserRouteProps extends ParamListBase {
       avatar: string
     }
     description: string
-    amount: string
+    amount: number
     currency: FiatCurrency
   }
 }
 
 export const ReceiveInAppRequestScreen = observer(function ReceiveInAppRequestScreen() {
+  const [loading, setLoading] = React.useState(false)
   const route = useRoute<RouteProp<ReceiveInAppUserRouteProps, "UserDetail">>()
   const { user, description, amount, currency } = route.params
+  const { walletStore } = useStores()
   const navigator = useNavigation()
 
   const RenderTopContainer = React.memo(() => (
@@ -73,7 +77,20 @@ export const ReceiveInAppRequestScreen = observer(function ReceiveInAppRequestSc
   ))
 
   const handler = {
-    Confirm: () => navigator.navigate("TransactionComplete", route.params),
+    Confirm: async () => {
+      setLoading(true)
+      const sendPaymentRequest = await walletStore.sendPaymentRequest({
+        amount,
+        currency,
+        description,
+        method: "",
+        userId: user.id,
+      })
+      if (sendPaymentRequest?.success) {
+        setLoading(false)
+        navigator.navigate("TransactionComplete", route.params)
+      }
+    },
     Cancel: () => navigator.goBack(),
   }
 
@@ -81,8 +98,14 @@ export const ReceiveInAppRequestScreen = observer(function ReceiveInAppRequestSc
     <View testID="ReceiveInAppRequestScreen" style={Style.Container}>
       <Screen unsafe={true} style={Style.Container}>
         <View style={Style.InnerContainer}>
-          <RenderTopContainer />
-          <RenderBottomContainer />
+          {loading ? (
+            <NeutronpaySpinner />
+          ) : (
+            <>
+              <RenderTopContainer />
+              <RenderBottomContainer />
+            </>
+          )}
         </View>
       </Screen>
     </View>

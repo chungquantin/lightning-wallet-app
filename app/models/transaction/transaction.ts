@@ -7,7 +7,7 @@ export const TransactionModel = types.model("Transaction").props({
     types.enumeration(["PENDING", "PAID", "EXPIRED", "UNPAID", "PARTIALLY_PAID"]),
   ),
   currency: types.maybe(types.enumeration(["USD", "VND", "CAD"])),
-  method: types.maybe(types.enumeration(["LIGHTNING", "ON_CHAIN"])),
+  method: types.maybe(types.enumeration(["LIGHTNING", "ON_CHAIN", "OTHER"])),
   networkFee: types.maybe(types.number),
   transactionFee: types.maybe(types.number),
   createdAt: types.maybe(types.string),

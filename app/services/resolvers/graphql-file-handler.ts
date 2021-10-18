@@ -26,6 +26,7 @@ const gqlModules = {
     /** Wallet */
     cancelPaymentRequest: loader("./wallet/mutations/cancelPaymentRequest.gql"),
     sendInAppPayment: loader("./wallet/mutations/sendInAppPayment.gql"),
+    sendPaymentRequest: loader("./wallet/mutations/sendPaymentRequest.gql"),
     sendLightningPayment: loader("./wallet/mutations/sendLightningPayment.gql"),
     respondPaymentRequest: loader("./wallet/mutations/respondPaymentRequest.gql"),
   },

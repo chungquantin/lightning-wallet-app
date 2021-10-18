@@ -7,9 +7,10 @@ import {
   GetWallet,
   GetWalletDto,
   RespondPaymentRequest,
-  SendInAppLightningPayment,
   SendInAppPayment,
-  SendOutAppLightningPayment,
+  SendInAppPaymentDto,
+  SendPaymentRequest,
+  SendRequestPaymentDto,
 } from "../../../generated/graphql"
 import { STORAGE_KEY } from "../../../constants/AsyncStorageKey"
 import { loadString } from "../../../utils/storage"
@@ -26,7 +27,7 @@ export class WalletResolverApi extends ResolverApi {
       : `${API_URL}:3000/graphql`
   }
 
-  public async getWallet(walletId: string): Promise<GetWallet> {
+  public async getWallet(id: string): Promise<GetWallet> {
     const [accessToken, refreshToken] = await Promise.all([
       loadString(STORAGE_KEY.ACCESS_TOKEN),
       loadString(STORAGE_KEY.REFRESH_TOKEN),
@@ -35,7 +36,8 @@ export class WalletResolverApi extends ResolverApi {
       "getWallet",
       {
         data: {
-          walletId,
+          userId: id,
+          walletId: id,
         },
       },
       {
@@ -164,51 +166,63 @@ export class WalletResolverApi extends ResolverApi {
     return res.respondPaymentRequest
   }
 
-  public async sendInAppLightningPayment(): Promise<SendInAppLightningPayment> {
+  public async sendPaymentRequest({
+    amount,
+    currency,
+    description,
+    method,
+    walletId,
+  }: SendRequestPaymentDto): Promise<SendPaymentRequest> {
     const [accessToken, refreshToken] = await Promise.all([
       loadString(STORAGE_KEY.ACCESS_TOKEN),
       loadString(STORAGE_KEY.REFRESH_TOKEN),
     ])
-    const res = await this.mutation<SendInAppLightningPayment, {}>(
-      "sendInAppLightningPayment",
-      {},
+    const res = await this.mutation<SendPaymentRequest, SendRequestPaymentDto>(
+      "sendPaymentRequest",
+      {
+        data: {
+          amount,
+          currency,
+          description,
+          method,
+          walletId,
+        },
+      },
       {
         accessToken,
         refreshToken,
       },
     )
-    return res.sendInAppLightningPayment
+    return res.sendPaymentRequest
   }
 
-  public async sendInAppPayment(): Promise<SendInAppPayment> {
+  public async sendInAppPayment({
+    amount,
+    currency,
+    description,
+    method,
+    walletId,
+  }: SendInAppPaymentDto): Promise<SendInAppPayment> {
     const [accessToken, refreshToken] = await Promise.all([
       loadString(STORAGE_KEY.ACCESS_TOKEN),
       loadString(STORAGE_KEY.REFRESH_TOKEN),
     ])
-    const res = await this.mutation<SendInAppPayment, {}>(
+    const res = await this.mutation<SendInAppPayment, SendInAppPaymentDto>(
       "sendInAppPayment",
-      {},
+      {
+        data: {
+          amount,
+          currency,
+          description,
+          method,
+          walletId,
+        },
+      },
       {
         accessToken,
         refreshToken,
       },
     )
-    return res.sendInAppLightningPayment
-  }
-
-  public async sendOutAppLightningPayment(): Promise<SendOutAppLightningPayment> {
-    const [accessToken, refreshToken] = await Promise.all([
-      loadString(STORAGE_KEY.ACCESS_TOKEN),
-      loadString(STORAGE_KEY.REFRESH_TOKEN),
-    ])
-    const res = await this.mutation<SendOutAppLightningPayment, {}>(
-      "sendOutAppLightningPayment",
-      {},
-      {
-        accessToken,
-        refreshToken,
-      },
-    )
-    return res.sendOutAppLightningPayment
+    return res.sendInAppPayment
   }
 }

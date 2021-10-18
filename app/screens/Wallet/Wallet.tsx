@@ -36,13 +36,13 @@ export const WalletScreen = observer(function WalletScreen() {
   const [loading, setLoading] = React.useState(false)
   const { walletStore, bankStore } = useStores()
   const isFocused = useIsFocused()
-  const transaction = walletStore.transactions
-  const transactionList = walletStore.groupTransactionByMonthAndYear()
+  const transaction = walletStore.syncedTransactions
+  const transactionList = walletStore.groupTransactionByMonthAndYear(transaction)
 
   const currentWallet = walletStore.wallet
   const navigator = useNavigation()
 
-  onSnapshot(walletStore.transactions, (snapshot) => {
+  onSnapshot(walletStore.syncedTransactions, (snapshot) => {
     transaction.replace(snapshot)
   })
 
@@ -51,7 +51,7 @@ export const WalletScreen = observer(function WalletScreen() {
       setLoading(true)
       const fetchMyBankAccountsResponse = await bankStore.fetchMyBankAccounts()
       const fetchCurrentUserWalletResponse = await walletStore.fetchCurrentUserWallet()
-      const fetchTransactionsResponse = await walletStore.fetchTransactions()
+      const fetchTransactionsResponse = await walletStore.syncTransactions()
       if (
         fetchCurrentUserWalletResponse.success &&
         fetchMyBankAccountsResponse.success &&

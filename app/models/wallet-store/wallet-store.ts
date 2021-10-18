@@ -1,7 +1,13 @@
 import { flow, Instance, isAlive, SnapshotOut, types } from "mobx-state-tree"
 import { withEnvironment } from "../extensions/with-environment"
 import _ from "underscore"
-import { GetMeWallet, GetTransactions } from "../../generated/graphql"
+import {
+  GetMeWallet,
+  GetMyPaymentRequests,
+  GetMyWalletTransactions,
+  SendPaymentRequest,
+  SendRequestPaymentDto,
+} from "../../generated/graphql"
 import { WalletModel, WalletSnapshot } from "../wallet/wallet"
 import { UserResolverAPI, WalletResolverApi } from "../../services/resolvers"
 import { Transaction, TransactionModel, TransactionSnapshot } from "../transaction/transaction"
@@ -19,6 +25,8 @@ export const WalletStoreModel = types
   .props({
     wallet: types.optional(WalletModel, {}),
     transactions: types.optional(types.array(TransactionModel), []),
+    requestedTransactions: types.optional(types.array(TransactionModel), []),
+    syncedTransactions: types.optional(types.array(TransactionModel), []),
   })
   .extend(withEnvironment)
   .actions((self) => ({
@@ -29,6 +37,12 @@ export const WalletStoreModel = types
     },
     saveTransactions: (transactionSnapshots: TransactionSnapshot[]) => {
       self.transactions.replace(transactionSnapshots)
+    },
+    saveRequestedTransactions: (transactionSnapshots: TransactionSnapshot[]) => {
+      self.requestedTransactions.replace(transactionSnapshots)
+    },
+    saveSyncedTransactions: (transactionSnapshots: TransactionSnapshot[]) => {
+      self.syncedTransactions.replace(transactionSnapshots)
     },
   }))
   .views((self) => ({
@@ -116,22 +130,52 @@ export const WalletStoreModel = types
       }
       return result as GetMeWallet
     }),
-    fetchTransactions: flow(function* () {
+    syncTransactions: async function () {
+      const result = await Promise.all([
+        this.fetchTransactions(),
+        this.fetchRequestedTransactions(),
+      ])
+
+      const syncedTransactions = self.transactions.concat(self.syncedTransactions)
+
+      self.saveSyncedTransactions(syncedTransactions as TransactionSnapshot[])
+
+      return result[0].success && result[1].success
+    },
+    fetchTransactions: async function () {
       console.log("WalletStore - FetchTransactions")
       const transactionApi = new WalletResolverApi()
-      const result = yield transactionApi.getMyWalletTransactions({
+      const result = await transactionApi.getMyWalletTransactions({
         limit: 10,
         skip: 0,
       })
 
       if (result.success) {
-        self.saveTransactions(result.data)
+        self.saveTransactions(result.data as TransactionSnapshot[])
       } else {
         __DEV__ && console.tron.log(result.errors)
       }
 
-      return result as GetTransactions
-    }),
+      return result as GetMyWalletTransactions
+    },
+    fetchRequestedTransactions: async function () {
+      console.log("WalletStore - FetchRequestedTransactions")
+      const transactionApi = new WalletResolverApi()
+      const result = await transactionApi.getMyPaymentRequests({
+        limit: 1,
+      })
+      if (result.success) {
+        const payReqData = result.data
+        if (payReqData && payReqData.length > 0) {
+          self.saveRequestedTransactions(
+            payReqData.map((request) => request.transaction) as TransactionSnapshot[],
+          )
+        }
+      } else {
+        __DEV__ && console.tron.log(result.errors)
+      }
+      return result as GetMyPaymentRequests
+    },
     fetchWalletOwner: async function (walletId: string): Promise<User> {
       console.log("WalletStore - FetchWalletOwner")
       const wallet = await new WalletResolverApi().getWallet(walletId)
@@ -147,6 +191,42 @@ export const WalletStoreModel = types
         __DEV__ && console.tron.log(wallet.errors)
         return null
       }
+    },
+    // sendInAppPayment: async function ({
+    //   amount,
+    //   currency,
+    //   description,
+    //   method,
+    //   walletId,
+    // }: SendInAppPaymentDto) {},
+    sendPaymentRequest: async function ({
+      amount,
+      method,
+      description,
+      currency,
+      userId,
+    }: Partial<SendRequestPaymentDto> & {
+      userId: string
+    }) {
+      const walletResolverApi = new WalletResolverApi()
+      const toWallet = await walletResolverApi.getWallet(userId)
+      if (toWallet.success && toWallet.data) {
+        const response = await walletResolverApi.sendPaymentRequest({
+          amount,
+          method,
+          currency,
+          description,
+          walletId: toWallet.data.id,
+        })
+        if (response.success) {
+          return response as SendPaymentRequest
+        } else {
+          __DEV__ && console.tron.log(response.errors)
+          return null
+        }
+      }
+      __DEV__ && console.tron.log(toWallet.errors)
+      return null
     },
   }))
 
