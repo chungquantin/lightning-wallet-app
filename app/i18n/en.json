@@ -152,7 +152,19 @@
     "balance": "Balance",
     "bankAccount": "Bank account"
   },
+  "transactionRequest": {
+    "description": "Description",
+    "amount": "Amount",
+    "createdDate": "Created date",
+    "expiredDate": "Expired date",
+    "settledDate": "Settled date",
+    "status": "Status",
+    "balance": "Balance",
+    "accept": "Accept",
+    "reject": "Reject"
+  },
   "navigation": {
+    "paymentRequest": "Request",
     "wallet": "Wallet",
     "contact": "Contact",
     "history": "History",

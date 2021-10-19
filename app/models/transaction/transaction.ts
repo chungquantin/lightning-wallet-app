@@ -4,7 +4,14 @@ export const TransactionModel = types.model("Transaction").props({
   id: types.maybe(types.string),
   description: types.maybe(types.string),
   status: types.maybe(
-    types.enumeration(["PENDING", "PAID", "EXPIRED", "UNPAID", "PARTIALLY_PAID"]),
+    types.enumeration(
+      ["PENDING", "PAID", "EXPIRED", "UNPAID", "PARTIALLY_PAID"].concat([
+        "PENDING",
+        "CONFIRMED",
+        "REJECTED",
+        "CANCELED",
+      ]),
+    ),
   ),
   currency: types.maybe(types.enumeration(["USD", "VND", "CAD"])),
   method: types.maybe(types.enumeration(["LIGHTNING", "ON_CHAIN", "OTHER"])),

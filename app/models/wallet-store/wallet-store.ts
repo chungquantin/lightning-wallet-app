@@ -7,6 +7,7 @@ import {
   GetMyWalletTransactions,
   SendPaymentRequest,
   SendRequestPaymentDto,
+  TransactionRequestStatus,
 } from "../../generated/graphql"
 import { WalletModel, WalletSnapshot } from "../wallet/wallet"
 import { UserResolverAPI, WalletResolverApi } from "../../services/resolvers"
@@ -20,9 +21,11 @@ import {
 } from "../../utils/date"
 import { User } from "../user/user"
 import {
+  RequestedTransaction,
   RequestedTransactionModel,
   RequestedTransactionSnapshot,
 } from "../requested-transaction/requested-transaction"
+import { setUndefinedAl } from "../../utils/misc"
 
 export const WalletStoreModel = types
   .model("WalletStore")
@@ -97,7 +100,7 @@ export const WalletStoreModel = types
     groupTransactionByMonthAndYear(transactions?: Transaction[]): {
       month: string
       year: string
-      data: Transaction[]
+      data: RequestedTransaction[]
     }[] {
       const transactionGroupedByAllMonth = _.groupBy(transactions || self.transactions, (item) => {
         return `${getMonthFromUnix(item.createdAt) + 1}-${getYearFromUnix(item.createdAt)}`
@@ -105,7 +108,7 @@ export const WalletStoreModel = types
       const transactionList: {
         month: string
         year: string
-        data: Transaction[]
+        data: RequestedTransaction[]
       }[] = Object.keys(transactionGroupedByAllMonth).map((transactionKey) => {
         return {
           month: monthList[Number(transactionKey.split("-")[0]) - 1],
@@ -115,8 +118,23 @@ export const WalletStoreModel = types
       })
       return transactionList
     },
+    filterGroupedTransactionByStatus(status: TransactionRequestStatus) {
+      return this.groupTransactionByMonthAndYear(
+        self.requestedTransactions.filter((transaction) => transaction.status === status),
+      )
+    },
   }))
   .actions((self) => ({
+    logout: flow(function* () {
+      try {
+        console.log("WalletStore - Logout")
+        setUndefinedAl(self.transactions)
+        setUndefinedAl(self.requestedTransactions)
+        setUndefinedAl(self.wallet)
+      } catch (error) {
+        console.tron.log(error.message)
+      }
+    }),
     fetchCurrentUserWallet: flow(function* () {
       console.log("WalletStore - FetchCurrentUserWallet")
       const walletApi = new WalletResolverApi()
@@ -174,6 +192,7 @@ export const WalletStoreModel = types
               }
               return {
                 ...request.transaction,
+                status: request.status,
                 description:
                   self.wallet.id === request.requestFrom
                     ? `Request to ${destination.email}`

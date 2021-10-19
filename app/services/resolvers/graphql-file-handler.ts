@@ -42,6 +42,7 @@ const gqlModules = {
     getMyWalletTransactions: loader("./wallet/queries/getMyWalletTransactions.gql"),
     getMyPaymentRequests: loader("./wallet/queries/getMyPaymentRequests.gql"),
     getPaymentRequest: loader("./wallet/queries/getPaymentRequest.gql"),
+    getTransaction: loader("./wallet/queries/getTransaction.gql"),
     /** Bank */
     getMyBankAccounts: loader("./bank/queries/getMyBankAccounts.gql"),
   },

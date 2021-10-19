@@ -13,6 +13,7 @@ query getMyContacts($Pagination: PaginationInputType) {
       phoneNumber
       phoneNumberVerified
       twoFactorVerified
+      username
     }
     errors {
       message

@@ -1,12 +1,17 @@
 import {
   CancelPaymentRequest,
+  CancelPaymentRequestDto,
   GetMeWallet,
   GetMyPaymentRequests,
   GetMyWalletTransactions,
   GetPaymentRequest,
+  GetPaymentRequestDto,
+  GetTransaction,
+  GetTransactionDto,
   GetWallet,
   GetWalletDto,
   RespondPaymentRequest,
+  RespondPaymentRequestDto,
   SendInAppPayment,
   SendInAppPaymentDto,
   SendPaymentRequest,
@@ -124,14 +129,18 @@ export class WalletResolverApi extends ResolverApi {
     return res.getMyPaymentRequests
   }
 
-  public async getPaymentRequest(): Promise<GetPaymentRequest> {
+  public async getPaymentRequest(requestId: string): Promise<GetPaymentRequest> {
     const [accessToken, refreshToken] = await Promise.all([
       loadString(STORAGE_KEY.ACCESS_TOKEN),
       loadString(STORAGE_KEY.REFRESH_TOKEN),
     ])
-    const res = await this.query<GetPaymentRequest, {}>(
+    const res = await this.query<GetPaymentRequest, GetPaymentRequestDto>(
       "getPaymentRequest",
-      {},
+      {
+        data: {
+          paymentRequestId: requestId,
+        },
+      },
       {
         accessToken,
         refreshToken,
@@ -140,14 +149,18 @@ export class WalletResolverApi extends ResolverApi {
     return res.getPaymentRequest
   }
 
-  public async cancelPaymentRequest(): Promise<CancelPaymentRequest> {
+  public async cancelPaymentRequest(paymentRequestId: string): Promise<CancelPaymentRequest> {
     const [accessToken, refreshToken] = await Promise.all([
       loadString(STORAGE_KEY.ACCESS_TOKEN),
       loadString(STORAGE_KEY.REFRESH_TOKEN),
     ])
-    const res = await this.mutation<CancelPaymentRequest, {}>(
+    const res = await this.mutation<CancelPaymentRequest, CancelPaymentRequestDto>(
       "cancelPaymentRequest",
-      {},
+      {
+        data: {
+          paymentRequestId,
+        },
+      },
       {
         accessToken,
         refreshToken,
@@ -156,14 +169,22 @@ export class WalletResolverApi extends ResolverApi {
     return res.cancelPaymentRequest
   }
 
-  public async respondPaymentRequest(): Promise<RespondPaymentRequest> {
+  public async respondPaymentRequest(
+    confirmed: boolean,
+    paymentRequestId: string,
+  ): Promise<RespondPaymentRequest> {
     const [accessToken, refreshToken] = await Promise.all([
       loadString(STORAGE_KEY.ACCESS_TOKEN),
       loadString(STORAGE_KEY.REFRESH_TOKEN),
     ])
-    const res = await this.mutation<RespondPaymentRequest, {}>(
-      "cancelPaymentRequest",
-      {},
+    const res = await this.mutation<RespondPaymentRequest, RespondPaymentRequestDto>(
+      "respondPaymentRequest",
+      {
+        data: {
+          confirmed,
+          paymentRequestId,
+        },
+      },
       {
         accessToken,
         refreshToken,
@@ -230,5 +251,25 @@ export class WalletResolverApi extends ResolverApi {
       },
     )
     return res.sendInAppPayment
+  }
+
+  public async getTransaction(transactionId: string): Promise<GetTransaction> {
+    const [accessToken, refreshToken] = await Promise.all([
+      loadString(STORAGE_KEY.ACCESS_TOKEN),
+      loadString(STORAGE_KEY.REFRESH_TOKEN),
+    ])
+    const res = await this.query<GetTransaction, GetTransactionDto>(
+      "getTransaction",
+      {
+        data: {
+          transactionId,
+        },
+      },
+      {
+        accessToken,
+        refreshToken,
+      },
+    )
+    return res.getTransaction
   }
 }

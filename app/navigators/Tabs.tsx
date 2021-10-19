@@ -1,7 +1,13 @@
 import React from "react"
 import { observer } from "mobx-react-lite"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { ContactScreen, HistoryScreen, ProfileScreen, WalletScreen } from "../screens"
+import {
+  ContactScreen,
+  HistoryScreen,
+  ProfileScreen,
+  RequestScreen,
+  WalletScreen,
+} from "../screens"
 import Style from "./Tabs.style"
 import { color } from "../theme"
 import { View } from "react-native"
@@ -180,9 +186,9 @@ export const Tabs = observer(function Tabs() {
     // Fifth Button - Profile
     {
       headerShown: true,
-      key: "profile-tab",
-      name: "Profile",
-      component: ProfileScreen,
+      key: "payment-request-tab",
+      name: "Payment Request",
+      component: RequestScreen,
       headerRight: () => (
         <CustomHeaderIconButton
           size={props.iconStyle.size}
@@ -193,12 +199,12 @@ export const Tabs = observer(function Tabs() {
       layout: ({ focused }) => (
         <View style={Style.TabItemsView}>
           <Feather
-            name="user"
+            name="mail"
             color={focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor}
             size={props.iconStyle.size}
           />
           <Text
-            tx="navigation.profile"
+            tx="navigation.paymentRequest"
             style={{
               color: focused ? props.iconStyle.activeColor : props.iconStyle.inactiveColor,
               ...Style.TabItemsLabel,

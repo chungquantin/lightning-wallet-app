@@ -1,5 +1,5 @@
 import React from "react"
-import { Switch, View } from "react-native"
+import { Pressable, Switch, View } from "react-native"
 import { observer } from "mobx-react-lite"
 import { Button, Screen, Text } from "../../components"
 import Style from "./Setting.style"
@@ -12,11 +12,13 @@ import { useStores } from "../../models"
 export const SettingScreen = observer(function SettingScreen() {
   const [biometricsEnabled, setBiometricsEnabled] = React.useState(false)
   const [notificationEnabled, setNotificationEnabled] = React.useState(false)
-  const { userStore } = useStores()
+  const { userStore, walletStore } = useStores()
   const navigator = useNavigation()
   const handler = {
     GoBack: () => navigator.goBack(),
-    Logout: () => userStore.logout(),
+    Logout: () => {
+      userStore.logout(), walletStore.logout()
+    },
     ToggleBiometrics: () => setBiometricsEnabled((enabled) => !enabled),
     ToggleNotification: () => setNotificationEnabled((enabled) => !enabled),
   }
@@ -48,6 +50,7 @@ export const SettingScreen = observer(function SettingScreen() {
       logo: "person-outline",
       label: "Profile",
       element: <ArrowRight />,
+      onPressHandler: () => navigator.navigate("Profile"),
     },
     {
       logo: "location-outline",
@@ -97,45 +100,48 @@ export const SettingScreen = observer(function SettingScreen() {
     },
   ]
 
-  const SettingItem = ({ label, rightElement, logo }) => (
-    <View
-      style={{
-        backgroundColor: color.secondaryBackground,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        paddingVertical: 15,
-        paddingHorizontal: 25,
-        borderBottomColor: color.palette.darkBlack,
-        borderBottomWidth: 1,
-      }}
-    >
+  const SettingItem = ({ label, rightElement, logo, onPress }) => (
+    <Pressable onPress={onPress}>
       <View
         style={{
+          backgroundColor: color.secondaryBackground,
           flexDirection: "row",
-          justifyContent: "center",
+          justifyContent: "space-between",
           alignItems: "center",
+          paddingVertical: 15,
+          paddingHorizontal: 25,
+          borderBottomColor: color.palette.darkBlack,
+          borderBottomWidth: 1,
         }}
       >
-        <Ionicons
+        <View
           style={{
-            marginRight: 15,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
           }}
-          name={logo}
-          color={color.primary}
-          size={23}
-        />
-        <Text>{label}</Text>
-      </View>
+        >
+          <Ionicons
+            style={{
+              marginRight: 15,
+            }}
+            name={logo}
+            color={color.primary}
+            size={23}
+          />
+          <Text>{label}</Text>
+        </View>
 
-      {rightElement}
-    </View>
+        {rightElement}
+      </View>
+    </Pressable>
   )
   return (
     <View testID="SettingScreen" style={Style.Container}>
       <Screen preset="scroll">
         {itemList.map((item) => (
           <SettingItem
+            onPress={item.onPressHandler ? item.onPressHandler : () => {}}
             key={item.label}
             logo={item.logo}
             label={item.label}

@@ -14,6 +14,7 @@ import { formatByUnit } from "../../utils/currency"
 import { SectionList } from "react-native"
 import { Transaction } from "../../models/transaction/transaction"
 import NeutronpaySpinner from "../Reusable/NeutronpaySpinner"
+import { RequestedTransaction } from "../../models/requested-transaction/requested-transaction"
 
 interface ButtonProps {
   onPressHandler: (event: GestureResponderEvent) => void
@@ -36,7 +37,7 @@ export const WalletScreen = observer(function WalletScreen() {
   const [loading, setLoading] = React.useState(false)
   const { walletStore, bankStore } = useStores()
   const isFocused = useIsFocused()
-  const transaction = walletStore.transactions.concat(walletStore.requestedTransactions)
+  const transaction = walletStore.transactions
   const transactionList = walletStore.groupTransactionByMonthAndYear(transaction)
 
   const currentWallet = walletStore.wallet
@@ -46,16 +47,12 @@ export const WalletScreen = observer(function WalletScreen() {
     snapshot.concat(walletStore.requestedTransactions)
   })
 
-  onSnapshot(walletStore.requestedTransactions, (snapshot) => {
-    transaction.concat(snapshot)
-  })
-
   React.useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
       const fetchMyBankAccountsResponse = await bankStore.fetchMyBankAccounts()
       const fetchCurrentUserWalletResponse = await walletStore.fetchCurrentUserWallet()
-      const fetchTransactionsResponse = await walletStore.syncTransactions()
+      const fetchTransactionsResponse = await walletStore.fetchTransactions()
       if (
         fetchCurrentUserWalletResponse.success &&
         fetchMyBankAccountsResponse.success &&
@@ -81,6 +78,10 @@ export const WalletScreen = observer(function WalletScreen() {
       }),
     OpenTransactionDetail: (transaction: Transaction) =>
       navigator.navigate("TransactionDetail", {
+        transaction,
+      }),
+    OpenRequestedTransactionDetail: (transaction: RequestedTransaction) =>
+      navigator.navigate("RequestedTransactionDetail", {
         transaction,
       }),
     GoToPaymentMethod: () => navigator.navigate("PaymentMethod"),
@@ -155,7 +156,11 @@ export const WalletScreen = observer(function WalletScreen() {
           renderItem={({ item }) => (
             <TransactionItem
               transaction={item}
-              onPressHandler={() => handler.OpenTransactionDetail(item)}
+              onPressHandler={() =>
+                item.type
+                  ? handler.OpenRequestedTransactionDetail(item)
+                  : handler.OpenTransactionDetail(item)
+              }
             />
           )}
           keyExtractor={(item) => item.id}

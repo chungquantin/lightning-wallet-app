@@ -18,6 +18,7 @@ import {
   SendScreen,
   SignInScreen,
   SignUpScreen,
+  ProfileScreen,
   TransactionCompleteScreen,
   TransactionConfirmScreen,
   TransactionDetailScreen,
@@ -31,6 +32,7 @@ import {
   BankTransferAmountCreationScreen,
   BankTransferConfirmScreen,
   BankTransferCompleteScreen,
+  RequestedTransactionDetailScreen,
 } from "../screens"
 import i18n from "i18n-js"
 import { useStores } from "../models"
@@ -50,6 +52,7 @@ export type NavigatorParamList = {
   Deposit: undefined
   UserDetail: undefined
   TransactionDetail: undefined
+  RequestedTransactionDetail: undefined
   TransactionConfirm: undefined
   TransactionComplete: undefined
   TransactionAmountCreation: undefined
@@ -64,6 +67,7 @@ export type NavigatorParamList = {
   PaymentMethod: undefined
   Notification: undefined
   Setting: undefined
+  Profile: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -154,6 +158,13 @@ const AppStack = observer(() => {
               name="PaymentMethod"
               component={PaymentMethodScreen}
             />
+            <Stack.Screen
+              options={{
+                headerTitle: "Profile",
+              }}
+              name="Profile"
+              component={ProfileScreen}
+            />
             <Stack.Screen name="Notification" component={NotificationScreen} />
             <Stack.Screen
               name="Setting"
@@ -233,6 +244,13 @@ const AppStack = observer(() => {
                 gestureEnabled: false,
               }}
               component={BankTransferCompleteScreen}
+            />
+            <Stack.Screen
+              name="RequestedTransactionDetail"
+              options={{
+                headerTitle: i18n.t("navigation.transaction"),
+              }}
+              component={RequestedTransactionDetailScreen}
             />
             <Stack.Screen
               name="TransactionDetail"

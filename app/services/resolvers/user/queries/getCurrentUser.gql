@@ -13,6 +13,7 @@ query getCurrentUser {
       phoneNumber
       phoneNumberVerified
       twoFactorVerified
+      username
     }
     errors {
       message

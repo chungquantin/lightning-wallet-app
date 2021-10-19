@@ -6,7 +6,6 @@ import { Style } from "./UserItem.style"
 import { User } from "../../models/user/user"
 import { GestureResponderEvent, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
-import { isAlive } from "mobx-state-tree"
 
 interface Props {
   user: User
