@@ -27,7 +27,10 @@ export class WalletResolverApi extends ResolverApi {
       : `${API_URL}:3000/graphql`
   }
 
-  public async getWallet(id: string): Promise<GetWallet> {
+  public async getWallet({
+    userId,
+    walletId,
+  }: Partial<Record<string, string>>): Promise<GetWallet> {
     const [accessToken, refreshToken] = await Promise.all([
       loadString(STORAGE_KEY.ACCESS_TOKEN),
       loadString(STORAGE_KEY.REFRESH_TOKEN),
@@ -35,10 +38,13 @@ export class WalletResolverApi extends ResolverApi {
     const res = await this.query<GetWallet, GetWalletDto>(
       "getWallet",
       {
-        data: {
-          userId: id,
-          walletId: id,
-        },
+        data: userId
+          ? {
+              userId,
+            }
+          : {
+              walletId,
+            },
       },
       {
         accessToken,

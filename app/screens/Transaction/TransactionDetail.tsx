@@ -10,6 +10,7 @@ import { useStores } from "../../models"
 import { Avatar } from "react-native-paper"
 import { color } from "../../theme"
 import { formatByUnit } from "../../utils/currency"
+import NeutronpaySpinner from "../Reusable/NeutronpaySpinner"
 
 interface TransactionDetailRouteProps extends ParamListBase {
   TransactionDetail: {
@@ -18,6 +19,7 @@ interface TransactionDetailRouteProps extends ParamListBase {
 }
 
 export const TransactionDetailScreen = observer(function TransactionDetailScreen() {
+  const [loading, setLoading] = React.useState(false)
   const route = useRoute<RouteProp<TransactionDetailRouteProps, "TransactionDetail">>()
   const { walletStore } = useStores()
   const [user, setUser] = React.useState<User>()
@@ -33,9 +35,11 @@ export const TransactionDetailScreen = observer(function TransactionDetailScreen
 
   React.useEffect(() => {
     const fetchUser = async () => {
+      setLoading(true)
       const result = await walletStore.fetchWalletOwner(userWalletId)
       if (result) {
         setUser((user) => (user = result))
+        setLoading(false)
       }
     }
     fetchUser()
@@ -100,22 +104,26 @@ export const TransactionDetailScreen = observer(function TransactionDetailScreen
   ]
   return (
     <View testID="TransactionDetailScreen" style={Style.Container}>
-      <Screen preset="scroll">
-        {walletStore.wallet.id === currentUserWalletId ? (
-          <View>
-            <RenderMetaContainer />
+      {loading ? (
+        <NeutronpaySpinner />
+      ) : (
+        <Screen preset="scroll">
+          {walletStore.wallet.id === currentUserWalletId ? (
+            <View>
+              <RenderMetaContainer />
 
-            {transactionFieldList.map((field, index) => (
-              <View style={{ ...Style.DetailContainer, marginTop: index === 0 ? 50 : 0 }}>
-                <Text style={Style.DetailLabelLeft}>{field.label}</Text>
-                <Text>{field.content}</Text>
-              </View>
-            ))}
-          </View>
-        ) : (
-          <Text>There is something wrong</Text>
-        )}
-      </Screen>
+              {transactionFieldList.map((field, index) => (
+                <View style={{ ...Style.DetailContainer, marginTop: index === 0 ? 50 : 0 }}>
+                  <Text style={Style.DetailLabelLeft}>{field.label}</Text>
+                  <Text>{field.content}</Text>
+                </View>
+              ))}
+            </View>
+          ) : (
+            <Text>There is something wrong</Text>
+          )}
+        </Screen>
+      )}
     </View>
   )
 })

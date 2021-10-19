@@ -13,6 +13,7 @@ query getUser($data: GetUserDto!) {
       phoneNumber
       phoneNumberVerified
       twoFactorVerified
+      username
     }
     errors {
       message

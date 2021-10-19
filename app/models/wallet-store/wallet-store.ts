@@ -19,14 +19,17 @@ import {
   monthList,
 } from "../../utils/date"
 import { User } from "../user/user"
+import {
+  RequestedTransactionModel,
+  RequestedTransactionSnapshot,
+} from "../requested-transaction/requested-transaction"
 
 export const WalletStoreModel = types
   .model("WalletStore")
   .props({
     wallet: types.optional(WalletModel, {}),
     transactions: types.optional(types.array(TransactionModel), []),
-    requestedTransactions: types.optional(types.array(TransactionModel), []),
-    syncedTransactions: types.optional(types.array(TransactionModel), []),
+    requestedTransactions: types.optional(types.array(RequestedTransactionModel), []),
   })
   .extend(withEnvironment)
   .actions((self) => ({
@@ -38,11 +41,8 @@ export const WalletStoreModel = types
     saveTransactions: (transactionSnapshots: TransactionSnapshot[]) => {
       self.transactions.replace(transactionSnapshots)
     },
-    saveRequestedTransactions: (transactionSnapshots: TransactionSnapshot[]) => {
+    saveRequestedTransactions: (transactionSnapshots: RequestedTransactionSnapshot[]) => {
       self.requestedTransactions.replace(transactionSnapshots)
-    },
-    saveSyncedTransactions: (transactionSnapshots: TransactionSnapshot[]) => {
-      self.syncedTransactions.replace(transactionSnapshots)
     },
   }))
   .views((self) => ({
@@ -136,10 +136,6 @@ export const WalletStoreModel = types
         this.fetchRequestedTransactions(),
       ])
 
-      const syncedTransactions = self.transactions.concat(self.syncedTransactions)
-
-      self.saveSyncedTransactions(syncedTransactions as TransactionSnapshot[])
-
       return result[0].success && result[1].success
     },
     fetchTransactions: async function () {
@@ -162,14 +158,38 @@ export const WalletStoreModel = types
       console.log("WalletStore - FetchRequestedTransactions")
       const transactionApi = new WalletResolverApi()
       const result = await transactionApi.getMyPaymentRequests({
-        limit: 1,
+        limit: 3,
       })
+      console.log(result.data)
       if (result.success) {
         const payReqData = result.data
         if (payReqData && payReqData.length > 0) {
-          self.saveRequestedTransactions(
-            payReqData.map((request) => request.transaction) as TransactionSnapshot[],
-          )
+          const transactions = (await Promise.all(
+            payReqData.map(async (request) => {
+              let destination: User
+              if (self.wallet.id === request.requestFrom) {
+                destination = await this.fetchWalletOwner(request.requestTo)
+              } else {
+                destination = await this.fetchWalletOwner(request.requestFrom)
+              }
+              return {
+                ...request.transaction,
+                description:
+                  self.wallet.id === request.requestFrom
+                    ? `Request to ${destination.email}`
+                    : `Request from ${destination.email}`,
+                type: self.wallet.id === request.requestFrom ? "RECEIVE" : "SEND",
+                requestId: request.id,
+                expiredAt: request.expiredAt,
+                createdAt: request.createdAt,
+                settledAt: request.settledAt,
+                from: request.requestFrom,
+                to: request.requestTo,
+              }
+            }),
+          )) as RequestedTransactionSnapshot[]
+          const sortedTransactions = _.sortBy(transactions, (transaction) => -transaction.createdAt)
+          self.saveRequestedTransactions(sortedTransactions)
         }
       } else {
         __DEV__ && console.tron.log(result.errors)
@@ -178,7 +198,7 @@ export const WalletStoreModel = types
     },
     fetchWalletOwner: async function (walletId: string): Promise<User> {
       console.log("WalletStore - FetchWalletOwner")
-      const wallet = await new WalletResolverApi().getWallet(walletId)
+      const wallet = await new WalletResolverApi().getWallet({ walletId })
       if (wallet.success) {
         const user = await new UserResolverAPI().getUser(wallet.data.userId)
         if (user.success) {
@@ -209,7 +229,7 @@ export const WalletStoreModel = types
       userId: string
     }) {
       const walletResolverApi = new WalletResolverApi()
-      const toWallet = await walletResolverApi.getWallet(userId)
+      const toWallet = await walletResolverApi.getWallet({ userId })
       if (toWallet.success && toWallet.data) {
         const response = await walletResolverApi.sendPaymentRequest({
           amount,
