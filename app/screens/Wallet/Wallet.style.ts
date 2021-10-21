@@ -12,7 +12,7 @@ const Style = StyleSheet.create({
     //position: "absolute",
     //bottom: 95,
     backgroundColor: color.secondaryBackground,
-    height: height / 1.7,
+    height: height / 1.3,
     width: "100%",
     borderTopRightRadius: 40,
     borderTopLeftRadius: 40,

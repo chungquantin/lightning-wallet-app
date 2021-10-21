@@ -11,9 +11,10 @@ import I18n from "i18n-js"
 import { color, textStyle } from "../../theme"
 import useFormValidation from "../../hooks/useFormValidation"
 import { Ionicons } from "@expo/vector-icons"
-import { User } from "../../models/user/user"
 import NeutronpaySpinner from "../Reusable/NeutronpaySpinner"
 import { isAlive } from "mobx-state-tree"
+import { load } from "../../utils/storage"
+import { STORAGE_KEY } from "../../constants/AsyncStorageKey"
 
 const NoContactIcon = require("../../../assets/images/icons/No-Contact-Icon.png")
 
@@ -34,10 +35,13 @@ export const ContactScreen = observer(function ContactScreen() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      setLoading(true)
-      const fetchUserContactsResponse = await userStore.fetchUserContacts()
-      if (fetchUserContactsResponse.success) {
-        setLoading(false)
+      const contactCache = await load(STORAGE_KEY.CONTACTS)
+      if (!contactCache) {
+        setLoading(true)
+        const fetchUserContactsResponse = await userStore.fetchUserContacts()
+        if (fetchUserContactsResponse.success) {
+          setLoading(false)
+        }
       }
     }
     fetchData()

@@ -60,14 +60,22 @@ export const SendOutAppRequestScreen = observer(function SendOutAppRequestScreen
         return alert(I18n.t("common.invalidBitcoinOrLightning"))
       }
     },
-    EnterAddress: () => {},
+    EnterAddress: () => navigator.navigate("SendOutAppEnterAddress"),
   }
 
   if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>
+    return (
+      <View testID="SendOutAppRequestScreen" style={Style.Container}>
+        <Text>Requesting for camera permission</Text>
+      </View>
+    )
   }
   if (hasPermission === false) {
-    return <Text>No access to camera</Text>
+    return (
+      <View testID="SendOutAppRequestScreen" style={Style.Container}>
+        <Text>No access to camera</Text>
+      </View>
+    )
   }
   return (
     <View testID="SendOutAppRequestScreen" style={Style.Container}>

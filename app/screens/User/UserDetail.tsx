@@ -28,14 +28,12 @@ export const UserDetailScreen = observer(function UserDetailScreen() {
 
   React.useEffect(() => {
     const fetchContactDetail = async () => {
-      if (id) {
-        setLoading(true)
-        const fetchContactResponse = await userStore.fetchContact(id)
-        if (fetchContactResponse.success) {
-          const user = userStore.contact
-          navigator.setOptions({ headerTitle: `${user.firstName} ${user.lastName}` })
-          setLoading(false)
-        }
+      setLoading(true)
+      const fetchContactResponse = await userStore.fetchContact(id)
+      if (fetchContactResponse.success) {
+        const user = userStore.contact
+        navigator.setOptions({ headerTitle: `${user.firstName} ${user.lastName}` })
+        setLoading(false)
       }
     }
     fetchContactDetail()

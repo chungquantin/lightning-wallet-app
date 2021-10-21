@@ -15,6 +15,8 @@ import NeutronpaySpinner from "../Reusable/NeutronpaySpinner"
 import { ActivityIndicator, Avatar } from "react-native-paper"
 import { useStores } from "../../models"
 import { useNavigation } from "@react-navigation/core"
+import { remove } from "../../utils/storage"
+import { STORAGE_KEY } from "../../constants/AsyncStorageKey"
 
 export const ContactCreationScreen = observer(function ContactCreationScreen() {
   const [loading, setLoading] = React.useState(false)
@@ -136,6 +138,7 @@ export const ContactCreationScreen = observer(function ContactCreationScreen() {
               text: "Back to wallet",
             },
           ])
+          remove(STORAGE_KEY.CONTACTS)
         }
       }
     },

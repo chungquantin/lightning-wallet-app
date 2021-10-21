@@ -79,8 +79,8 @@ export class WalletResolverApi extends ResolverApi {
     limit,
     skip,
   }: Partial<{
-    limit: number
-    skip: number
+    limit?: number
+    skip?: number
   }>): Promise<GetMyWalletTransactions> {
     const [accessToken, refreshToken] = await Promise.all([
       loadString(STORAGE_KEY.ACCESS_TOKEN),

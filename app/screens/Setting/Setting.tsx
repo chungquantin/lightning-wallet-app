@@ -17,7 +17,8 @@ export const SettingScreen = observer(function SettingScreen() {
   const handler = {
     GoBack: () => navigator.goBack(),
     Logout: () => {
-      userStore.logout(), walletStore.logout()
+      userStore.logout()
+      walletStore.logout()
     },
     ToggleBiometrics: () => setBiometricsEnabled((enabled) => !enabled),
     ToggleNotification: () => setNotificationEnabled((enabled) => !enabled),

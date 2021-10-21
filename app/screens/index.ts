@@ -9,6 +9,7 @@ export * from "./Request/Request"
 // Send
 export * from "./Send/Send"
 export * from "./Send/SendOutAppRequest"
+export * from "./Send/SendOutAppEnterAddress"
 // Receive
 export * from "./Receive/Receive"
 export * from "./Receive/ReceiveInAppRequest"

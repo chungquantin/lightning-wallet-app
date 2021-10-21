@@ -67,6 +67,7 @@ export const BankStoreModel = types
               }
             })
             self.saveBankAccounts(convertedData)
+            return result
           } else {
             __DEV__ && console.tron.log(result.errors)
           }

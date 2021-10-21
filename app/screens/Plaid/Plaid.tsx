@@ -9,10 +9,12 @@ import { useIsFocused, useNavigation } from "@react-navigation/core"
 import I18n from "i18n-js"
 import { color } from "../../theme"
 import { ActivityIndicator } from "react-native-paper"
+import { remove } from "../../utils/storage"
+import { STORAGE_KEY } from "../../constants/AsyncStorageKey"
 
 export const PlaidScreen = observer(function PlaidScreen() {
   const [loading, setLoading] = React.useState(false)
-  const { bankStore } = useStores()
+  const { bankStore, userStore } = useStores()
   const isFocused = useIsFocused()
   const navigator = useNavigation()
 
@@ -34,14 +36,15 @@ export const PlaidScreen = observer(function PlaidScreen() {
               alert(__DEV__ ? exit.error.errorMessage : I18n.t("somethingWrong"))
               //navigator.navigate("PaymentMethod")
             }}
-            onSuccess={async ({ publicToken, metadata }) =>
+            onSuccess={async ({ publicToken, metadata }) => {
               bankStore.connectBankAccount({ publicToken, metadata }).then((res) => {
                 if (res.success) {
                   bankStore.fetchMyBankAccounts()
                   navigator.navigate("PaymentMethod")
                 }
               })
-            }
+              remove(STORAGE_KEY.BANK_ACCOUNTS)
+            }}
           />
         ) : (
           <View style={{ height: "100%", justifyContent: "center", alignItems: "center" }}>

@@ -16,6 +16,8 @@ import { TransactionItem } from "../Transaction/TransactionItem"
 import useFormValidation from "../../hooks/useFormValidation"
 import { Transaction } from "../../models/transaction/transaction"
 import NeutronpaySpinner from "../Reusable/NeutronpaySpinner"
+import { load, save } from "../../utils/storage"
+import { STORAGE_KEY } from "../../constants/AsyncStorageKey"
 
 const NoTransactionIcon = require("../../../assets/images/icons/No-Transaction-Icon.png")
 
@@ -48,10 +50,14 @@ export const RequestScreen = observer(function RequestScreen() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      setLoading(true)
-      const fetchTransactionsResponse = await walletStore.fetchRequestedTransactions()
-      if (fetchTransactionsResponse) {
-        setLoading(false)
+      const requestedTransactionsCache = await load(STORAGE_KEY.REQUESTED_TRANSACTIONS)
+      if (!requestedTransactionsCache) {
+        setLoading(true)
+        const fetchTransactionsResponse = await walletStore.fetchRequestedTransactions()
+        if (fetchTransactionsResponse) {
+          setLoading(false)
+          save(STORAGE_KEY.REQUESTED_TRANSACTIONS, fetchTransactionsResponse.success)
+        }
       }
     }
     fetchData()
@@ -226,14 +232,16 @@ export const RequestScreen = observer(function RequestScreen() {
 
   return (
     <View testID="RequestScreen" style={Style.Container}>
+      <RenderTabButtonContainer />
+      <RenderSearchInputContainer />
       {loading ? (
-        <NeutronpaySpinner />
+        <NeutronpaySpinner style={{ marginTop: -100 }} />
       ) : (
-        <Screen unsafe={true}>
-          <RenderTabButtonContainer />
-          <RenderSearchInputContainer />
-          <RenderTransactionContainer />
-        </Screen>
+        <>
+          <Screen unsafe={true} preset="scroll">
+            <RenderTransactionContainer />
+          </Screen>
+        </>
       )}
     </View>
   )

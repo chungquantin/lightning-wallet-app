@@ -10,6 +10,8 @@ import { Avatar } from "react-native-paper"
 import { FiatCurrency } from "../../generated/graphql"
 import { useStores } from "../../models"
 import NeutronpaySpinner from "../Reusable/NeutronpaySpinner"
+import { STORAGE_KEY } from "../../constants/AsyncStorageKey"
+import { remove } from "../../utils/storage"
 interface ReceiveInAppUserRouteProps extends ParamListBase {
   UserDetail: {
     user: {
@@ -88,6 +90,7 @@ export const ReceiveInAppRequestScreen = observer(function ReceiveInAppRequestSc
       })
       if (sendPaymentRequest?.success) {
         setLoading(false)
+        remove(STORAGE_KEY.REQUESTED_TRANSACTIONS)
         navigator.navigate("TransactionComplete", route.params)
       }
     },

@@ -11,6 +11,8 @@ import { InputField } from "./InputField"
 import signInValidate from "./SignIn.validate"
 import { useStores } from "../../models"
 import I18n from "i18n-js"
+import { clear } from "../../utils/storage"
+// import AsyncStorage from "@react-native-async-storage/async-storage"
 
 const NeutronPayHorizontal = require("../../../assets/images/logos/neutronpay-row-logo.png")
 
@@ -35,11 +37,21 @@ export const SignInScreen = observer(function SignInScreen() {
       password: "",
     },
     signInValidate as any,
-    )
+  )
+
+  // console.log(
+  //   "ASYNC STORAGE",
+  //   (async () => {
+  //     const data = await AsyncStorage.multiGet(await AsyncStorage.getAllKeys())
+  //     return data
+  //   })(),
+  // )
+
   const handler = {
     SignIn: () =>
       handleSubmit(async (formValues: any) => {
         try {
+          clear()
           setLoading(true)
           const result = await userStore.login({
             email: formValues.emailAddress,
@@ -134,8 +146,8 @@ export const SignInScreen = observer(function SignInScreen() {
                 style={Style.Indicator}
               />
             ) : (
-                <Text>{I18n.t("common.auth.signIn")}</Text>
-              )}
+              <Text>{I18n.t("common.auth.signIn")}</Text>
+            )}
           </Button>
           <View style={{ flexDirection: "row", marginTop: 20, alignItems: "center" }}>
             <Text

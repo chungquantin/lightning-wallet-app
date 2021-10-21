@@ -5,6 +5,7 @@ import {
   GetMeWallet,
   GetMyPaymentRequests,
   GetMyWalletTransactions,
+  SendInAppPayment,
   SendPaymentRequest,
   SendRequestPaymentDto,
   TransactionRequestStatus,
@@ -26,6 +27,8 @@ import {
   RequestedTransactionSnapshot,
 } from "../requested-transaction/requested-transaction"
 import { setUndefinedAl } from "../../utils/misc"
+import { clear, remove } from "../../utils/storage"
+import { STORAGE_KEY } from "../../constants/AsyncStorageKey"
 
 export const WalletStoreModel = types
   .model("WalletStore")
@@ -131,6 +134,10 @@ export const WalletStoreModel = types
         setUndefinedAl(self.transactions)
         setUndefinedAl(self.requestedTransactions)
         setUndefinedAl(self.wallet)
+        remove(STORAGE_KEY.REQUESTED_TRANSACTIONS)
+        remove(STORAGE_KEY.TRANSACTIONS)
+        remove(STORAGE_KEY.MY_WALLET)
+        clear()
       } catch (error) {
         console.tron.log(error.message)
       }
@@ -148,21 +155,10 @@ export const WalletStoreModel = types
       }
       return result as GetMeWallet
     }),
-    syncTransactions: async function () {
-      const result = await Promise.all([
-        this.fetchTransactions(),
-        this.fetchRequestedTransactions(),
-      ])
-
-      return result[0].success && result[1].success
-    },
     fetchTransactions: async function () {
       console.log("WalletStore - FetchTransactions")
       const transactionApi = new WalletResolverApi()
-      const result = await transactionApi.getMyWalletTransactions({
-        limit: 10,
-        skip: 0,
-      })
+      const result = await transactionApi.getMyWalletTransactions({})
 
       if (result.success) {
         self.saveTransactions(result.data as TransactionSnapshot[])
@@ -172,15 +168,21 @@ export const WalletStoreModel = types
 
       return result as GetMyWalletTransactions
     },
-    fetchRequestedTransactions: async function () {
+    fetchRequestedTransactions: async function (limit?: number) {
       console.log("WalletStore - FetchRequestedTransactions")
       const transactionApi = new WalletResolverApi()
-      const result = await transactionApi.getMyPaymentRequests({
-        limit: 3,
-      })
-      console.log(result.data)
+      const result = await transactionApi.getMyPaymentRequests(
+        limit
+          ? {
+              limit: limit,
+            }
+          : {},
+      )
       if (result.success) {
         const payReqData = result.data
+        if (result.data.length === 0) {
+          self.saveRequestedTransactions([])
+        }
         if (payReqData && payReqData.length > 0) {
           const transactions = (await Promise.all(
             payReqData.map(async (request) => {
@@ -210,10 +212,11 @@ export const WalletStoreModel = types
           const sortedTransactions = _.sortBy(transactions, (transaction) => -transaction.createdAt)
           self.saveRequestedTransactions(sortedTransactions)
         }
+        return result as GetMyPaymentRequests
       } else {
         __DEV__ && console.tron.log(result.errors)
+        return null
       }
-      return result as GetMyPaymentRequests
     },
     fetchWalletOwner: async function (walletId: string): Promise<User> {
       console.log("WalletStore - FetchWalletOwner")
@@ -231,13 +234,30 @@ export const WalletStoreModel = types
         return null
       }
     },
-    // sendInAppPayment: async function ({
-    //   amount,
-    //   currency,
-    //   description,
-    //   method,
-    //   walletId,
-    // }: SendInAppPaymentDto) {},
+    sendInAppPayment: async function ({ amount, currency, description, method, userId }) {
+      const walletResolverApi = new WalletResolverApi()
+      const toWalletResponse = await walletResolverApi.getWallet({
+        userId,
+      })
+      if (toWalletResponse.success) {
+        const response = await walletResolverApi.sendInAppPayment({
+          amount,
+          currency,
+          description,
+          method: method,
+          walletId: toWalletResponse.data.id,
+        })
+        if (response.success) {
+          return response as SendInAppPayment
+        } else {
+          __DEV__ && console.tron.log(response.errors)
+          return null
+        }
+      } else {
+        __DEV__ && console.tron.log(toWalletResponse.errors)
+        return null
+      }
+    },
     sendPaymentRequest: async function ({
       amount,
       method,

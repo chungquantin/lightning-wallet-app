@@ -12,7 +12,7 @@ import {
   Register,
   RegisterDto,
 } from "../../generated/graphql"
-import { clear, saveString } from "../../utils/storage"
+import { clear, remove, save, saveString } from "../../utils/storage"
 import { STORAGE_KEY } from "../../constants/AsyncStorageKey"
 import { setUndefinedAl } from "../../utils/misc"
 
@@ -100,6 +100,10 @@ export const UserStoreModel = types
           console.log("UserStore - Logout")
           setUndefinedAl(self.currentUser)
           setUndefinedAl(self.contacts)
+          remove(STORAGE_KEY.CONTACTS)
+          remove(STORAGE_KEY.CURRENT_USER)
+          remove(STORAGE_KEY.ACCESS_TOKEN)
+          remove(STORAGE_KEY.REFRESH_TOKEN)
           clear()
         } catch (error) {
           console.tron.log(error.message)
@@ -145,6 +149,7 @@ export const UserStoreModel = types
           const result = yield userApi.getMyContacts()
           if (result.success) {
             self.saveUserContacts(result.data)
+            save(STORAGE_KEY.CONTACTS, result.data)
           } else {
             __DEV__ && console.tron.log(result.errors)
           }
@@ -162,6 +167,7 @@ export const UserStoreModel = types
 
           if (result.success) {
             self.saveCurrentUser(result.data)
+            save(STORAGE_KEY.CURRENT_USER, result.data)
           } else {
             __DEV__ && console.tron.log(result.errors)
           }

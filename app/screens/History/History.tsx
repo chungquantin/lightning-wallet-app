@@ -19,6 +19,8 @@ import { TouchableRipple } from "react-native-paper"
 import { useIsFocused } from "@react-navigation/core"
 import getSymbolFromCurrency from "currency-symbol-map"
 import NeutronpaySpinner from "../Reusable/NeutronpaySpinner"
+import { load, save } from "../../utils/storage"
+import { STORAGE_KEY } from "../../constants/AsyncStorageKey"
 
 const NoTransactionIcon = require("../../../assets/images/icons/No-Transaction-Icon.png")
 
@@ -41,7 +43,7 @@ const chartConfig: ChartConfig = {
 
 export const HistoryScreen = observer(function HistoryScreen() {
   const [loading, setLoading] = React.useState(false)
-  const { walletStore } = useStores()
+  const { walletStore, userStore } = useStores()
   const [selectedTab, setSelectedTab] = React.useState(1)
   const isFocused = useIsFocused()
   const screenWidth = Dimensions.get("window").width
@@ -103,10 +105,14 @@ export const HistoryScreen = observer(function HistoryScreen() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      setLoading(true)
-      const fetchTransactionsResponse = await walletStore.fetchTransactions()
-      if (fetchTransactionsResponse.success) {
-        setLoading(false)
+      const transactionsCache = await load(STORAGE_KEY.TRANSACTIONS)
+      if (!transactionsCache) {
+        setLoading(true)
+        const fetchTransactionsResponse = await walletStore.fetchTransactions()
+        if (fetchTransactionsResponse.success) {
+          save(STORAGE_KEY.TRANSACTIONS, fetchTransactionsResponse.data)
+          setLoading(false)
+        }
       }
     }
     fetchData()
@@ -312,15 +318,18 @@ export const HistoryScreen = observer(function HistoryScreen() {
       {loading ? (
         <NeutronpaySpinner style={{ marginTop: -110 }} />
       ) : (
-        <Screen preset="scroll">
-          {selectedTab == 1 ? (
-            transactionList.length !== 0 && <RenderPieChart />
-          ) : (
-            <RenderLineChart />
-          )}
-          <RenderSearchInputContainer />
-          <RenderTransactionContainer />
-        </Screen>
+        <>
+          <Screen preset="scroll">
+            <RenderSearchInputContainer />
+
+            {selectedTab == 1 ? (
+              transactionList.length !== 0 && <RenderPieChart />
+            ) : (
+              <RenderLineChart />
+            )}
+            <RenderTransactionContainer />
+          </Screen>
+        </>
       )}
     </View>
   )

@@ -15,6 +15,8 @@ import { SectionList } from "react-native"
 import { Transaction } from "../../models/transaction/transaction"
 import NeutronpaySpinner from "../Reusable/NeutronpaySpinner"
 import { RequestedTransaction } from "../../models/requested-transaction/requested-transaction"
+import { STORAGE_KEY } from "../../constants/AsyncStorageKey"
+import { load, save } from "../../utils/storage"
 
 interface ButtonProps {
   onPressHandler: (event: GestureResponderEvent) => void
@@ -35,7 +37,7 @@ const CustomButton = ({ onPressHandler, tx, children }: ButtonProps) => {
 
 export const WalletScreen = observer(function WalletScreen() {
   const [loading, setLoading] = React.useState(false)
-  const { walletStore, bankStore } = useStores()
+  const { walletStore, bankStore, userStore } = useStores()
   const isFocused = useIsFocused()
   const transaction = walletStore.transactions
   const transactionList = walletStore.groupTransactionByMonthAndYear(transaction)
@@ -49,18 +51,38 @@ export const WalletScreen = observer(function WalletScreen() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      setLoading(true)
-      const fetchMyBankAccountsResponse = await bankStore.fetchMyBankAccounts()
-      const fetchCurrentUserWalletResponse = await walletStore.fetchCurrentUserWallet()
-      const fetchTransactionsResponse = await walletStore.fetchTransactions()
+      const bankAccountsCache = await load(STORAGE_KEY.BANK_ACCOUNTS)
+      const myWalletCache = await load(STORAGE_KEY.MY_WALLET)
+      const transactionsCache = await load(STORAGE_KEY.TRANSACTIONS)
+      const requestedTransactionsCache = await load(STORAGE_KEY.REQUESTED_TRANSACTIONS)
       if (
-        fetchCurrentUserWalletResponse.success &&
-        fetchMyBankAccountsResponse.success &&
-        fetchTransactionsResponse
+        !bankAccountsCache ||
+        !myWalletCache ||
+        !transactionsCache ||
+        !requestedTransactionsCache
       ) {
-        setLoading(false)
+        setLoading(true)
+        const fetchMyBankAccountsResponse = await bankStore.fetchMyBankAccounts()
+        const fetchCurrentUserWalletResponse = await walletStore.fetchCurrentUserWallet()
+        const fetchTransactionsResponse = await walletStore.fetchTransactions()
+        const fetchRequestedTransactionsResponse = await walletStore.fetchRequestedTransactions()
+        const fetchContactResponse = await userStore.fetchUserContacts()
+        if (
+          fetchCurrentUserWalletResponse.success &&
+          fetchMyBankAccountsResponse.success &&
+          fetchTransactionsResponse &&
+          fetchRequestedTransactionsResponse.success &&
+          fetchContactResponse.success
+        ) {
+          save(STORAGE_KEY.MY_WALLET, fetchCurrentUserWalletResponse.data)
+          save(STORAGE_KEY.TRANSACTIONS, fetchTransactionsResponse.data)
+          save(STORAGE_KEY.BANK_ACCOUNTS, fetchMyBankAccountsResponse.data)
+          save(STORAGE_KEY.REQUESTED_TRANSACTIONS, fetchRequestedTransactionsResponse.success)
+          setLoading(false)
+        }
       }
     }
+
     fetchData()
     return () => {}
   }, [isFocused])

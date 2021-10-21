@@ -1,13 +1,7 @@
 import React from "react"
 import { observer } from "mobx-react-lite"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import {
-  ContactScreen,
-  HistoryScreen,
-  ProfileScreen,
-  RequestScreen,
-  WalletScreen,
-} from "../screens"
+import { ContactScreen, HistoryScreen, RequestScreen, WalletScreen } from "../screens"
 import Style from "./Tabs.style"
 import { color } from "../theme"
 import { View } from "react-native"
@@ -57,6 +51,18 @@ export const Tabs = observer(function Tabs() {
     GoToSettings: () => navigator.navigate("Setting"),
     GoToNotification: () => navigator.navigate("Notification"),
   }
+  const BurgerButton = () => (
+    <View style={{ marginLeft: 25 }}>
+      <TouchableOpacity onPress={handler.GoToSettings}>
+        <Ionicons
+          style={Style.CustomHeaderRightButton}
+          name={"menu"}
+          color={color.palette.offWhite}
+        />
+      </TouchableOpacity>
+    </View>
+  )
+
   const TabItems = (
     props?: Props,
   ): Partial<{
@@ -83,17 +89,7 @@ export const Tabs = observer(function Tabs() {
           />
         </TouchableOpacity>
       ),
-      headerLeft: () => (
-        <View style={{ marginLeft: 25 }}>
-          <TouchableOpacity onPress={handler.GoToSettings}>
-            <Ionicons
-              style={Style.CustomHeaderRightButton}
-              name={"menu"}
-              color={color.palette.offWhite}
-            />
-          </TouchableOpacity>
-        </View>
-      ),
+      headerLeft: () => <BurgerButton />,
       key: "wallet-tab",
       name: "Wallet",
       component: WalletScreen,
@@ -127,6 +123,7 @@ export const Tabs = observer(function Tabs() {
           name="add-circle"
         />
       ),
+      headerLeft: () => <BurgerButton />,
       layout: ({ focused }) => (
         <View style={Style.TabItemsView}>
           <Feather
@@ -166,6 +163,7 @@ export const Tabs = observer(function Tabs() {
           name="add-circle"
         />
       ),
+      headerLeft: () => <BurgerButton />,
       layout: ({ focused }) => (
         <View style={Style.TabItemsView}>
           <Ionicons
@@ -196,6 +194,7 @@ export const Tabs = observer(function Tabs() {
           name="settings-sharp"
         />
       ),
+      headerLeft: () => <BurgerButton />,
       layout: ({ focused }) => (
         <View style={Style.TabItemsView}>
           <Feather

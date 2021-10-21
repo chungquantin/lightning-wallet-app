@@ -1,5 +1,5 @@
 import React from "react"
-import { Clipboard, Share, View } from "react-native"
+import { Alert, Clipboard, Share, View } from "react-native"
 import { observer } from "mobx-react-lite"
 import { Button, Screen, Text } from "../../components"
 import Style from "./TransactionConfirm.style"
@@ -10,10 +10,15 @@ import { Ionicons } from "@expo/vector-icons"
 import { Avatar, Modal, Portal } from "react-native-paper"
 import { SnackBarContext } from "../../constants/Context"
 import I18n from "i18n-js"
+import { useStores } from "../../models"
+import NeutronpaySpinner from "../Reusable/NeutronpaySpinner"
+import { remove } from "../../utils/storage"
+import { STORAGE_KEY } from "../../constants/AsyncStorageKey"
 
 interface TransactionConfirmRouteProps extends ParamListBase {
   InvoiceDetail: {
     user: {
+      id: ""
       avatar: ""
       username: ""
     }
@@ -27,11 +32,13 @@ interface TransactionConfirmRouteProps extends ParamListBase {
 }
 
 export const TransactionConfirmScreen = observer(function TransactionConfirmScreen() {
+  const [loading, setLoading] = React.useState(false)
   const route = useRoute<RouteProp<TransactionConfirmRouteProps, "InvoiceDetail">>()
   const { onToggleSnackBar, setSnackBar } = React.useContext(SnackBarContext)
   const [toggleModal, setToggleModal] = React.useState(false)
   const { amount, currency, method, address, user, description } = route.params
   const navigator = useNavigation()
+  const { walletStore, userStore } = useStores()
 
   const RenderAddressModal = React.memo(() => (
     <Portal>
@@ -133,7 +140,24 @@ export const TransactionConfirmScreen = observer(function TransactionConfirmScre
   ))
 
   const handler = {
-    Confirm: () => navigator.navigate("TransactionComplete", route.params),
+    Confirm: async () => {
+      setLoading(true)
+      const response = await walletStore.sendInAppPayment({
+        amount,
+        currency,
+        description,
+        method: "",
+        userId: user.id,
+      })
+      if (response.success) {
+        remove(STORAGE_KEY.TRANSACTIONS)
+        remove(STORAGE_KEY.MY_WALLET)
+        navigator.navigate("TransactionComplete", route.params)
+        setLoading(false)
+      } else {
+        Alert.alert("Network error", response.errors[0].message)
+      }
+    },
     Cancel: () => navigator.goBack(),
     CopyText: () => {
       Clipboard.setString(address)
@@ -160,11 +184,12 @@ export const TransactionConfirmScreen = observer(function TransactionConfirmScre
     CloseModal: () => setToggleModal(false),
   }
 
-  switch (method) {
-    case "LIGHTNING":
-    case "ON_CHAIN":
-      return (
-        <View testID="TransactionConfirmScreen" style={Style.Container}>
+  return (
+    <View testID="TransactionConfirmScreen" style={Style.Container}>
+      {loading ? (
+        <NeutronpaySpinner />
+      ) : (
+        <>
           <Screen unsafe={true} style={Style.Container}>
             <View style={Style.InnerContainer}>
               <RenderTopContainer />
@@ -172,19 +197,8 @@ export const TransactionConfirmScreen = observer(function TransactionConfirmScre
             </View>
           </Screen>
           <RenderAddressModal />
-        </View>
-      )
-    default:
-      return (
-        <View testID="TransactionConfirmScreen" style={Style.Container}>
-          <Screen unsafe={true} style={Style.Container}>
-            <View style={Style.InnerContainer}>
-              <RenderTopContainer />
-              <RenderBottomContainer />
-            </View>
-          </Screen>
-          <RenderAddressModal />
-        </View>
-      )
-  }
+        </>
+      )}
+    </View>
+  )
 })

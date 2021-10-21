@@ -49,7 +49,7 @@ const Style = StyleSheet.create({
   },
   BottomContainer: {
     width: "100%",
-    paddingBottom: 150,
+    paddingBottom: 200,
   },
   BottomTransactionLabelContainer: {
     flexDirection: "row",

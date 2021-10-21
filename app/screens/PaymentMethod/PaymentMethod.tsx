@@ -11,6 +11,8 @@ import { TouchableOpacity } from "react-native-gesture-handler"
 import { ParamListBase } from "@react-navigation/routers"
 import { BankAccount } from "../../models/bank-account/bank-account"
 import NeutronpaySpinner from "../Reusable/NeutronpaySpinner"
+import { load, save } from "../../utils/storage"
+import { STORAGE_KEY } from "../../constants/AsyncStorageKey"
 
 interface PaymentMethodRouteProps extends ParamListBase {
   RoutingDetail: {
@@ -20,7 +22,7 @@ interface PaymentMethodRouteProps extends ParamListBase {
 
 export const PaymentMethodScreen = observer(function PaymentMethodScreen() {
   const [loading, setLoading] = React.useState(false)
-  const { bankStore } = useStores()
+  const { bankStore, userStore } = useStores()
   const navigator = useNavigation()
   const isFocused = useIsFocused()
   const route = useRoute<RouteProp<PaymentMethodRouteProps, "RoutingDetail">>()
@@ -46,10 +48,14 @@ export const PaymentMethodScreen = observer(function PaymentMethodScreen() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      setLoading(true)
-      const fetchMyBankAccountsResponse = await bankStore.fetchMyBankAccounts()
-      if (fetchMyBankAccountsResponse.success) {
-        setLoading(false)
+      const bankAccountsCache = await load(STORAGE_KEY.BANK_ACCOUNTS)
+      if (!bankAccountsCache) {
+        setLoading(true)
+        const fetchMyBankAccountsResponse = await bankStore.fetchMyBankAccounts()
+        if (fetchMyBankAccountsResponse.success) {
+          save(STORAGE_KEY.BANK_ACCOUNTS, fetchMyBankAccountsResponse.data)
+          setLoading(false)
+        }
       }
     }
     fetchData()

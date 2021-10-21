@@ -15,6 +15,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { NormalSpinner } from "../Reusable/NormalSpinner"
 import { validationUtil } from "../../utils"
 import { UserResolverAPI } from "../../services/resolvers"
+import { STORAGE_KEY } from "../../constants/AsyncStorageKey"
+import { load } from "../../utils/storage"
 
 export const ReceiveScreen = observer(function ReceiveScreen() {
   const [loading, setLoading] = React.useState(false)
@@ -63,10 +65,13 @@ export const ReceiveScreen = observer(function ReceiveScreen() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      setLoading(true)
-      const fetchUserContactsResponse = await userStore.fetchUserContacts()
-      if (fetchUserContactsResponse.success) {
-        setLoading(false)
+      const contactsCache = await load(STORAGE_KEY.CONTACTS)
+      if (!contactsCache) {
+        setLoading(true)
+        const fetchUserContactsResponse = await userStore.fetchUserContacts()
+        if (fetchUserContactsResponse.success) {
+          setLoading(false)
+        }
       }
     }
     fetchData()

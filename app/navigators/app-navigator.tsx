@@ -33,6 +33,7 @@ import {
   BankTransferConfirmScreen,
   BankTransferCompleteScreen,
   RequestedTransactionDetailScreen,
+  SendOutAppEnterAddressScreen,
 } from "../screens"
 import i18n from "i18n-js"
 import { useStores } from "../models"
@@ -44,6 +45,7 @@ export type NavigatorParamList = {
   Wallet: undefined
   Send: undefined
   SendOutAppRequest: undefined
+  SendOutAppEnterAddress: undefined
   SendInAppRequest: undefined
   Receive: undefined
   ReceiveOutAppRequest: undefined
@@ -133,6 +135,13 @@ const AppStack = observer(() => {
                 headerTitle: i18n.t("navigation.scanQrCode"),
               }}
               component={SendOutAppRequestScreen}
+            />
+            <Stack.Screen
+              name="SendOutAppEnterAddress"
+              options={{
+                headerTitle: i18n.t("navigation.enterAddress"),
+              }}
+              component={SendOutAppEnterAddressScreen}
             />
             {/* Receive screen stack */}
             <Stack.Screen name="Receive" component={ReceiveScreen} />

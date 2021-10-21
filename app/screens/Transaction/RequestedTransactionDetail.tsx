@@ -6,7 +6,7 @@ import Style from "./RequestedTransactionDetail.style"
 import { ParamListBase } from "@react-navigation/routers"
 import { RouteProp, useRoute } from "@react-navigation/core"
 import { formatByUnit } from "../../utils/currency"
-import { ActivityIndicator, Avatar } from "react-native-paper"
+import { ActivityIndicator } from "react-native-paper"
 import { color } from "../../theme"
 import { useStores } from "../../models"
 import { useNavigation } from "@react-navigation/core"
@@ -16,6 +16,8 @@ import NeutronpaySpinner from "../Reusable/NeutronpaySpinner"
 import * as moment from "moment"
 import { stringUtil } from "../../utils"
 import { WalletResolverApi } from "../../services/resolvers"
+import { remove } from "../../utils/storage"
+import { STORAGE_KEY } from "../../constants/AsyncStorageKey"
 
 interface RequestedTransactionDetailRouteProps extends ParamListBase {
   RequestedTransactionDetail: {
@@ -41,7 +43,7 @@ export const RequestedTransactionDetailScreen = observer(
           setLoading(false)
         }
       }
-      fetchTransactionDetail()
+      // fetchTransactionDetail()
       return () => {
         transactionDetailStore.clear()
       }
@@ -49,7 +51,7 @@ export const RequestedTransactionDetailScreen = observer(
 
     const RenderUpperContainer = React.memo(() => (
       <View style={Style.UpperContainer}>
-        <View style={Style.ImageContainer}>
+        {/* <View style={Style.ImageContainer}>
           {transactionDetailStore.sender.avatar ? (
             <Avatar.Image
               style={{
@@ -90,7 +92,7 @@ export const RequestedTransactionDetailScreen = observer(
               size={60}
             />
           )}
-        </View>
+        </View> */}
         <View style={{ flexDirection: "row" }}>
           <Text style={Style.CurrencySymbol}>{getSymbolFromCurrency(transaction.currency)}</Text>
           <Text style={Style.Amount}>
@@ -132,23 +134,6 @@ export const RequestedTransactionDetailScreen = observer(
         <View style={Style.ItemRow}>
           <Text style={Style.ItemLeftText} tx="transactionRequest.status" />
           <Text>{stringUtil.capitalize(transaction.status)}</Text>
-        </View>
-        <View style={Style.ItemRow}>
-          <Text style={Style.ItemLeftText} tx="transactionRequest.balance" />
-          <Text style={Style.BalanceText}>
-            {formatByUnit(
-              transaction.type === "RECEIVE"
-                ? walletStore.wallet.balance +
-                    transaction.amount +
-                    transaction.networkFee +
-                    transaction.transactionFee
-                : walletStore.wallet.balance -
-                    transaction.amount -
-                    transaction.networkFee -
-                    transaction.transactionFee,
-              transaction.currency,
-            )}
-          </Text>
         </View>
         {buttonLoading ? (
           <ActivityIndicator color={color.primary} size={20} />
@@ -198,6 +183,9 @@ export const RequestedTransactionDetailScreen = observer(
             action: "SEND",
           })
         }
+        remove(STORAGE_KEY.REQUESTED_TRANSACTIONS)
+        remove(STORAGE_KEY.TRANSACTIONS)
+        remove(STORAGE_KEY.MY_WALLET)
       },
       Reject: async () => {
         setButtonLoading(true)
@@ -209,6 +197,8 @@ export const RequestedTransactionDetailScreen = observer(
           setButtonLoading(false)
           navigator.goBack()
         }
+        remove(STORAGE_KEY.REQUESTED_TRANSACTIONS)
+        remove(STORAGE_KEY.MY_WALLET)
       },
       Cancel: async () => {
         setButtonLoading(true)
@@ -217,6 +207,8 @@ export const RequestedTransactionDetailScreen = observer(
           setButtonLoading(false)
           navigator.goBack()
         }
+        remove(STORAGE_KEY.REQUESTED_TRANSACTIONS)
+        remove(STORAGE_KEY.MY_WALLET)
       },
     }
     return (

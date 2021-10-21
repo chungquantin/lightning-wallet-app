@@ -21,8 +21,6 @@ import { SnackBarContext } from "./constants/Context"
 import { AnimatedAppLoader } from "./screens/Splash/AnimatedAppLoader"
 import Constants from "expo-constants"
 import { color } from "./theme"
-import axios from "axios"
-import { DummyApi } from "./services/resolvers"
 enableScreens()
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
