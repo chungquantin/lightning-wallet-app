@@ -11,6 +11,7 @@ import { useStores } from "../../models"
 import { color } from "../../theme"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import NeutronpaySpinner from "../Reusable/NeutronpaySpinner"
+import { TextInput } from "react-native-gesture-handler"
 
 interface UserDetailRouteProps extends ParamListBase {
   UserDetail: {
@@ -48,7 +49,7 @@ export const UserDetailScreen = observer(function UserDetailScreen() {
     },
     Send: () =>
       navigator.navigate("TransactionAmountCreation", {
-        description: `Send to ${userStore.contact.username || "Unknown"}`,
+        description: `${userStore.currentUser.name} 💰 ${userStore.contact.username || "Unknown"}`,
         action: "SEND",
         type: "IN_APP",
         user: {
@@ -59,7 +60,7 @@ export const UserDetailScreen = observer(function UserDetailScreen() {
       }),
     Receive: () =>
       navigator.navigate("TransactionAmountCreation", {
-        description: `Receive from ${userStore.contact.username || "Unknown"}`,
+        description: `${userStore.contact.username || "Unknown"} 💰 ${userStore.currentUser.name}`,
         action: "RECEIVE",
         type: "IN_APP",
         user: {

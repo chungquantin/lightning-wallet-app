@@ -51,33 +51,24 @@ export const WalletScreen = observer(function WalletScreen() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const bankAccountsCache = await load(STORAGE_KEY.BANK_ACCOUNTS)
-      const myWalletCache = await load(STORAGE_KEY.MY_WALLET)
-      const transactionsCache = await load(STORAGE_KEY.TRANSACTIONS)
-      const requestedTransactionsCache = await load(STORAGE_KEY.REQUESTED_TRANSACTIONS)
-      if (
-        !bankAccountsCache ||
-        !myWalletCache ||
-        !transactionsCache ||
-        !requestedTransactionsCache
-      ) {
+      const keys = [
+        STORAGE_KEY.BANK_ACCOUNTS,
+        STORAGE_KEY.MY_WALLET,
+        STORAGE_KEY.TRANSACTIONS,
+        STORAGE_KEY.CONTACTS,
+      ]
+      const caches = await Promise.all(keys.map((key) => load(key)))
+      if (caches.includes((cache) => cache === false)) {
         setLoading(true)
-        const fetchMyBankAccountsResponse = await bankStore.fetchMyBankAccounts()
-        const fetchCurrentUserWalletResponse = await walletStore.fetchCurrentUserWallet()
-        const fetchTransactionsResponse = await walletStore.fetchTransactions()
-        const fetchRequestedTransactionsResponse = await walletStore.fetchRequestedTransactions()
-        const fetchContactResponse = await userStore.fetchUserContacts()
-        if (
-          fetchCurrentUserWalletResponse.success &&
-          fetchMyBankAccountsResponse.success &&
-          fetchTransactionsResponse &&
-          fetchRequestedTransactionsResponse.success &&
-          fetchContactResponse.success
-        ) {
-          save(STORAGE_KEY.MY_WALLET, fetchCurrentUserWalletResponse.data)
-          save(STORAGE_KEY.TRANSACTIONS, fetchTransactionsResponse.data)
-          save(STORAGE_KEY.BANK_ACCOUNTS, fetchMyBankAccountsResponse.data)
-          save(STORAGE_KEY.REQUESTED_TRANSACTIONS, fetchRequestedTransactionsResponse.success)
+        const response = await Promise.all([
+          bankStore.fetchMyBankAccounts(),
+          walletStore.fetchCurrentUserWallet(),
+          walletStore.fetchTransactions(),
+          userStore.fetchUserContacts(),
+        ])
+
+        if (response.some((res) => res.success !== false)) {
+          keys.forEach((key, index) => save(key, response[index].data))
           setLoading(false)
         }
       }

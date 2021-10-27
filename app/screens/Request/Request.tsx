@@ -235,7 +235,7 @@ export const RequestScreen = observer(function RequestScreen() {
       <RenderTabButtonContainer />
       <RenderSearchInputContainer />
       {loading ? (
-        <NeutronpaySpinner style={{ marginTop: -100 }} />
+        <NeutronpaySpinner style={{ marginTop: -200 }} />
       ) : (
         <>
           <Screen unsafe={true} preset="scroll">

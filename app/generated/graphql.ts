@@ -977,9 +977,9 @@ export type TokenResponse = {
 
 /** Transaction method */
 export enum TransactionMethod {
-  InApp = 'IN_APP',
   Lightning = 'LIGHTNING',
-  OnChain = 'ON_CHAIN'
+  OnChain = 'ON_CHAIN',
+  Other = 'OTHER'
 }
 
 export type TransactionRequestSchema = {

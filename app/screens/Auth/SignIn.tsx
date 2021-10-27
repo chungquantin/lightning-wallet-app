@@ -62,8 +62,8 @@ export const SignInScreen = observer(function SignInScreen() {
           } else {
             userStore.fetchCurrentUser()
             walletStore.fetchCurrentUserWallet()
+            setLoading(false)
           }
-          setLoading(false)
         } catch (err) {
           setLoading(false)
           Alert.alert(err.message)

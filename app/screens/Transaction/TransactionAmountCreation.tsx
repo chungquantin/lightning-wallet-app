@@ -87,6 +87,8 @@ export const TransactionAmountCreationScreen = observer(function TransactionAmou
       <View
         style={{
           flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         <Text tx="common.form.description.label" />

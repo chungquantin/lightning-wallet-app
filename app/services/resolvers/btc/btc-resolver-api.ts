@@ -1,5 +1,9 @@
 import { STORAGE_KEY } from "../../../constants/AsyncStorageKey"
 import {
+  CheckLightningStatus,
+  CheckLightningStatusDto,
+  CheckOnChainStatus,
+  CheckOnChainStatusDto,
   GenerateChainInvoice,
   GenerateLightningInvoice,
   GenerateLightningInvoiceDto,
@@ -52,5 +56,31 @@ export class BtcResolverApi extends ResolverApi {
       },
     )
     return res.generateLightningInvoice
+  }
+
+  public async checkOnchainStatus({ userId }: CheckOnChainStatusDto): Promise<CheckOnChainStatus> {
+    const res = await this.query<CheckOnChainStatus, CheckLightningStatusDto>(
+      "checkOnChainStatus",
+      {
+        data: {
+          userId,
+        },
+      },
+    )
+    return res.checkOnChainStatus
+  }
+
+  public async checkLightningStatus({
+    userId,
+  }: CheckLightningStatusDto): Promise<CheckLightningStatus> {
+    const res = await this.query<CheckLightningStatus, CheckLightningStatusDto>(
+      "checkLightningStatus",
+      {
+        data: {
+          userId,
+        },
+      },
+    )
+    return res.checkLightningStatus
   }
 }

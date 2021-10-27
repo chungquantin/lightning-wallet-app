@@ -701,9 +701,9 @@ type TokenResponse {
 
 """Transaction method"""
 enum TransactionMethod {
-  IN_APP
   LIGHTNING
   ON_CHAIN
+  OTHER
 }
 
 type TransactionRequestSchema {

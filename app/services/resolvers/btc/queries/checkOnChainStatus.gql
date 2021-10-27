@@ -1,0 +1,15 @@
+query checkOnChainStatus($data: CheckOnChainStatusDto!) {
+    checkOnChainStatus(data: $data){
+        data{
+            amount
+            status
+            timeStamp
+            txHash
+        }
+        errors{
+            message
+            path
+        }
+        success
+    }
+}

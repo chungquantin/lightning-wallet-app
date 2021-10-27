@@ -31,7 +31,7 @@ export const ReceiveOutAppRequestScreen = observer(function ReceiveOutAppRequest
   const [tab, switchTab] = React.useState<number>(0)
   const [toggleModal, setToggleModal] = React.useState(false)
   const [expirationTime, setExpirationTime] = React.useState({
-    minute: 15,
+    minute: 1,
     second: 0,
   })
   const [loading, setLoading] = React.useState({
@@ -80,7 +80,7 @@ export const ReceiveOutAppRequestScreen = observer(function ReceiveOutAppRequest
         if (expirationTime.minute === 0 && expirationTime.second === 0) {
           // Re-create a new invoice
           setExpirationTime({
-            minute: 15,
+            minute: 1,
             second: 0,
           })
           btcStore.clearLightningAddress()

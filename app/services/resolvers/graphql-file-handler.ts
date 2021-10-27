@@ -45,6 +45,9 @@ const gqlModules = {
     getTransaction: loader("./wallet/queries/getTransaction.gql"),
     /** Bank */
     getMyBankAccounts: loader("./bank/queries/getMyBankAccounts.gql"),
+    /** Btc */
+    checkOnChainStatus: loader("./btc/queries/checkOnChainStatus.gql"),
+    checkLightningStatus: loader("./btc/queries/checkLightningStatus.gql"),
   },
 }
 
