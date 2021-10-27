@@ -2,8 +2,12 @@ import { STORAGE_KEY } from "../../../constants/AsyncStorageKey"
 import {
   ConnectBankAccount,
   ConnectBankAccountDto,
+  Deposit,
+  DepositDto,
   GetMyBankAccounts,
   PlaidCreateLinkToken,
+  Withdraw,
+  WithdrawDto,
 } from "../../../generated/graphql"
 import { loadString } from "../../../utils/storage"
 import { API_URL, PRODUCTION_API_URL, useGateway } from "../constants"
@@ -67,5 +71,41 @@ export class BankResolverApi extends ResolverApi {
       },
     )
     return res.createLinkToken
+  }
+
+  public async deposit(args: DepositDto): Promise<Deposit> {
+    const [accessToken, refreshToken] = await Promise.all([
+      loadString(STORAGE_KEY.ACCESS_TOKEN),
+      loadString(STORAGE_KEY.REFRESH_TOKEN),
+    ])
+    const res = await this.mutation<Deposit, DepositDto>(
+      "deposit",
+      {
+        data: args,
+      },
+      {
+        accessToken,
+        refreshToken,
+      },
+    )
+    return res.deposit
+  }
+
+  public async withdraw(args: WithdrawDto): Promise<Withdraw> {
+    const [accessToken, refreshToken] = await Promise.all([
+      loadString(STORAGE_KEY.ACCESS_TOKEN),
+      loadString(STORAGE_KEY.REFRESH_TOKEN),
+    ])
+    const res = await this.mutation<Withdraw, WithdrawDto>(
+      "withdraw",
+      {
+        data: args,
+      },
+      {
+        accessToken,
+        refreshToken,
+      },
+    )
+    return res.withdraw
   }
 }

@@ -1,7 +1,14 @@
 import { flow, Instance, SnapshotOut, types } from "mobx-state-tree"
 import { withEnvironment } from "../extensions/with-environment"
 import { BankResolverApi } from "../../services/resolvers"
-import { GetMyBankAccounts, PlaidCreateLinkToken } from "../../generated/graphql"
+import {
+  Deposit,
+  DepositDto,
+  GetMyBankAccounts,
+  PlaidCreateLinkToken,
+  Withdraw,
+  WithdrawDto,
+} from "../../generated/graphql"
 import { BankAccount, BankAccountModel, BankAccountSnapshot } from "../bank-account/bank-account"
 
 export const BankStoreModel = types
@@ -64,6 +71,7 @@ export const BankStoreModel = types
                 institutionLogo: bankAccount.institution.institutionLogo,
                 institutionPrimaryColor: bankAccount.institution.primaryColor,
                 institutionWebsite: bankAccount.institution.websiteUrl,
+                type: bankAccount.type,
               }
             })
             self.saveBankAccounts(convertedData)
@@ -96,6 +104,36 @@ export const BankStoreModel = types
           throw error
         }
       }),
+      deposit: async function (args: DepositDto) {
+        console.log("BankStore - Deposit")
+        try {
+          const bankApi = new BankResolverApi()
+          const result: Deposit = await bankApi.deposit(args)
+          if (!result.success) {
+            __DEV__ && console.tron.log(result.errors)
+          }
+
+          return result
+        } catch (error) {
+          console.tron.error(error.message, "deposit")
+          throw error
+        }
+      },
+      withdraw: async function (args: WithdrawDto) {
+        console.log("BankStore - Withdraw")
+        try {
+          const bankApi = new BankResolverApi()
+          const result: Withdraw = await bankApi.withdraw(args)
+          if (!result.success) {
+            __DEV__ && console.tron.log(result.errors)
+          }
+
+          return result
+        } catch (error) {
+          console.tron.error(error.message, "withdraw")
+          throw error
+        }
+      },
     }
   })
 

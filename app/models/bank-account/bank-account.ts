@@ -17,6 +17,7 @@ export const BankAccountModel = types.model("BankAccount").props({
   routingNumber: types.maybeNull(types.string),
   accountNumber: types.maybeNull(types.string),
   addedAt: types.maybe(types.string),
+  type: types.maybeNull(types.string),
 })
 
 type BankAccountType = Instance<typeof BankAccountModel>

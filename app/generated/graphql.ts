@@ -53,7 +53,7 @@ export type BankAccountSchema = {
   addedAt: Scalars['String'];
   balance: BankAccountBalanceSchema;
   id: Scalars['ID'];
-  institution: InstitutionSchema;
+  institution?: Maybe<InstitutionSchema>;
   name: Scalars['String'];
   officialName?: Maybe<Scalars['String']>;
   subType?: Maybe<Scalars['String']>;
@@ -203,6 +203,18 @@ export type Deposit = {
   data?: Maybe<Scalars['String']>;
   errors?: Maybe<Array<ApiError>>;
   success: Scalars['Boolean'];
+};
+
+export type DepositDto = {
+  accountName: Scalars['String'];
+  /** The user's account number. */
+  accountNumber: Scalars['String'];
+  /** The type of the bank account (checking or savings). */
+  accountType: Scalars['String'];
+  amount: Scalars['Float'];
+  currency: Scalars['String'];
+  /** The user's routing number. */
+  routingNumber: Scalars['String'];
 };
 
 export type ExchangeTokenDto = {
@@ -584,6 +596,7 @@ export type Mutation = {
   sendLightningPayment?: Maybe<SendLightningPayment>;
   sendOnchainPayment?: Maybe<SendOnchainPayment>;
   sendPaymentRequest?: Maybe<SendPaymentRequest>;
+  withdraw?: Maybe<Withdraw>;
 };
 
 
@@ -613,7 +626,7 @@ export type MutationDeleteBankAccountArgs = {
 
 
 export type MutationDepositArgs = {
-  data: WithdrawDto;
+  data: DepositDto;
 };
 
 
@@ -664,6 +677,11 @@ export type MutationSendOnchainPaymentArgs = {
 
 export type MutationSendPaymentRequestArgs = {
   data: SendRequestPaymentDto;
+};
+
+
+export type MutationWithdrawArgs = {
+  data: WithdrawDto;
 };
 
 export type OnChainStatusResponse = {
@@ -977,9 +995,11 @@ export type TokenResponse = {
 
 /** Transaction method */
 export enum TransactionMethod {
+  Deposit = 'DEPOSIT',
   Lightning = 'LIGHTNING',
   OnChain = 'ON_CHAIN',
-  Other = 'OTHER'
+  Other = 'OTHER',
+  Withdraw = 'WITHDRAW'
 }
 
 export type TransactionRequestSchema = {
@@ -1058,6 +1078,13 @@ export type WalletSchema = {
   id: Scalars['ID'];
   transactions: Array<TransactionSchema>;
   userId: Scalars['ID'];
+};
+
+export type Withdraw = {
+  __typename?: 'Withdraw';
+  data?: Maybe<Scalars['String']>;
+  errors?: Maybe<Array<ApiError>>;
+  success: Scalars['Boolean'];
 };
 
 export type WithdrawDto = {

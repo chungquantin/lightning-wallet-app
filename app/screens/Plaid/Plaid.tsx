@@ -14,7 +14,7 @@ import { STORAGE_KEY } from "../../constants/AsyncStorageKey"
 
 export const PlaidScreen = observer(function PlaidScreen() {
   const [loading, setLoading] = React.useState(false)
-  const { bankStore, userStore } = useStores()
+  const { bankStore } = useStores()
   const isFocused = useIsFocused()
   const navigator = useNavigation()
 

@@ -22,3 +22,4 @@ module.exports.sendInAppPayment = fs.readFileSync(path.join(__dirname, 'sendInAp
 module.exports.sendLightningPayment = fs.readFileSync(path.join(__dirname, 'sendLightningPayment.gql'), 'utf8');
 module.exports.sendOnchainPayment = fs.readFileSync(path.join(__dirname, 'sendOnchainPayment.gql'), 'utf8');
 module.exports.sendPaymentRequest = fs.readFileSync(path.join(__dirname, 'sendPaymentRequest.gql'), 'utf8');
+module.exports.withdraw = fs.readFileSync(path.join(__dirname, 'withdraw.gql'), 'utf8');

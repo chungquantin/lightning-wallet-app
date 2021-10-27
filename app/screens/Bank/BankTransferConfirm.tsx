@@ -1,5 +1,5 @@
 import React from "react"
-import { View } from "react-native"
+import { Alert, View } from "react-native"
 import { observer } from "mobx-react-lite"
 import { Button, Screen, Text } from "../../components"
 import Style from "./BankTransferConfirm.style"
@@ -8,7 +8,7 @@ import { ParamListBase } from "@react-navigation/routers"
 import { RouteProp, useRoute } from "@react-navigation/core"
 import { FiatCurrency } from "../../generated/graphql"
 import { formatByUnit } from "../../utils/currency"
-import { Avatar, Divider } from "react-native-paper"
+import { ActivityIndicator, Avatar, Divider } from "react-native-paper"
 import { color } from "../../theme"
 import { stringUtil } from "../../utils"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
@@ -27,7 +27,8 @@ interface BankTransferConfirmRouteProps extends ParamListBase {
 }
 
 export const BankTransferConfirmScreen = observer(function BankTransferConfirmScreen() {
-  const { walletStore } = useStores()
+  const { walletStore, bankStore } = useStores()
+  const [loading, setLoading] = React.useState(false)
   const route = useRoute<RouteProp<BankTransferConfirmRouteProps, "InvoiceDetail">>()
   const { action, amount, currency, bankAccount, fee } = route.params
   const navigator = useNavigation()
@@ -137,20 +138,62 @@ export const BankTransferConfirmScreen = observer(function BankTransferConfirmSc
     </View>
   ))
 
-  const RenderButtonContainer = React.memo(() => (
-    <View style={Style.ButtonContainer}>
-      <Button style={Style.CancelButton} onPress={handler.Cancel}>
-        <Text tx="common.cancel" />
-      </Button>
-      <View style={{ width: 10 }} />
-      <Button style={Style.SubmitButton} onPress={handler.Confirm}>
-        <Text tx="common.confirm" />
-      </Button>
-    </View>
-  ))
+  const RenderButtonContainer = React.memo(() =>
+    loading ? (
+      <ActivityIndicator color={color.primary} style={{ marginTop: 10 }} />
+    ) : (
+      <View style={Style.ButtonContainer}>
+        <Button style={Style.CancelButton} onPress={handler.Cancel}>
+          <Text tx="common.cancel" />
+        </Button>
+        <View style={{ width: 10 }} />
+        <Button style={Style.SubmitButton} onPress={handler.Confirm}>
+          <Text tx="common.confirm" />
+        </Button>
+      </View>
+    ),
+  )
 
   const handler = {
-    Confirm: () => navigator.navigate("BankTransferComplete", route.params),
+    Confirm: async () => {
+      if (action === "DEPOSIT") {
+        setLoading(true)
+
+        const res = await bankStore.deposit({
+          accountName: bankAccount.name,
+          accountNumber: bankAccount.accountNumber,
+          accountType: bankAccount.type,
+          amount,
+          currency,
+          routingNumber: bankAccount.routingNumber,
+        })
+        if (res.success) {
+          setLoading(false)
+          navigator.navigate("BankTransferComplete", route.params)
+        } else {
+          setLoading(false)
+          Alert.alert("Error", res.errors[0].message)
+        }
+      } else if (action === "WITHDRAW") {
+        setLoading(true)
+
+        const res = await bankStore.withdraw({
+          accountName: bankAccount.name,
+          accountNumber: bankAccount.accountNumber,
+          accountType: bankAccount.type,
+          amount,
+          currency,
+          routingNumber: bankAccount.routingNumber,
+        })
+        if (res.success) {
+          setLoading(false)
+          navigator.navigate("BankTransferComplete", route.params)
+        } else {
+          setLoading(false)
+          Alert.alert("Error", res.errors[0].message)
+        }
+      }
+    },
     Cancel: () => navigator.goBack(),
   }
   return (

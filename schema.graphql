@@ -41,7 +41,7 @@ type BankAccountSchema {
   addedAt: String!
   balance: BankAccountBalanceSchema!
   id: ID!
-  institution: InstitutionSchema!
+  institution: InstitutionSchema
   name: String!
   officialName: String
   subType: String
@@ -178,6 +178,21 @@ type Deposit {
   data: String
   errors: [ApiError!]
   success: Boolean!
+}
+
+input DepositDto {
+  accountName: String!
+
+  """The user's account number."""
+  accountNumber: String!
+
+  """The type of the bank account (checking or savings)."""
+  accountType: String!
+  amount: Float!
+  currency: String!
+
+  """The user's routing number."""
+  routingNumber: String!
 }
 
 input ExchangeTokenDto {
@@ -508,7 +523,7 @@ type Mutation {
   connectDebitCard: ConnectDebitCard
   createLinkToken: PlaidCreateLinkToken
   deleteBankAccount(data: DeleteBankAccountDto!): DeleteBankAccount
-  deposit(data: WithdrawDto!): Deposit
+  deposit(data: DepositDto!): Deposit
   forgotPasswordChange(data: ForgotPasswordChangeDto!): SendForgotPassword
   generateLightningInvoice(data: GenerateLightningInvoiceDto!): GenerateLightningInvoice
   generateOnChainInvoice: GenerateChainInvoice
@@ -521,6 +536,7 @@ type Mutation {
   sendLightningPayment(data: SendLightningPaymentDto!): SendLightningPayment
   sendOnchainPayment(data: SendOnchainPaymentDto!): SendOnchainPayment
   sendPaymentRequest(data: SendRequestPaymentDto!): SendPaymentRequest
+  withdraw(data: WithdrawDto!): Withdraw
 }
 
 type OnChainStatusResponse {
@@ -701,9 +717,11 @@ type TokenResponse {
 
 """Transaction method"""
 enum TransactionMethod {
+  DEPOSIT
   LIGHTNING
   ON_CHAIN
   OTHER
+  WITHDRAW
 }
 
 type TransactionRequestSchema {
@@ -778,6 +796,12 @@ type WalletSchema {
   id: ID!
   transactions: [TransactionSchema!]!
   userId: ID!
+}
+
+type Withdraw {
+  data: String
+  errors: [ApiError!]
+  success: Boolean!
 }
 
 input WithdrawDto {

@@ -20,6 +20,8 @@ const gqlModules = {
     /** Bank */
     createLinkToken: loader("./bank/mutations/createLinkToken.gql"),
     connectBankAccount: loader("./bank/mutations/connectBankAccount.gql"),
+    deposit: loader("./bank/mutations/deposit.gql"),
+    withdraw: loader("./bank/mutations/withdraw.gql"),
     /** Btc */
     generateOnChainInvoice: loader("./btc/mutations/generateOnChainInvoice.gql"),
     generateLightningInvoice: loader("./btc/mutations/generateLightningInvoice.gql"),

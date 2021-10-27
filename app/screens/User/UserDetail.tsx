@@ -11,7 +11,6 @@ import { useStores } from "../../models"
 import { color } from "../../theme"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import NeutronpaySpinner from "../Reusable/NeutronpaySpinner"
-import { TextInput } from "react-native-gesture-handler"
 
 interface UserDetailRouteProps extends ParamListBase {
   UserDetail: {
